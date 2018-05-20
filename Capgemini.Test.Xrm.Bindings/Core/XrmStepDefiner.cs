@@ -1,0 +1,38 @@
+﻿using Capgemini.Test.Xrm.Configuration;
+using OpenQA.Selenium;
+using System.IO;
+using System.Xml.Serialization;
+
+namespace Capgemini.Test.Xrm.Bindings.Core
+{
+    /// <summary>
+    /// Base class for classes containing SpecFlow step definitions common across all clients.
+    /// </summary>
+    public abstract class XrmStepDefiner
+    {
+        private static XrmTestConfiguration xrmTestConfig;
+        /// <summary>
+        /// The configuration for the test project.
+        /// </summary>
+        protected static XrmTestConfiguration XrmTestConfig
+        {
+            get
+            {
+                if (xrmTestConfig == null)
+                {
+                    var serializer = new XmlSerializer(typeof(XrmTestConfiguration));
+                    using (var fs = File.OpenRead(Path.Combine(Directory.GetCurrentDirectory(), "EasyReproConfig.xml")))
+                    {
+                        xrmTestConfig = serializer.Deserialize(fs) as XrmTestConfiguration;
+                    }
+                }
+                return xrmTestConfig;
+            }
+        }
+
+        /// <summary>
+        /// The Selenium WebDriver.
+        /// </summary>
+        protected abstract IWebDriver Driver { get; }
+    }
+}
