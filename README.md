@@ -95,3 +95,7 @@ The root of your project should contain an **xrm.test.config** file. Ensure that
   </Apps>
 </XrmTestConfig>
 ```
+
+[easyrepro]:https://github.com/Microsoft/EasyRepro
+[specflow]:http://specflow.org/
+[capgemini-logo]:https://capgemini.github.io/images/logo.svg
