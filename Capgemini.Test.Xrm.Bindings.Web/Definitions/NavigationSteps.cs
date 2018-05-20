@@ -17,7 +17,7 @@ namespace Capgemini.Test.Xrm.Bindings.Definitions
     {
         #region Given
         [Given(@"I am logged in as ""(.*)""")]
-        public void GivenIAmLoggedInAs(string appName, string user)
+        public void GivenIAmLoggedInAs(string user)
         {
             Login(XrmTestConfig.GetUserConfiguration(user));
         }
