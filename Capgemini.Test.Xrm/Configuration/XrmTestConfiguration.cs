@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Xml.Serialization;
 
@@ -12,6 +12,9 @@ namespace Capgemini.Test.Xrm.Configuration
     [XmlRoot("XrmTestConfig")]
     public class XrmTestConfiguration
     {
+        private const string GET_USER_EXCEPTION = "Unable to retrieve user configuration. Please ensure a user with the given alias exists in the xrm.test.config file.";
+        private const string GET_APP_EXCEPTION = "Unable to retrieve app configuration. Please ensure an app with the given name exists in the xrm.test.config file.";
+
         /// <summary>
         /// The URL of the target Dynamics 365 instance.
         /// </summary>
@@ -39,17 +42,31 @@ namespace Capgemini.Test.Xrm.Configuration
         /// <returns></returns>
         public XrmUserConfiguration GetUserConfiguration(string userAlias)
         {
-            return Users.First(user => user.Alias == userAlias);
+            try
+            {
+                return Users.First(user => user.Alias == userAlias);
+            }
+            catch (Exception ex)
+            {
+                throw new ConfigurationErrorsException($"{GET_USER_EXCEPTION} User: {userAlias}", ex);
+            }
         }
 
         /// <summary>
         /// Retrieves the configuration for an app.
         /// </summary>
-        /// <param name="appAlias">The alias of the app</param>
+        /// <param name="appName">The name of the app</param>
         /// <returns></returns>
-        public XrmAppConfiguration GetAppConfiguration(string appAlias)
+        public XrmAppConfiguration GetAppConfiguration(string appName)
         {
-            return Apps.First(app => app.Name == appAlias);
+            try
+            {
+                return Apps.First(app => app.Name == appName);
+            }
+            catch (Exception ex)
+            {
+                throw new ConfigurationErrorsException($"{GET_APP_EXCEPTION} App: {appName}", ex);
+            }
         }
     }
 }

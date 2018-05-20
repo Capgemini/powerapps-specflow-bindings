@@ -56,6 +56,12 @@ namespace Capgemini.Test.Xrm.Bindings.Web.Definitions
             foreach (var row in table.Rows)
                 Browser.Entity.SetValue(row["Field"], row["Value"]);
         }
+
+        [When(@"I save the record")]
+        public void WhenISaveTheRecord()
+        {
+            Browser.Entity.Save();
+        }
         #endregion
 
         #region Then
