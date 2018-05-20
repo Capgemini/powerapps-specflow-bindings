@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>Capgemini.Test.Xrm.Bindings.Web</id>
+    <id>Capgemini.Test.Xrm.Bindings.UUI</id>
     <version>0.0.1</version>
-    <title>Capgemini XRM Web Client SpecFlow Bindings</title>
+    <title>Capgemini XRM UUI Client SpecFlow Bindings</title>
     <authors>Capgemini</authors>
     <owners>Capgemini</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>SpecFlow step definitions and bindings for automated UI testing on the Dynamics 365 web client.</description>
+    <description>SpecFlow step definitions and bindings for automated UI testing on the Dynamics 365 UUI client.</description>
     <copyright>Capgemini Copyright © 2018</copyright>
     <dependencies/>
   </metadata>

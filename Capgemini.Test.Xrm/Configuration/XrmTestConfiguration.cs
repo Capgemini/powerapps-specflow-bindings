@@ -1,26 +1,36 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Serialization;
 
 namespace Capgemini.Test.Xrm.Configuration
 {
     /// <summary>
     /// Test configuration for Dynamics 365 automated UI testing.
     /// </summary>
+    [Serializable]
+    [XmlRoot("XrmTestConfig")]
     public class XrmTestConfiguration
     {
         /// <summary>
         /// The URL of the target Dynamics 365 instance.
         /// </summary>
+        [XmlElement("Url")]
         public string Url { get; set; }
 
         /// <summary>
         /// Users that tests can be run as.
         /// </summary>
-        private XrmUserConfiguration[] users { get; set; }
+        [XmlArray("Users")]
+        [XmlArrayItem("User")]
+        public XrmUserConfiguration[] Users { get; set; }
 
         /// <summary>
         /// Apps that tests can navigate to.
         /// </summary>
-        private XrmAppConfiguration[] apps { get; set; }
+        [XmlArray("Apps")]
+        [XmlArrayItem("App")]
+        public XrmAppConfiguration[] Apps { get; set; }
 
         /// <summary>
         /// Retrieves the configuration for a user.
@@ -29,7 +39,7 @@ namespace Capgemini.Test.Xrm.Configuration
         /// <returns></returns>
         public XrmUserConfiguration GetUserConfiguration(string userAlias)
         {
-            return users.First(user => user.Alias == userAlias);
+            return Users.First(user => user.Alias == userAlias);
         }
 
         /// <summary>
@@ -39,7 +49,7 @@ namespace Capgemini.Test.Xrm.Configuration
         /// <returns></returns>
         public XrmAppConfiguration GetAppConfiguration(string appAlias)
         {
-            return apps.First(app => app.Name == appAlias);
+            return Apps.First(app => app.Name == appAlias);
         }
     }
 }

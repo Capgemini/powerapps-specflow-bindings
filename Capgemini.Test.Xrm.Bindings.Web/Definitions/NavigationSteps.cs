@@ -23,7 +23,8 @@ namespace Capgemini.Test.Xrm.Bindings.Definitions
             Browser.LoginPage.Login(
                 new Uri($"{XrmTestConfig.Url}/main.aspx?appId={appConfig.Id}"),
                 userConfig.Username,
-                userConfig.Password, userConfig.IsAdfs);
+                userConfig.Password,
+                userConfig.IsAdfs);
         }
         #endregion
 

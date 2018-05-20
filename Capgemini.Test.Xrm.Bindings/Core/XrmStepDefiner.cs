@@ -1,6 +1,7 @@
 ﻿using Capgemini.Test.Xrm.Configuration;
 using OpenQA.Selenium;
 using System.IO;
+using System.Reflection;
 using System.Xml.Serialization;
 
 namespace Capgemini.Test.Xrm.Bindings.Core
@@ -20,10 +21,15 @@ namespace Capgemini.Test.Xrm.Bindings.Core
             {
                 if (xrmTestConfig == null)
                 {
-                    var serializer = new XmlSerializer(typeof(XrmTestConfiguration));
-                    using (var fs = File.OpenRead(Path.Combine(Directory.GetCurrentDirectory(), "EasyReproConfig.xml")))
+                    var configPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "xrm.test.config");
+                    using (var fs = File.OpenRead(configPath))
                     {
-                        xrmTestConfig = serializer.Deserialize(fs) as XrmTestConfiguration;
+                        xrmTestConfig = new XmlSerializer(
+                            typeof(XrmTestConfiguration),
+                            new[] {
+                                typeof(XrmAppConfiguration),
+                                typeof(XrmUserConfiguration)
+                            }).Deserialize(fs) as XrmTestConfiguration;
                     }
                 }
                 return xrmTestConfig;
