@@ -3,7 +3,9 @@ using Microsoft.Dynamics365.UIAutomation.Api;
 using Microsoft.Dynamics365.UIAutomation.Browser;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
+using System.Collections.Generic;
 using TechTalk.SpecFlow;
+using TechTalk.SpecFlow.Assist;
 
 namespace Capgemini.Test.Xrm.Bindings.Web.Definitions
 {
@@ -42,6 +44,12 @@ namespace Capgemini.Test.Xrm.Bindings.Web.Definitions
         public void WhenIEnterInTheOptionSetField(string value, string field)
         {
             Browser.Entity.SetValue(new OptionSet { Name = field, Value = value });
+        }
+
+        [When(@"I enter the following in the ""(.*)"" composite field")]
+        public void WhenIEnterInTheOptionSetField(string field, Table fields)
+        {
+            Browser.Entity.SetValue(new CompositeControl { Id = field, Fields = new List<Field>(fields.CreateSet<Field>()) });
         }
 
         [When(@"I tab out of the ""(.*)"" field")]
