@@ -72,6 +72,16 @@ Develop on a separate feature branch and create a pull request into master.
 
 ## Configuration
 
+The `<specFlow>` section of your project's **App.config** must be aware that you are using bindings from external assemblies. For example, if you are using the web client bindings:
+
+```xml
+<specFlow>
+  <stepAssemblies>
+    <stepAssembly assembly="Capgemini.Test.Xrm.Bindings.Web" />
+  </stepAssemblies>
+</specFlow>
+``` 
+
 The root of your project should contain an **xrm.test.config** file. Ensure that this file is copied to the output directory. It contains details of the Dynamics 365 instance, the user credentials and the Dynamics 365 Apps that can be used for test:
 
 ```xml
