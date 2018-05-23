@@ -16,6 +16,11 @@ namespace Capgemini.Test.Xrm.Bindings.Web.Definitions
     public class FormSteps : XrmWebStepDefiner
     {
         #region Given
+        [Given(@"I am viewing the ""(.*)"" form")]
+        public void GivenIAmViewingTheForm(string formName)
+        {
+            Browser.Entity.SelectForm(formName);
+        }
         #endregion
 
         #region When
@@ -77,6 +82,16 @@ namespace Capgemini.Test.Xrm.Bindings.Web.Definitions
         public void ThenIShouldSeeTheField(string field)
         {
             Assert.IsTrue(Browser.Entity.Browser.Driver.IsVisible(By.Id(field)));
+        }
+
+        [Then(@"I should see an error on the ""(.*)"" field which reads ""(.*)""")]
+        public void ThenIShouldSeeAnErrorOnTheFieldWhichReads(string field, string message)
+        {
+            var errors = Browser.Entity.Browser.Driver.FindElements(By.CssSelector($"#{field} > div.ms-crm-Inline-Validation"));
+
+            Assert.AreEqual(1, errors.Count);
+            Assert.AreEqual(message, errors[0].Text);
+            Assert.IsTrue(errors[0].Displayed);
         }
 
         [Then(@"I should see the following fields")]

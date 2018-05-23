@@ -42,7 +42,7 @@ namespace Capgemini.Test.Xrm.Bindings.Definitions
         }
 
         [Given(@"I have selected the ""(.*)"" command")]
-        public void GivenIHaveSlectedToCreateANewRecord(string commandName)
+        public void GivenIHaveSelectedTheCommand(string commandName)
         {
             Browser.CommandBar.ClickCommand(commandName);
         }

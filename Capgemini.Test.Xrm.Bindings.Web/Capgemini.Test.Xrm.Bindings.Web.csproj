@@ -77,6 +77,8 @@
     <Compile Include="Definitions\NavigationSteps.cs" />
     <Compile Include="Definitions\CommonSteps.cs" />
     <Compile Include="Definitions\FormSteps.cs" />
+    <Compile Include="Hooks\AfterScenarioHooks.cs" />
+    <Compile Include="Hooks\BeforeTestRunHooks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -85,7 +87,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Hooks\" />
     <Folder Include="Transformations\" />
   </ItemGroup>
   <ItemGroup>
