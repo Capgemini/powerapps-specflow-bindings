@@ -52,7 +52,7 @@ namespace Capgemini.Test.Xrm.Bindings.Web.Definitions
         }
 
         [When(@"I enter the following in the ""(.*)"" composite field")]
-        public void WhenIEnterInTheOptionSetField(string field, Table fields)
+        public void WhenIEntertheFollowingInTheCompositeField(string field, Table fields)
         {
             Browser.Entity.SetValue(new CompositeControl { Id = field, Fields = new List<Field>(fields.CreateSet<Field>()) });
         }
@@ -64,10 +64,24 @@ namespace Capgemini.Test.Xrm.Bindings.Web.Definitions
         }
 
         [When(@"I enter these values in the following fields")]
-        public void WhenIEnterTheseValuesInTheFolowingFields(Table table)
+        public void WhenIEnterTheseValuesInTheFollowingFields(Table table)
         {
             foreach (var row in table.Rows)
                 Browser.Entity.SetValue(row["Field"], row["Value"]);
+        }
+
+        [When(@"I enter these values in the following option set fields")]
+        public void WhenIEnterTheseValuesInTheFollowingOptionSetFields(Table table)
+        {
+            foreach (var row in table.Rows)
+                Browser.Entity.SetValue(new OptionSet { Name = row["Field"], Value = row["Value"] });
+        }
+
+        [When(@"I enter these values in the following lookup fields")]
+        public void WhenIEnterTheseValuesInTheFollowingLookupFields(Table table)
+        {
+            foreach (var row in table.Rows)
+                Browser.Entity.SetValue(new LookupItem { Name = row["Field"], Value = row["Value"] });
         }
 
         [When(@"I save the record")]
@@ -82,6 +96,12 @@ namespace Capgemini.Test.Xrm.Bindings.Web.Definitions
         public void ThenIShouldSeeTheField(string field)
         {
             Assert.IsTrue(Browser.Entity.Browser.Driver.IsVisible(By.Id(field)));
+        }
+
+        [Then(@"I shouldn't see the ""(.*)"" field")]
+        public void ThenIShouldntSeeTheField(string field)
+        {
+            Assert.IsFalse(Browser.Entity.Browser.Driver.IsVisible(By.Id(field)));
         }
 
         [Then(@"I should see an error on the ""(.*)"" field which reads ""(.*)""")]
