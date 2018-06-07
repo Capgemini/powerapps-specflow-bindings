@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Capgemini.Test.Xrm.Bindings.Web</id>
-    <version>0.0.5.1</version>
+    <version>0.1.0</version>
     <title>Capgemini XRM Web Client SpecFlow Bindings</title>
     <authors>Capgemini</authors>
     <owners>Capgemini</owners>
