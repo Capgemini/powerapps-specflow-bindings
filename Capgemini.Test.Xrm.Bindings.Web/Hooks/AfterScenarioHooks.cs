@@ -11,5 +11,11 @@ namespace Capgemini.Test.Xrm.Bindings.Web.Hooks
         {
             Browser.Dispose();
         }
+
+        [AfterScenario("DontDispose")]
+        public void DontDisposeBrowser()
+        {
+            //Don't Dispose
+        }
     }
 }
