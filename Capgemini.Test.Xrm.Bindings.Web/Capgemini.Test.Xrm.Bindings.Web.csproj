@@ -78,13 +78,14 @@
     <Compile Include="Definitions\CommonSteps.cs" />
     <Compile Include="Definitions\FormSteps.cs" />
     <Compile Include="Hooks\AfterScenarioHooks.cs" />
-    <Compile Include="Hooks\BeforeTestRunHooks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Capgemini.Test.Xrm.Bindings.Web.nuspec" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Transformations\" />

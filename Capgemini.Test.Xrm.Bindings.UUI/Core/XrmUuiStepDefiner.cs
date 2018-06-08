@@ -57,5 +57,14 @@ namespace Capgemini.Test.Xrm.EasyRepro
                 return Client.Browser.Driver;
             }
         }
+
+        protected sealed override void Quit()
+        {
+            if (xrmApp != null)
+            {
+                xrmApp.Dispose();
+                xrmApp = null;
+            }
+        }
     }
 }

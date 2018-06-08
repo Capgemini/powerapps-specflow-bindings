@@ -40,5 +40,14 @@ namespace Capgemini.Test.Xrm.Bindings.Core
                 return Browser.Driver;
             }
         }
+
+        protected sealed override void Quit()
+        {
+            if (browser != null)
+            {
+                browser.Dispose();
+                browser = null;
+            }
+        }
     }
 }

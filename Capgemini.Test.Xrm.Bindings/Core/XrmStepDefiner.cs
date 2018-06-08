@@ -40,5 +40,10 @@ namespace Capgemini.Test.Xrm.Bindings.Core
         /// The Selenium WebDriver.
         /// </summary>
         protected abstract IWebDriver Driver { get; }
+
+        /// <summary>
+        /// Performs any cleanup necessary when quitting the WebBrowser
+        /// </summary>
+        protected abstract void Quit();
     }
 }
