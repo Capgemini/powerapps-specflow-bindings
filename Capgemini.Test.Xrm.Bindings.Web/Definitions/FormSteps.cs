@@ -1,9 +1,9 @@
-﻿using Capgemini.Test.Xrm.Bindings.Core;
-using Microsoft.Dynamics365.UIAutomation.Api;
+﻿using Microsoft.Dynamics365.UIAutomation.Api;
 using Microsoft.Dynamics365.UIAutomation.Browser;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using System.Collections.Generic;
+using Capgemini.Test.Xrm.Bindings.Web.Core;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 
@@ -28,8 +28,8 @@ namespace Capgemini.Test.Xrm.Bindings.Web.Definitions
         public void WhenIClickTheDialogButton(string buttonName)
         {
             Browser.Entity.SwitchToDialogFrame();
-            var buttonID = "button[title=\"" + buttonName + "\"]";
-            Browser.Driver.FindElement(By.CssSelector(buttonID)).Click();
+            var buttonId = "button[title=\"" + buttonName + "\"]";
+            Browser.Driver.FindElement(By.CssSelector(buttonId)).Click();
             Browser.Entity.SwitchToContentFrame();
         }
 

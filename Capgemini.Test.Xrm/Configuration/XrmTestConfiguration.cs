@@ -12,8 +12,8 @@ namespace Capgemini.Test.Xrm.Configuration
     [XmlRoot("XrmTestConfig")]
     public class XrmTestConfiguration
     {
-        private const string GET_USER_EXCEPTION = "Unable to retrieve user configuration. Please ensure a user with the given alias exists in the xrm.test.config file.";
-        private const string GET_APP_EXCEPTION = "Unable to retrieve app configuration. Please ensure an app with the given name exists in the xrm.test.config file.";
+        private const string GetUserException = "Unable to retrieve user configuration. Please ensure a user with the given alias exists in the xrm.test.config file.";
+        private const string GetAppException = "Unable to retrieve app configuration. Please ensure an app with the given name exists in the xrm.test.config file.";
 
         /// <summary>
         /// The URL of the target Dynamics 365 instance.
@@ -48,7 +48,7 @@ namespace Capgemini.Test.Xrm.Configuration
             }
             catch (Exception ex)
             {
-                throw new ConfigurationErrorsException($"{GET_USER_EXCEPTION} User: {userAlias}", ex);
+                throw new ConfigurationErrorsException($"{GetUserException} User: {userAlias}", ex);
             }
         }
 
@@ -65,7 +65,7 @@ namespace Capgemini.Test.Xrm.Configuration
             }
             catch (Exception ex)
             {
-                throw new ConfigurationErrorsException($"{GET_APP_EXCEPTION} App: {appName}", ex);
+                throw new ConfigurationErrorsException($"{GetAppException} App: {appName}", ex);
             }
         }
     }

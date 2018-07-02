@@ -1,8 +1,7 @@
-﻿using Capgemini.Test.Xrm.Bindings.Core;
-using Microsoft.Dynamics365.UIAutomation.Api;
+﻿using Capgemini.Test.Xrm.Bindings.Web.Core;
 using TechTalk.SpecFlow;
 
-namespace Capgemini.Test.Xrm.Bindings.Definitions
+namespace Capgemini.Test.Xrm.Bindings.Web.Definitions
 {
     /// <summary>
     /// Step definitions for user interactions that are common throughout Dynamics 365.

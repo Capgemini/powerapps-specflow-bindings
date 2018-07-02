@@ -1,70 +1,45 @@
-﻿using Capgemini.Test.Xrm.Bindings.Core;
+﻿using System;
+using Capgemini.Test.Xrm.Bindings.Core;
 using Microsoft.Dynamics365.UIAutomation.Api.UCI;
 using Microsoft.Dynamics365.UIAutomation.Browser;
 using OpenQA.Selenium;
 
-namespace Capgemini.Test.Xrm.EasyRepro
+namespace Capgemini.Test.Xrm.Bindings.UUI.Core
 {
     /// <summary>
     /// Base class for classes containing SpecFlow step definitions for the UUI client.
     /// </summary>
     public abstract class XrmUuiStepsDefiner : XrmStepDefiner
     {
-        private static WebClient client;
+        [ThreadStatic]
+        private static WebClient _client;
         /// <summary>
         /// EasyRepro WebClient.
         /// </summary>
-        protected static WebClient Client
-        {
-            get
-            {
-                if (client == null)
-                {
-                    client = new WebClient(
-                        new BrowserOptions
-                        {
-                            BrowserType = BrowserType.Chrome,
-                            PrivateMode = true
-                        });
-                }
-                return client;
-            }
-        }
+        protected static WebClient Client => _client ?? (_client = new WebClient(
+                                                 new BrowserOptions
+                                                 {
+                                                     BrowserType = BrowserType.Chrome,
+                                                     PrivateMode = true
+                                                 }));
 
-        private static XrmApp xrmApp;
+        [ThreadStatic]
+        private static XrmApp _xrmApp;
         /// <summary>
         /// EasyRepro XrmApp.
         /// </summary>
-        protected static XrmApp XrmApp
-        {
-            get
-            {
-                if (xrmApp == null)
-                {
-                    xrmApp = new XrmApp(Client);
-                }
-                return xrmApp;
-            }
-        }
+        protected static XrmApp XrmApp => _xrmApp ?? (_xrmApp = new XrmApp(Client));
 
-        /// <summary>
-        /// Browser WebDriver.
-        /// </summary>
-        protected override IWebDriver Driver
-        {
-            get
-            {
-                return Client.Browser.Driver;
-            }
-        }
+        /// <inheritdoc />
+        protected override IWebDriver Driver => Client.Browser.Driver;
 
+        /// <inheritdoc />
         protected sealed override void Quit()
         {
-            if (xrmApp != null)
-            {
-                xrmApp.Dispose();
-                xrmApp = null;
-            }
+            if (_xrmApp == null) return;
+
+            _xrmApp.Dispose();
+            _xrmApp = null;
         }
     }
 }

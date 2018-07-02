@@ -1,13 +1,12 @@
-﻿using Capgemini.Test.Xrm.Bindings.Core;
+﻿using System;
+using Capgemini.Test.Xrm.Bindings.Web.Core;
 using Capgemini.Test.Xrm.Configuration;
 using Capgemini.Test.Xrm.EasyRepro.Web.Extensions;
 using Microsoft.Dynamics365.UIAutomation.Api;
 using Microsoft.Dynamics365.UIAutomation.Browser;
-using System;
-using System.Configuration;
 using TechTalk.SpecFlow;
 
-namespace Capgemini.Test.Xrm.Bindings.Definitions
+namespace Capgemini.Test.Xrm.Bindings.Web.Definitions
 {
     /// <summary>
     /// Step definitions for user interactions related to navigation.
@@ -54,7 +53,7 @@ namespace Capgemini.Test.Xrm.Bindings.Definitions
         #region Then
         #endregion
 
-        private BrowserCommandResult<LoginResult> Login(XrmUserConfiguration userConfig, string appId = "")
+        private static BrowserCommandResult<LoginResult> Login(XrmUserConfiguration userConfig, string appId = "")
         {
             return Browser.LoginPage.Login(
                 new Uri($"{XrmTestConfig.Url}/main.aspx?{(appId != string.Empty ? "appId=" : "")}{appId}"),

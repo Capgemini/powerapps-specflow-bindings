@@ -1,4 +1,4 @@
-﻿using Capgemini.Test.Xrm.Bindings.Core;
+﻿using Capgemini.Test.Xrm.Bindings.Web.Core;
 using TechTalk.SpecFlow;
 
 namespace Capgemini.Test.Xrm.Bindings.Web.Hooks

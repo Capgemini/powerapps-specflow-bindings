@@ -11,7 +11,7 @@ namespace Capgemini.Test.Xrm.Bindings.Core
     /// </summary>
     public abstract class XrmStepDefiner
     {
-        private static XrmTestConfiguration xrmTestConfig;
+        private static XrmTestConfiguration _xrmTestConfig;
         /// <summary>
         /// The configuration for the test project.
         /// </summary>
@@ -19,12 +19,12 @@ namespace Capgemini.Test.Xrm.Bindings.Core
         {
             get
             {
-                if (xrmTestConfig == null)
+                if (_xrmTestConfig == null)
                 {
                     var configPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "xrm.test.config");
                     using (var fs = File.OpenRead(configPath))
                     {
-                        xrmTestConfig = new XmlSerializer(
+                        _xrmTestConfig = new XmlSerializer(
                             typeof(XrmTestConfiguration),
                             new[] {
                                 typeof(XrmAppConfiguration),
@@ -32,7 +32,7 @@ namespace Capgemini.Test.Xrm.Bindings.Core
                             }).Deserialize(fs) as XrmTestConfiguration;
                     }
                 }
-                return xrmTestConfig;
+                return _xrmTestConfig;
             }
         }
 
