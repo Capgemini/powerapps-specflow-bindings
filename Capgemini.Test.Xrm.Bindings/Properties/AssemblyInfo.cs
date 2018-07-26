@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Capgemini.Test.Xrm.EasyRepro")]
+[assembly: AssemblyTitle("Capgemini.Test.Xrm.Bindings")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Capgemini")]
-[assembly: AssemblyProduct("Capgemini.Test.Xrm.EasyRepro")]
+[assembly: AssemblyProduct("Capgemini.Test.Xrm.Bindings")]
 [assembly: AssemblyCopyright("Copyright © Capgemini 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

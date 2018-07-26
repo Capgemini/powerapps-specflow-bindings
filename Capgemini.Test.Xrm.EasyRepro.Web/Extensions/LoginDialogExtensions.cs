@@ -21,18 +21,9 @@ namespace Capgemini.Test.Xrm.EasyRepro.Web.Extensions
         /// <returns></returns>
         public static BrowserCommandResult<LoginResult> Login(this LoginDialog loginDialog, Uri uri, string username, string password, bool isAdfs = false)
         {
-            BrowserCommandResult<LoginResult> result;
-
-            if (!isAdfs)
-            {
-                result = loginDialog.Login(uri, username.ToSecureString(), password.ToSecureString());
-            }
-            else
-            {
-                result = loginDialog.Login(uri, username.ToSecureString(), password.ToSecureString(), AdfsLoginAction);
-            }
-
-            return result;
+            return isAdfs
+                ? loginDialog.Login(uri, username.ToSecureString(), password.ToSecureString(), AdfsLoginAction)
+                : loginDialog.Login(uri, username.ToSecureString(), password.ToSecureString());
         }
 
         private static void AdfsLoginAction(LoginRedirectEventArgs args)

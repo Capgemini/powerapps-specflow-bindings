@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\XrmWebStepDefiner.cs" />
+    <Compile Include="Definitions\SetupSteps.cs" />
     <Compile Include="Definitions\NavigationSteps.cs" />
     <Compile Include="Definitions\CommonSteps.cs" />
     <Compile Include="Definitions\FormSteps.cs" />

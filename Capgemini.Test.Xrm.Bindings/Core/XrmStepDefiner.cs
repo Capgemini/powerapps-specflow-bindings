@@ -1,8 +1,13 @@
-﻿using Capgemini.Test.Xrm.Configuration;
+﻿using System;
+using Capgemini.Test.Xrm.Configuration;
 using OpenQA.Selenium;
 using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
+using Capgemini.Test.Xrm.Data;
+using Capgemini.Test.Xrm.Data.Core;
+using Capgemini.Test.Xrm.Utilities;
+using Capgemini.Test.Xrm.Utilities.Core;
 
 namespace Capgemini.Test.Xrm.Bindings.Core
 {
@@ -15,7 +20,7 @@ namespace Capgemini.Test.Xrm.Bindings.Core
         /// <summary>
         /// The configuration for the test project.
         /// </summary>
-        protected static XrmTestConfiguration XrmTestConfig
+        protected XrmTestConfiguration XrmTestConfig
         {
             get
             {
@@ -35,6 +40,20 @@ namespace Capgemini.Test.Xrm.Bindings.Core
                 return _xrmTestConfig;
             }
         }
+
+        [ThreadStatic]
+        private static ITestUtility _utility;
+        /// <summary>
+        /// Provides utilities for test setup/teardown.
+        /// </summary>
+        protected ITestUtility Utility => _utility ?? (_utility = new XrmTestManager((IJavaScriptExecutor)Driver));
+
+        [ThreadStatic]
+        private static ITestDataRepository _testDataRepository;
+        /// <summary>
+        /// Provides access to test data.
+        /// </summary>
+        protected ITestDataRepository TestDataRepository => _testDataRepository ?? (_testDataRepository = new FileTestDataRepository());
 
         /// <summary>
         /// The Selenium WebDriver.

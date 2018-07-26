@@ -7,8 +7,8 @@
     <ProjectGuid>{0701328D-543E-44B1-9E79-B9D06F1E7D3D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Capgemini.Test.Xrm.EasyRepro</RootNamespace>
-    <AssemblyName>Capgemini.Test.Xrm.EasyRepro</AssemblyName>
+    <RootNamespace>Capgemini.Test.Xrm.Bindings</RootNamespace>
+    <AssemblyName>Capgemini.Test.Xrm.Bindings</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

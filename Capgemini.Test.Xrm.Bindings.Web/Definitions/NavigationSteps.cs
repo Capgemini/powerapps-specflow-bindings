@@ -2,8 +2,6 @@
 using Capgemini.Test.Xrm.Bindings.Web.Core;
 using Capgemini.Test.Xrm.Configuration;
 using Capgemini.Test.Xrm.EasyRepro.Web.Extensions;
-using Microsoft.Dynamics365.UIAutomation.Api;
-using Microsoft.Dynamics365.UIAutomation.Browser;
 using TechTalk.SpecFlow;
 
 namespace Capgemini.Test.Xrm.Bindings.Web.Definitions
@@ -53,9 +51,9 @@ namespace Capgemini.Test.Xrm.Bindings.Web.Definitions
         #region Then
         #endregion
 
-        private static BrowserCommandResult<LoginResult> Login(XrmUserConfiguration userConfig, string appId = "")
+        private void Login(XrmUserConfiguration userConfig, string appId = "")
         {
-            return Browser.LoginPage.Login(
+            Browser.LoginPage.Login(
                 new Uri($"{XrmTestConfig.Url}/main.aspx?{(appId != string.Empty ? "appId=" : "")}{appId}"),
                 userConfig.Username,
                 userConfig.Password,
