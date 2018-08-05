@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "@capgemini/xrm-test-utilities": "0.0.3"
+    "@capgemini/xrm-test-utilities": "0.0.4"
   }
 }
