@@ -1,0 +1,9 @@
+url: 
+browser: 
+remoteServerUrl: 
+users: 
+  - username:
+    password:
+    isAdfs:
+    alias:
+apps: []

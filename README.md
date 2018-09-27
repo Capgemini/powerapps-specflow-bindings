@@ -1,30 +1,65 @@
-![Capgemini Logo](https://capgemini.github.io/images/logo.svg)
+# SpecXRM
 
-# Capgemini.Test.Xrm
-> Automated UI testing for Dynamics 365
-
-This repository contains a number of packages to make automated UI testing for Dynamics 365 easier. This includes:
-- Extensions to [EasyRepro][easyrepro] 
-- Step definitions and base classes for projects using [SpecFlow][specflow]
+SpecXRM aims to make automated UI testing for Dynamics 365 more accessible by enabling best practice test automation and removing the dependency on developers who are proficient in both the Dynamics 365 APIs and browser automation tools.
 
 ## Installing / Getting started
 
-Install the correct NuGet package for your project.
+Install the correct NuGet package for your project - depending on whether you're using the web client or UCI.
 
-### Capgemini.Test.Xrm.Bindings&#46;Web
-
-SpecFlow step definitions and bindings for automated UI testing on the Dynamics 365 Web Client.
+### Web
 
 ```shell
-PM> Install-Package Capgemini.Test.Xrm.Bindings.Web
+PM> Install-Package Capgemini.Test.Xrm.Web
 ```
 
-And your SpecFlow feature files will show additional bound steps:
+### UCI 
+
+```shell
+PM> Install-Package Capgemini.Test.Xrm.Uci
+```
+
+### Configuration
+
+Installing the NuGet package creates a *spec-xrm.yaml* file in your project's root directory. This is used to configure the instance, users and apps that will be used for your tests. You also have the ability to configure a remoteServerUrl if you using a remote WebDriver (e.g. Selenium Grid). 
+
+```yaml
+url: https://instance.region.dynamics.com
+remoteServerUrl: http://localhost:4444/wd/hub
+users: 
+  - username: user@domain.com
+    password: password
+    isAdfs: false
+    alias: admin
+apps:
+  - id: 7d4981cd-ec11-43b3-bdcc-3cb67b092b29
+    name: Some App
+```
+
+### Writing feature files
+
+SpecFlow allows the use of steps which have been defined in an external library. This is what allows SpecXRM steps to be used in your projects feature files. When the SpecXRM NuGet package is installed, your projects *app.config* is transformed to include the following -
+
+```xml
+<specFlow>
+  <stepAssemblies>
+    <stepAssembly assembly="Capgemini.Test.Xrm.Web" />
+  </stepAssemblies>
+</specFlow>
+```
+
+This tells SpecFlow to include the steps defined in SpecXRM - giving you access to all the steps when writing your feature files.
+
 ```gherkin
-Given I am logged in to the "{appName}" app as "{user}"
+Scenario: Save a record with no name
+	Given I am logged in as admin
+	And I have created a demo record with no name
+	When I save the record
+	Then I should see an error on the cap_name field which reads "You must provide a value for Name."
 ```
 
-If you are using any of your own step definitions, you must ensure that the class defining your steps inherits from the `XrmWebStepDefiner` base class and interacts with via the browser using the inherited `Browser` property.
+### Writing step defintions
+
+SpecXRM provides a way for you to write your own step definitions with access to EasyRepro and the WebDriver in a thread-safe manner. This ensures that your tests can be ran safely in parallel. You can do this by creating a class decorated with the SpecFlow `BindingAttribute` and inheriting from the SpecXRM `XrmWebStepDefiner` base class. You can then create your SpecFlow step bindings as normal, interacting with the `Browser` and `Driver` properties.
 
 ```csharp
 [Binding]
@@ -33,79 +68,57 @@ public class MyCustomSteps : XrmWebStepDefiner
     [Given(@"I have a custom step")]
     public void GivenIHaveACustomStep()
     {
-      // Interact with the inherited Browser property
+      // Interact with the inherited EasyRepro Browser property
+      // Browser.
+
+      // Interact with the inherited WebDriver property
+      // Driver.
     }
 }
 ```
 
-### Capgemini.Test.Xrm.EasyRepro&#46;Web
+### Test Setup
 
-Extensions for EasyRepro specific to testing the Dynamics 365 web client.
+One of the principles of SpecXRM is to avoid performing test setup via the UI. This helps speed up test execution, as well as making the tests more robust (as the UI is more fragile than the SDK/API). For that reason, `Given` steps should be performed using the [Client API](client-api), [WebAPI](web-api) or [Organization Service](org-service).
 
-```shell
-PM> Install-Package Capgemini.Test.Xrm.EasyRepro.Web
+You can create test data by using the following `Given` step -
+
+```gherkin
+Given I have created a (file name)
 ```
 
-This will make extension methods available. For example, there is an extension method to handle ADFS logins.
+It will look for a JSON file in the *Data* folder (ensure that the files are set to copy to the output directory). You do not need to include the .json extension in the step. The JSON is the same stucture as though using the WebAPI with a couple of key differences. For example, this will create an account with an associated primary contact and an opportunity with an associated task.
 
-```csharp
-Browser.LoginPage.Login(dynamicsUrl, username, password, isAdfs);
+```json
+{
+  "@logicalName": "account",
+  "@alias": "sample account",
+  "name": "Sample Account",
+  "primarycontactid":
+  {
+    "firstname": "John",
+    "lastname": "Smith"
+  },
+  "opportunity_customer_accounts":
+  [
+    {
+      "name": "Opportunity associated to Sample Account",
+      "Opportunity_Tasks":
+      [
+        { "subject": "Task associated to opportunity" }
+      ]
+    }
+  ]
+}
 ```
 
-### Capgemini.Test.Xrm.Bindings.UUI
+The `"@logicalName"` property tells SpecXRM which entity to create. The `"@alias"` is used to give friendly names to the records so that we can refer to them in our scenarios. 
+## Contributing
 
-*Coming soon!*
-
-### Capgemini.Test.Xrm.EasyRepro.UUI
-
-*Coming soon!*
-
-## Developing
-
-To develop the repository further, clone it:
-
-```shell
-git clone https://capgeminiuk.visualstudio.com/Capgemini%20Reusable%20IP/_git/Capgemini.Test.Xrm
-``` 
-
-Develop on a separate feature branch and create a pull request into master.
-
-## Configuration
-
-The `<specFlow>` section of your project's **App.config** must be aware that you are using bindings from external assemblies. For example, if you are using the web client bindings:
-
-```xml
-<specFlow>
-  <stepAssemblies>
-    <stepAssembly assembly="Capgemini.Test.Xrm.Bindings.Web" />
-  </stepAssemblies>
-</specFlow>
-``` 
-
-The root of your project should contain an **xrm.test.config** file. Ensure that this file is copied to the output directory. It contains details of the Dynamics 365 instance, the user credentials and the Dynamics 365 Apps that can be used for test:
-
-```xml
-<?xml version="1.0" encoding="utf-8" ?>
-<XrmTestConfig>
-  <Url>https://yourinstance.crm4.dynamics.com</Url>
-  <Users>
-    <User Alias="Salesperson" IsAdfs="false">
-      <Username>salesperson@domain.onmicrosoft.com</Username>
-      <Password>P@ssw0rd</Password>
-    </User>
-    <User Alias="Sales Manager" IsAdfs="true">
-      <Username>salesperson@domain.com</Username>
-      <Password>P@ssw0rd</Password>
-    </User>
-  </Users>
-  <Apps>
-    <App Name="Sales App">
-      <Id>6848bb0b-ed5f-45bb-9a6f-f196b21d04ee</Id>
-    </App>
-  </Apps>
-</XrmTestConfig>
-```
+To develop the repository further, fork it and develop on a separate feature branch before creating a pull request.
 
 [easyrepro]:https://github.com/Microsoft/EasyRepro
 [specflow]:http://specflow.org/
-[capgemini-logo]:https://capgemini.github.io/images/logo.svg
+[client-api]:https://docs.microsoft.com/en-us/dynamics365/customer-engagement/developer/clientapi/reference
+[web-api]:https://docs.microsoft.com/en-us/dynamics365/customer-engagement/developer/use-microsoft-dynamics-365-web-api
+[org-service]:https://docs.microsoft.com/en-us/dynamics365/customer-engagement/developer/use-microsoft-dynamics-365-organization-service
