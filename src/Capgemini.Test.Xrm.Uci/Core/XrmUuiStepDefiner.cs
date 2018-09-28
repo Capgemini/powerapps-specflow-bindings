@@ -40,6 +40,7 @@ namespace Capgemini.Test.Xrm.Uci
 
             _xrmApp.Dispose();
             _xrmApp = null;
+            _testDriver = null;
         }
     }
 }

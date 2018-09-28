@@ -52,6 +52,7 @@ namespace Capgemini.Test.Xrm.Web.Core
 
             _browser.Dispose();
             _browser = null;
+            _testDriver = null;
         }
     }
 }

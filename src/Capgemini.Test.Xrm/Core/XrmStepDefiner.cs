@@ -34,7 +34,7 @@ namespace Capgemini.Test.Xrm.Core
         }
 
         [ThreadStatic]
-        private static ITestDriver _testDriver;
+        protected static ITestDriver _testDriver;
         /// <summary>
         /// Provides utilities for test setup/teardown.
         /// </summary>
