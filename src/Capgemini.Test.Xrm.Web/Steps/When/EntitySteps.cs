@@ -27,19 +27,19 @@ namespace Capgemini.Test.Xrm.Web.Steps.When
             Browser.Entity.SwitchToContentFrame();
         }
 
-        [When(@"I enter ""(.*)"" in the (.*) field")]
+        [When(@"I enter ""(.*)"" in the ""(.*)"" field")]
         public void WhenIEnterInTheField(string value, string logicalName)
         {
             Browser.Entity.SetValue(logicalName, value);
         }
 
-        [When(@"I enter ""(.*)"" in the (.*) lookup field")]
+        [When(@"I enter ""(.*)"" in the ""(.*)"" lookup field")]
         public void WhenIEnterInTheLookupField(string value, string logicalName)
         {
             Browser.Entity.SetValue(new LookupItem { Name = logicalName, Value = value });
         }
 
-        [When(@"I enter ""(.*)"" in the (.*) option set field")]
+        [When(@"I enter ""(.*)"" in the ""(.*)"" option set field")]
         public void WhenIEnterInTheOptionSetField(string value, string logicalName)
         {
             Browser.Entity.SetValue(new OptionSet { Name = logicalName, Value = value });
