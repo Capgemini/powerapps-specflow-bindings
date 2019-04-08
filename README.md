@@ -7,7 +7,6 @@ The aim of this project is to make Dynamics 365 test automation easier, faster a
 
 ## Table of Contents
 
-1. [Description](#Description)
 1. [Installation](#Installation)
 1. [Usage](#Usage)
 1. [Contributing](#Contributing)
