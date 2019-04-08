@@ -1,4 +1,4 @@
-# SpecFlow XRM Bindings
+# SpecFlow for Dynamics 365
 
 ## Description
 
@@ -141,4 +141,4 @@ Capgemini UK Microsoft Team
 
 ## License
 
-The SpecFlow XRM Bindings are released under the [MIT license](./License).
+SpecFlow for Dynamics 365 is released under the [MIT license](./License).
