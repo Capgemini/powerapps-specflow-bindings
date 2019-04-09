@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Capgemini.Test.Xrm.Web.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,11 +34,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Dynamics365.UIAutomation.Api, Version=9.0.1.6, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Dynamics365.UIAutomation.Api.9.0.1.6\lib\net46\Microsoft.Dynamics365.UIAutomation.Api.dll</HintPath>
+    <Reference Include="Microsoft.Dynamics365.UIAutomation.Api, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dynamics365.UIAutomation.Api.9.1.0.1\lib\net46\Microsoft.Dynamics365.UIAutomation.Api.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Dynamics365.UIAutomation.Browser, Version=9.0.1.4, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Dynamics365.UIAutomation.Api.9.0.1.6\lib\net46\Microsoft.Dynamics365.UIAutomation.Browser.dll</HintPath>
+    <Reference Include="Microsoft.Dynamics365.UIAutomation.Api.UCI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dynamics365.UIAutomation.Api.9.1.0.1\lib\net46\Microsoft.Dynamics365.UIAutomation.Api.UCI.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamics365.UIAutomation.Browser, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dynamics365.UIAutomation.Api.9.1.0.1\lib\net46\Microsoft.Dynamics365.UIAutomation.Browser.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">

@@ -12,7 +12,7 @@ using YamlDotNet.Serialization;
 namespace Capgemini.Test.Xrm.Core
 {
     /// <summary>
-    /// Base class for classes containing SpecFlow step definitions common across all clients.
+    /// Base class for defining step bindings for all clients.
     /// </summary>
     public abstract class XrmStepDefiner
     {

@@ -3,17 +3,19 @@
   <metadata>
     <id>Capgemini.Test.Xrm</id>
     <version>0.0.6</version>
-    <title>SpecXRM.Core</title>
     <authors>Capgemini</authors>
     <owners>Capgemini</owners>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Core classes for SpecXRM.</description>
-    <copyright>Capgemini Copyright © 2018</copyright>
+    <licenseUrl>https://github.com/Capgemini/specflow-xrm-bindings/blob/master/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <projectUrl>https://github.com/Capgemini/specflow-xrm-bindings</projectUrl>
+    <description>Core classes for Dynamics 365 UI test automation.</description>
+    <copyright>Capgemini Copyright ©  2019</copyright>
+    <tags>microsoft dynamics crm dynamics365 dynamics-365 ui automated testing bindings specflow spec tdd automation capgemini unified interface uci</tags>
     <dependencies/>
+    <files>
+      <file src="content\**\*" target="content"/>
+      <file src="build\**" target="build"/>
+      <file src="node_modules\@capgemini\spec-xrm-driver\dist\cap.specxrm.driver.js" target="build"/>
+    </files>
   </metadata>
-  <files>
-    <file src="content\**\*" target="content"/>
-    <file src="build\**" target="build"/>
-    <file src="node_modules\@capgemini\spec-xrm-driver\dist\cap.specxrm.driver.js" target="build"/>
-  </files>
 </package>

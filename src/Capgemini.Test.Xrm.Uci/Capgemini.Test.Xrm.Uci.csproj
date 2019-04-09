@@ -32,13 +32,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Dynamics365.UIAutomation.Api.UCI, Version=9.0.2.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dynamics365.UIAutomation.Api.9.0.2.1\lib\net46\Microsoft.Dynamics365.UIAutomation.Api.UCI.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Dynamics365.UIAutomation.Api, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dynamics365.UIAutomation.Api.9.1.0.1\lib\net46\Microsoft.Dynamics365.UIAutomation.Api.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Dynamics365.UIAutomation.Browser, Version=9.0.2.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dynamics365.UIAutomation.Api.9.0.2.1\lib\net46\Microsoft.Dynamics365.UIAutomation.Browser.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Dynamics365.UIAutomation.Api.UCI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dynamics365.UIAutomation.Api.9.1.0.1\lib\net46\Microsoft.Dynamics365.UIAutomation.Api.UCI.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamics365.UIAutomation.Browser, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dynamics365.UIAutomation.Api.9.1.0.1\lib\net46\Microsoft.Dynamics365.UIAutomation.Browser.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -69,17 +70,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Hooks\AfterScenarioHooks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Core\XrmUuiStepDefiner.cs" />
+    <Compile Include="Core\XrmUciStepDefiner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Capgemini.Test.Xrm.Uci.nuspec" />
+    <Content Include="content\app.config.install.xdt">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Extensions\" />
-    <Folder Include="Hooks\" />
     <Folder Include="Steps\" />
     <Folder Include="Transformations\" />
   </ItemGroup>

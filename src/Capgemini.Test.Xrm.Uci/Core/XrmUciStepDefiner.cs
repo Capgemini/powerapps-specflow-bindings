@@ -7,12 +7,13 @@ using OpenQA.Selenium;
 namespace Capgemini.Test.Xrm.Uci
 {
     /// <summary>
-    /// Base class for classes containing SpecFlow step definitions for the UCI client.
+    /// Base class for defining step bindings for the UCI client.
     /// </summary>
-    public abstract class XrmUCIStepsDefiner : XrmStepDefiner
+    public abstract class XrmUciStepDefiner : XrmStepDefiner
     {
         [ThreadStatic]
         private static WebClient _client;
+
         /// <summary>
         /// EasyRepro WebClient.
         /// </summary>
@@ -25,6 +26,7 @@ namespace Capgemini.Test.Xrm.Uci
 
         [ThreadStatic]
         private static XrmApp _xrmApp;
+
         /// <summary>
         /// EasyRepro XrmApp.
         /// </summary>
@@ -32,6 +34,19 @@ namespace Capgemini.Test.Xrm.Uci
 
         /// <inheritdoc />
         protected override IWebDriver Driver => Client.Browser.Driver;
+
+        private BrowserOptions GetBrowserOptions()
+        {
+            var options = new BrowserOptions
+            {
+                UserAgent = true,
+                UserAgentValue = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36",
+                BrowserType = (BrowserType)Enum.Parse(typeof(BrowserType), XrmTestConfig.Browser.ToString()),
+                // TODO: merge remote server URL support into 9.1 branch of EasyRepro
+                // RemoteServerUrl = string.IsNullOrEmpty(XrmTestConfig.RemoteServerUrl) ? null : new Uri(XrmTestConfig.RemoteServerUrl),
+            };
+            return options;
+        }
 
         /// <inheritdoc />
         protected sealed override void Quit()

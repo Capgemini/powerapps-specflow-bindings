@@ -1,4 +1,4 @@
-﻿using Capgemini.Test.Xrm.Web.Core;
+﻿using Capgemini.Test.Xrm.Uci;
 using TechTalk.SpecFlow;
 
 namespace Capgemini.Test.Xrm.Web.Hooks
@@ -7,7 +7,7 @@ namespace Capgemini.Test.Xrm.Web.Hooks
     /// After scenario hooks.
     /// </summary>
     [Binding]
-    public class AfterScenarioHooks : XrmWebStepDefiner
+    public class AfterScenarioHooks : XrmUciStepDefiner
     {
         /// <summary>
         /// Deletes the test data created during the test and disposes of the browser.
