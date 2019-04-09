@@ -12,10 +12,10 @@
     <copyright>Capgemini Copyright ©  2019</copyright>
     <tags>microsoft dynamics crm dynamics365 dynamics-365 ui automated testing bindings specflow spec tdd automation capgemini unified interface uci</tags>
     <dependencies/>
-    <files>
-      <file src="content\**\*" target="content"/>
-      <file src="build\**" target="build"/>
-      <file src="node_modules\@capgemini\spec-xrm-driver\dist\cap.specxrm.driver.js" target="build"/>
-    </files>
   </metadata>
+  <files>
+    <file src="content\**\*" target="content"/>
+    <file src="build\**" target="build"/>
+    <file src="node_modules\@capgemini\spec-xrm-driver\dist\cap.specxrm.driver.js" target="build"/>
+  </files>
 </package>
