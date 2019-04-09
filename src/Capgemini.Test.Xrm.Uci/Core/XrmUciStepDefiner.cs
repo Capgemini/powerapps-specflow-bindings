@@ -17,12 +17,7 @@ namespace Capgemini.Test.Xrm.Uci
         /// <summary>
         /// EasyRepro WebClient.
         /// </summary>
-        protected static WebClient Client => _client ?? (_client = new WebClient(
-                                                 new BrowserOptions
-                                                 {
-                                                     BrowserType = BrowserType.Chrome,
-                                                     PrivateMode = true
-                                                 }));
+        protected WebClient Client => _client ?? (_client = new WebClient(GetBrowserOptions()));
 
         [ThreadStatic]
         private static XrmApp _xrmApp;
@@ -30,7 +25,7 @@ namespace Capgemini.Test.Xrm.Uci
         /// <summary>
         /// EasyRepro XrmApp.
         /// </summary>
-        protected static XrmApp XrmApp => _xrmApp ?? (_xrmApp = new XrmApp(Client));
+        protected XrmApp XrmApp => _xrmApp ?? (_xrmApp = new XrmApp(Client));
 
         /// <inheritdoc />
         protected override IWebDriver Driver => Client.Browser.Driver;
