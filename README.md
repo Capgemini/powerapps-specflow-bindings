@@ -1,5 +1,4 @@
 # SpecFlow for Dynamics 365
-
 ## Description
 
 A SpecFlow bindings library for Dynamics 365.
@@ -31,16 +30,25 @@ PM> Install-Package Capgemini.Test.Xrm.Uci
 
 _Note: The UCI package does not yet contain any predefined step bindings. It currently provides `XrmUciStepDefiner` base class that makes writing your own bindings easier as well as ensuring that they are thread-safe - meaning your tests can be ran in parallel across all supported test runners._
 
+### WebDrivers
+
+We do not have a dependency on any specific WebDrivers. You will need to ensure that the correct WebDrivers are available in your project based on the browser that you are targetting. For example - if your configuration file is targetting Chrome - you can install the Chrome WebDriver via NuGet - 
+
+```shell
+PM> Install-Package Selenium.Chrome.WebDriver
+```
+
 ## Usage
 
 This section applies primarily to the Capgemini.Test.Xrm&#46;Web package as do not have pre-defined step bindings available for UCI. If you are using UCI, please skip ahead to the **writing step definitions** section.
 
 ### Configuration
 
-Installing the NuGet package creates a _spec-xrm.yaml_ file in your project's root. This is used to configure the URL, users and apps that will be used for your tests. You also have the option to configure a remoteServerUrl if you using a remote WebDriver (e.g. Selenium Grid).
+Installing the NuGet package creates a _spec-xrm.yaml_ file in your project's root. This is used to configure the URL, browser, users and apps that will be used for your tests. You also have the option to configure a remoteServerUrl if you using a remote WebDriver (e.g. Selenium Grid).
 
 ```yaml
 url: "https://instance.region.dynamics.com"
+browser: Chrome
 remoteServerUrl: "http://localhost:4444/wd/hub"
 users:
   - username: "salesperson@organisation.onmicrosoft.com"
