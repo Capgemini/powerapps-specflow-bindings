@@ -87,7 +87,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Capgemini.Test.Xrm.Uci.nuspec" />
-    <Content Include="content\app.config.install.xdt">
+    <Content Include="app.config.install.xdt">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

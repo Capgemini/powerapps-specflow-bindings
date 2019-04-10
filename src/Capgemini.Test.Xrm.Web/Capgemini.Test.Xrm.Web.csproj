@@ -104,7 +104,7 @@
     <None Include="Capgemini.Test.Xrm.Web.nuspec">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="content\app.config.install.xdt">
+    <Content Include="app.config.install.xdt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
