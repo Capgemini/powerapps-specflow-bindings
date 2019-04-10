@@ -1,0 +1,125 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "required": [
+    "url",
+    "users",
+    "apps"
+  ],
+  "properties": {
+    "url": {
+      "$id": "#/properties/url",
+      "type": "string",
+      "title": "The Url Schema",
+      "description": "The URL of the Dynamics 365 instance used for tests.",
+      "default": "",
+      "examples": [
+        "https://instance.region.dynamics.com"
+      ],
+      "pattern": "^(.*)$",
+      "format": "uri"
+    },
+    "users": {
+      "$id": "#/properties/users",
+      "type": "array",
+      "title": "The Users Schema",
+      "description": "The users available for test execution (at least one for each of your security roles is recommended).",
+      "default": null,
+      "items": {
+        "$id": "#/properties/users/items",
+        "type": "object",
+        "title": "The Items Schema",
+        "required": [
+          "username",
+          "password",
+          "isAdfs",
+          "alias"
+        ],
+        "properties": {
+          "username": {
+            "$id": "#/properties/users/items/properties/username",
+            "type": "string",
+            "title": "The Username Schema",
+            "default": "",
+            "pattern": "^(.*)$",
+            "format": "email"
+          },
+          "password": {
+            "$id": "#/properties/users/items/properties/password",
+            "type": "string",
+            "title": "The Password Schema",
+            "description": "The user's password",
+            "default": "",
+            "examples": [
+              "Password123"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "isAdfs": {
+            "$id": "#/properties/users/items/properties/isAdfs",
+            "type": "boolean",
+            "title": "The IsAdfs Schema",
+            "description": "Whether or not the user is authenticated via ADFS.",
+            "default": false,
+            "examples": [
+              false
+            ]
+          },
+          "alias": {
+            "$id": "#/properties/users/items/properties/alias",
+            "type": "string",
+            "title": "The Alias Schema",
+            "default": "",
+            "examples": [
+              "admin"
+            ],
+            "pattern": "^(.*)$"
+          }
+        }
+      }
+    },
+    "apps": {
+      "$id": "#/properties/apps",
+      "type": "array",
+      "title": "The Apps Schema",
+      "description": "The Dynamics 365 apps used for your tests.",
+      "default": null,
+      "items": {
+        "$id": "#/properties/apps/items",
+        "type": "object",
+        "title": "The Items Schema",
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "$id": "#/properties/apps/items/properties/id",
+            "type": "string",
+            "title": "The Id Schema",
+            "description": "The unique identifier of the app.",
+            "default": "",
+            "examples": [
+              "7d4981cd-ec11-43b3-bdcc-3cb67b092b29"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "name": {
+            "$id": "#/properties/apps/items/properties/name",
+            "type": "string",
+            "title": "The Name Schema",
+            "description": "The name of the app.",
+            "default": "",
+            "examples": [
+              "Sales App"
+            ],
+            "pattern": "^(.*)$"
+          }
+        }
+      }
+    }
+  }
+}

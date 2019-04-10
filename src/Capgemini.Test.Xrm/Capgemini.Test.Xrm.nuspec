@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Capgemini.Test.Xrm</id>
-    <version>0.0.6</version>
+    <version>0.0.7</version>
     <authors>Capgemini</authors>
     <owners>Capgemini</owners>
     <licenseUrl>https://github.com/Capgemini/specflow-xrm-bindings/blob/master/LICENSE</licenseUrl>
