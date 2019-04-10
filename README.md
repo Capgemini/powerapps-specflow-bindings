@@ -158,7 +158,7 @@ Capgemini UK Microsoft Team
 And the creators of the following:
 
 - EasyRepro
-- Newtonsoft.Json
+- Json.NET
 - NUnit 
 - Selenium
 - SpecFlow
