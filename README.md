@@ -1,4 +1,9 @@
 # SpecFlow for Dynamics 365
+
+Web ![[Build Status](https://capgeminiuk.visualstudio.com/Capgemini Reusable IP/_apis/build/status/NUGET CI Builds/Capgemini%20Test%20Xrm%20Web%20CI%20NUGET?branchName=master)](https://capgeminiuk.visualstudio.com/Capgemini Reusable IP/_build/latest?definitionId=97&branchName=master)
+
+UCI ![[Build Status](https://capgeminiuk.visualstudio.com/Capgemini Reusable IP/_apis/build/status/NUGET CI Builds/Capgemini%20Test%20Xrm%20UCI%20CI%20NUGET?branchName=master)](https://capgeminiuk.visualstudio.com/Capgemini Reusable IP/_build/latest?definitionId=122&branchName=master)
+
 ## Description
 
 A SpecFlow bindings library for Dynamics 365.
@@ -145,6 +150,15 @@ To contact us, please email nuget.uk@capgemini.com.
 ## Credits
 
 Capgemini UK Microsoft Team
+
+And the creators of the following:
+
+- EasyRepro
+- Newtonsoft.Json
+- NUnit 
+- Selenium
+- SpecFlow
+- YamlDotNet
 
 ## License
 
