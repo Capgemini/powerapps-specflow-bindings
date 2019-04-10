@@ -157,12 +157,12 @@ Capgemini UK Microsoft Team
 
 And the creators of the following:
 
-- EasyRepro
-- Json.NET
-- NUnit 
-- Selenium
-- SpecFlow
-- YamlDotNet
+- [EasyRepro](https://github.com/Microsoft/EasyRepro)
+- [Json.NET](https://github.com/JamesNK/Newtonsoft.Json)
+- [NUnit](https://github.com/nunit/nunit) 
+- [Selenium](https://github.com/nunit/nunit)
+- [SpecFlow](https://github.com/techtalk/SpecFlow)
+- [YamlDotNet](https://github.com/techtalk/SpecFlow)
 
 ## License
 
