@@ -1,8 +1,12 @@
 # SpecFlow for Dynamics 365
 
-Web ![Build Status](https://capgeminiuk.visualstudio.com/Capgemini%20Reusable%20IP/_apis/build/status/NUGET%20CI%20Builds/Capgemini%20Test%20Xrm%20Web%20CI%20NUGET?branchName=master)
+Web 
 
-UCI ![Build Status](https://capgeminiuk.visualstudio.com/Capgemini%20Reusable%20IP/_apis/build/status/NUGET%20CI%20Builds/Capgemini%20Test%20Xrm%20UCI%20CI%20NUGET?branchName=master)
+![Build Status](https://capgeminiuk.visualstudio.com/Capgemini%20Reusable%20IP/_apis/build/status/NUGET%20CI%20Builds/Capgemini%20Test%20Xrm%20Web%20CI%20NUGET?branchName=master)
+
+UCI 
+
+![Build Status](https://capgeminiuk.visualstudio.com/Capgemini%20Reusable%20IP/_apis/build/status/NUGET%20CI%20Builds/Capgemini%20Test%20Xrm%20UCI%20CI%20NUGET?branchName=master)
 
 ## Description
 
