@@ -40,9 +40,14 @@ namespace Capgemini.Test.Xrm.Web.Steps.Then
         [Then(@"I should see an error on the (.*) field which reads ""(.*)""")]
         public void ThenIShouldSeeAnErrorOnTheFieldWhichReads(string field, string message)
         {
-            var errors = Browser.Entity.Browser.Driver.FindElements(By.CssSelector($"#{field} > div.ms-crm-Inline-Validation"));
+            var warnSpan = Browser.Entity.Browser.Driver.FindElement(
+                By.CssSelector($"#{field}_warnSpan"));
 
-            Assert.IsTrue(errors.Count == 1 && errors[0].Text == message && errors[0].Displayed == true);
+            Assert.IsTrue(warnSpan.Displayed, $"No errors are displayed against the {field} field.");
+
+            var errorMessage = warnSpan.FindElement(By.Id($"{field}_w")).GetAttribute("innerText");
+
+            Assert.AreEqual(message, errorMessage);
         }
 
         /// <summary>
