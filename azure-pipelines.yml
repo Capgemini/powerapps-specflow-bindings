@@ -48,7 +48,6 @@ stages:
     jobs:
     - job: TestJob
       displayName: Test
-      continueOnError: true
       steps:
         - checkout: none
         - download: current
@@ -56,6 +55,7 @@ stages:
           artifact: driver
         - task: Npm@1
           displayName: Run tests
+          continueOnError: true
           inputs:
             command: custom
             verbose: false
