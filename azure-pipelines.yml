@@ -1,0 +1,92 @@
+trigger:
+  - master
+pool:
+  vmImage: 'windows-latest'
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+stages:
+  - stage: Build
+    jobs:
+    - job: BuildJob
+      displayName: Build
+      steps:
+        - task: NuGetToolInstaller@1
+          displayName: Install NuGet
+        - task: NuGetCommand@2
+          displayName: Restore NuGet packages
+          inputs:
+            restoreSolution: '$(solution)'
+        - task: Npm@1
+          displayName: Restore npm packages
+          inputs:
+            verbose: false
+            workingDir: driver
+        - task: VSBuild@1
+          displayName: Build solution
+          inputs:
+            solution: '$(solution)'
+            platform: '$(buildPlatform)'
+            configuration: '$(buildConfiguration)'
+        - task: NuGetCommand@2
+          displayName: Pack NuGet package
+          inputs:
+            command: pack
+            packagesToPack: bindings\src\Capgemini.PowerApps.SpecFlowBindings\Capgemini.PowerApps.SpecFlowBindings.nuspec
+            includeReferencedProjects: true
+            packDestination: '$(Build.ArtifactStagingDirectory)/out'
+            configuration: $(buildConfiguration) 
+        - publish: $(Build.ArtifactStagingDirectory)/out
+          displayName: Publish NuGet artifact
+          artifact: Capgemini.PowerApps.SpecFlowBindings
+        - publish: driver
+          displayName: Publish driver
+          artifact: driver
+  - stage: Test
+    dependsOn: Build
+    jobs:
+    - job: TestJob
+      displayName: Test
+      continueOnError: true
+      steps:
+        - checkout: none
+        - download: current
+          displayName: Download driver
+          artifact: driver
+        - task: Npm@1
+          displayName: Run tests
+          inputs:
+            command: custom
+            verbose: false
+            customCommand: 'run test'
+            publishRegistry: useFeed
+            workingDir: $(Pipeline.Workspace)/driver
+        - task: PublishTestResults@2
+          displayName: Publish test results
+          inputs:
+            testResultsFiles: '$(Pipeline.Workspace)\driver\**\TESTS-*.xml'
+        - task: PublishCodeCoverageResults@1
+          displayName: Publish code coverage results
+          inputs:
+            codeCoverageTool: Cobertura
+            summaryFileLocation: '$(Pipeline.Workspace)/driver/coverage/cobertura/cobertura.xml'
+            reportDirectory: '$(Pipeline.Workspace)/driver/coverage/html'        
+  - stage: PublishtoPrivateFeed
+    displayName: Publish to Private Feed
+    jobs:
+      - job: PublishPrivateJob
+        displayName: Publish to Private Feed
+        steps:
+          - checkout: none
+          - download: current
+            displayName: Download NuGet package artifact
+            artifact: Capgemini.PowerApps.SpecFlowBindings
+          - task: NuGetCommand@2
+            displayName: Push to private feed
+            inputs:
+              command: push
+              packagesToPush: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*.nupkg'
+              nuGetFeedType: 'internal'
+              publishVstsFeed: '25162f08-da5e-4c04-bac0-40216eaa4bf9'
+      

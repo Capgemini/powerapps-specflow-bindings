@@ -1,8 +1,8 @@
-# SpecFlow for Dynamics 365
+# SpecFlow for Power Apps
 ## Description
 
-A SpecFlow bindings library for Dynamics 365.
-The aim of this project is to make Dynamics 365 test automation easier, faster and more accessible. It does this by providing a library of generic SpecFlow step bindings that adhere to test automation best practices. This allows effective automated tests to be written without the dependency on developers who are both proficient with Dynamics 365 and test automation.
+A SpecFlow bindings library for Power Apps.
+The aim of this project is to make Power Apps test automation easier, faster and more accessible. It does this by providing a library of generic SpecFlow step bindings that adhere to test automation best practices. This allows effective automated tests to be written without the dependency on developers who are both proficient with Power Apps and test automation.
 
 ## Table of Contents
 
@@ -14,21 +14,21 @@ The aim of this project is to make Dynamics 365 test automation easier, faster a
 
 ## Installation
 
-Follow the guidance in the **Installation and Setup** section in https://specflow.org/getting-started/. After installing the IDE integration and setting up your project, install the corresponding NuGet package for your implementation - depending on whether you're using the web client or UCI.
-
-### Web
+Follow the guidance in the **Installation and Setup** section in https://specflow.org/getting-started/. After installing the IDE integration and setting up your project, install the NuGet package.
 
 ```shell
-PM> Install-Package Capgemini.Test.Xrm.Web
+PM> Install-Package Capgemini.PowerApps.SpecFlowBindings
 ```
 
-### UCI
+Once the NuGet package is installed, follow the SpecFlow [documentation](https://specflow.org/documentation/Configuration/) on referencing an external binding library. At the time of writing - for SpecFlow 3.x - you should update a _specflow.json_ file in your project root as follows -
 
-```shell
-PM> Install-Package Capgemini.Test.Xrm.Uci
+```json
+{
+    "stepAssemblies": [
+        { "assembly": "Capgemini.PowerApps.SpecFlowBindings" }
+    ]
+}
 ```
-
-_Note: The UCI package does not yet contain any predefined step bindings. It currently provides `XrmUciStepDefiner` base class that makes writing your own bindings easier as well as ensuring that they are thread-safe - meaning your tests can be ran in parallel across all supported test runners._
 
 ### WebDrivers
 
@@ -40,11 +40,9 @@ PM> Install-Package Selenium.Chrome.WebDriver
 
 ## Usage
 
-This section applies primarily to the Capgemini.Test.Xrm&#46;Web package as do not have pre-defined step bindings available for UCI. If you are using UCI, please skip ahead to the **writing step definitions** section.
-
 ### Configuration
 
-Installing the NuGet package creates a _spec-xrm.yaml_ file in your project's root. This is used to configure the URL, browser, users and apps that will be used for your tests. You also have the option to configure a remoteServerUrl if you using a remote WebDriver (e.g. Selenium Grid).
+Installing the NuGet package creates a _power-apps-bindings.yml_ file in your project's root. This is used to configure the URL, browser, users and apps that will be used for your tests. You also have the option to configure a remoteServerUrl if you using a remote WebDriver (e.g. Selenium Grid).
 
 ```yaml
 url: "https://instance.region.dynamics.com"
@@ -62,17 +60,7 @@ apps:
 
 ### Writing feature files
 
-After the NuGet package is installed, your projects _app.config_ is transformed to include the following -
-
-```xml
-<specFlow>
-  <stepAssemblies>
-    <stepAssembly assembly="Capgemini.Test.Xrm.Web" />
-  </stepAssemblies>
-</specFlow>
-```
-
-This tells SpecFlow to include the step bindings defined in the Capgemini.Test.Xrm.Web.dll. You can then use the predefined step bindings to write your tests -
+You can use the predefined step bindings to write your tests.
 
 ```gherkin
 Scenario: Save a record with no name
@@ -82,13 +70,15 @@ Scenario: Save a record with no name
 	Then I should see an error on the "cap_name" field which reads "You must provide a value for Name."
 ```
 
-### Writing step defintions
+Alternatively, write your own step bindings (see below).
 
-Both the web and UCI packages provide a way for you to write your own step bindings that have thread-safe access to EasyRepro and the WebDriver. This ensures that your tests can be ran safely in parallel. You can do this by creating a class decorated with the SpecFlow `BindingAttribute` and inheriting from the either the `XrmWebStepDefiner` or `XrmUciStepDefiner` base classes. You can then create your SpecFlow step bindings as normal while interacting with the `Browser` and `Driver` properties.
+### Writing step bindings
+
+You can write your own step bindings that have thread-safe access to EasyRepro and the Selenium WebDriver. This ensures that your tests can be ran safely in parallel. You can do this by creating a class decorated with the SpecFlow `BindingAttribute` and inheriting from the `PowerAppsStepDefiner` base class. You can then createing your SpecFlow step bindings while interacting with the `XrmApp` and `Driver` properties.
 
 ```csharp
 [Binding]
-public class MyCustomSteps : XrmWebStepDefiner
+public class MyCustomSteps : PowerAppsStepDefiner
 {
     [Given(@"I have a custom step")]
     public void GivenIHaveACustomStep()
@@ -109,7 +99,7 @@ You can create test data by using the following _Given_ step -
 Given I have created "a record"
 ```
 
-It will look for a JSON file in the _Data_ folder. You must ensure that these files are copying to the build output directory. You do not need to include the .json extension when writing the step (the example above would look for _'a record.json'_).
+It will look for a JSON file in the _data_ folder. You must ensure that these files are copying to the build output directory. You do not need to include the .json extension when writing the step (the example above would look for _'a record.json'_).
 
 The JSON is the same as expected by WebAPI when creating records via a [deep insert](https://docs.microsoft.com/en-us/dynamics365/customer-engagement/developer/webapi/create-entity-web-api#create-related-entities-in-one-operation). The example below will create the following -
 
@@ -148,4 +138,4 @@ Capgemini UK Microsoft Team
 
 ## License
 
-SpecFlow for Dynamics 365 is released under the [MIT license](./License).
+SpecFlow for Power Apps is released under the [MIT license](./License).

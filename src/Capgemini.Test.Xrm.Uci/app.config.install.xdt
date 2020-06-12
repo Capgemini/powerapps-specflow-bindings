@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
-  <specFlow xdt:Transform="InsertIfMissing">
-    <stepAssemblies xdt:Transform="InsertIfMissing">
-      <stepAssembly assembly="Capgemini.Test.Xrm.Uci" />
-    </stepAssemblies>
-  </specFlow>
-</configuration>

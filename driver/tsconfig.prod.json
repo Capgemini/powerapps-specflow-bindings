@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "none",
+    "strict": true,
+    "removeComments": true,
+    "declaration": true,
+    "outFile": "dist/specflow.driver.js",
+    "lib": [
+      "dom",
+      "es2015"
+    ]
+  },
+  "exclude": [
+    "src/tests/",
+  ],
+  "include": [
+    "src"
+  ]
+}

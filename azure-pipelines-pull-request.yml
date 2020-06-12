@@ -1,0 +1,49 @@
+trigger:
+  - master
+pool:
+  vmImage: 'windows-latest'
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+stages:
+  - stage: Build
+    jobs:
+    - job: BuildJob
+      displayName: Build
+      steps:
+        - task: NuGetToolInstaller@1
+          displayName: Install NuGet
+        - task: NuGetCommand@2
+          displayName: Restore NuGet packages
+          inputs:
+            restoreSolution: '$(solution)'
+        - task: Npm@1
+          displayName: Restore npm packages
+          inputs:
+            verbose: false
+            workingDir: driver
+        - task: VSBuild@1
+          displayName: Build solution
+          inputs:
+            solution: '$(solution)'
+            platform: '$(buildPlatform)'
+            configuration: '$(buildConfiguration)'
+        - task: Npm@1
+          displayName: Run tests
+          inputs:
+            command: custom
+            verbose: false
+            customCommand: run test
+            publishRegistry: useFeed
+            workingDir: driver
+        - task: PublishTestResults@2
+          displayName: Publish test results
+          inputs:
+            testResultsFiles: driver\**\TESTS-*.xml
+        - task: PublishCodeCoverageResults@1
+          displayName: Publish code coverage results
+          inputs:
+            codeCoverageTool: Cobertura
+            summaryFileLocation: driver/coverage/cobertura/cobertura.xml
+            reportDirectory: driver/coverage/html        
