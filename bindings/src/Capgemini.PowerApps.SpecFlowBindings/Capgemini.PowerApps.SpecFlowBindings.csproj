@@ -139,6 +139,7 @@
     <Compile Include="Hooks\AfterScenarioHooks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Steps\CommandSteps.cs" />
+    <Compile Include="Steps\DataSteps.cs" />
     <Compile Include="Steps\FormSteps.cs" />
     <Compile Include="Steps\LoginSteps.cs" />
     <Compile Include="Steps\NavigationSteps.cs" />
