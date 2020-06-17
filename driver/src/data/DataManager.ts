@@ -7,7 +7,7 @@ namespace Capgemini.Dynamics.Testing.Data {
      */
     export class DataManager {
         public readonly createdRecords: Xrm.LookupValue[];
-
+        public readonly createdRecordsByAlias: { [alias: string]: Xrm.LookupValue }
         private readonly recordRepository: RecordRepository;
         private readonly deepInsertParser: DeepInsertParser;
 
@@ -19,6 +19,7 @@ namespace Capgemini.Dynamics.Testing.Data {
          */
         constructor(recordRepository: RecordRepository, deepInsertParser: DeepInsertParser) {
             this.createdRecords = [];
+            this.createdRecordsByAlias = {};
             this.recordRepository = recordRepository;
             this.deepInsertParser = deepInsertParser;
         }
@@ -32,9 +33,14 @@ namespace Capgemini.Dynamics.Testing.Data {
          */
         public async createData(logicalName: string, record: IRecord): Promise<Xrm.LookupValue> {
             const deepInsertResponse = await this.deepInsertParser.deepInsert(logicalName, record);
-            this.createdRecords.push(deepInsertResponse.record, ...deepInsertResponse.associatedRecords);
+            const newRecords = [deepInsertResponse.record, ...deepInsertResponse.associatedRecords];
 
-            return deepInsertResponse.record;
+            this.createdRecords.push(...newRecords.map(r => r.reference));
+            newRecords
+                .filter(r => r.alias)
+                .forEach(aliasedRecord => this.createdRecordsByAlias[aliasedRecord.alias!] = aliasedRecord.reference);
+
+            return deepInsertResponse.record.reference;
         }
 
         /**
@@ -43,18 +49,21 @@ namespace Capgemini.Dynamics.Testing.Data {
          * @returns {Promise<void>}
          * @memberof DataManager
          */
-        public async cleanup(): Promise<void> {
-            this.createdRecords.forEach(async (record) => {
+        public async cleanup(): Promise<(Xrm.LookupValue | void)[]> {
+            const deletePromises = this.createdRecords.map(async (record) => {
                 let retry = 0;
                 while (retry < 3) {
                     try {
-                        return await this.recordRepository.deleteRecord(record);
+                        const result = await this.recordRepository.deleteRecord(record);
+                        return result;
                     } catch (err) {
                         retry++;
                     }
                 }
             });
             this.createdRecords.splice(0, this.createdRecords.length);
+            Object.keys(this.createdRecordsByAlias).forEach(alias => delete this.createdRecordsByAlias[alias]);
+            return Promise.all(deletePromises);
         }
     }
 }

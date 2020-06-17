@@ -6,7 +6,7 @@
     /// Step bindings relating to the command bar.
     /// </summary>
     [Binding]
-    public class CommandSteps : PowerAppsStepDefiner
+    public class CommandBarSteps : PowerAppsStepDefiner
     {
         /// <summary>
         /// Selects a command with the given label.

@@ -1,11 +1,12 @@
 /// <reference path="../../dist/specflow.driver.d.ts" />
+/// <reference types="@types/jasmine" />
 
 namespace Capgemini.Dynamics.Testing.Tests {
     describe("TestDriver", () => {
         let dataManager: jasmine.SpyObj<Data.DataManager>;
         let testDriver: TestDriver;
-        beforeEach(() => {
-            dataManager = jasmine.createSpyObj<Data.DataManager>("DataManager", ["createData", "cleanup", "createdRecords"]);
+        beforeAll(() => {
+            dataManager = jasmine.createSpyObj<Data.DataManager>("DataManager", ["createData", "cleanup", "createdRecords", "createdRecordsByAlias"]);
             testDriver = new TestDriver(dataManager);
         });
         it("listens for the specXrm.loadTestDataRequested event", () => {
@@ -19,17 +20,19 @@ namespace Capgemini.Dynamics.Testing.Tests {
                         data,
                     },
                 });
+            const createDataCalls = dataManager.createData.calls.count();
 
             window.top.dispatchEvent(event);
 
-            expect(dataManager.createData.calls.count()).toBe(1);
+            expect(dataManager.createData).toHaveBeenCalledTimes(createDataCalls + 1);
         });
         it("listens for the specXrm.deleteTestDataRequested event", () => {
             const event = new CustomEvent(TestEvents.DeleteTestDataRequested);
+            const cleanupCalls = dataManager.cleanup.calls.count();
 
             window.top.dispatchEvent(event);
 
-            expect(dataManager.cleanup.calls.count()).toBe(1);
+            expect(dataManager.cleanup).toHaveBeenCalledTimes(cleanupCalls + 1);
         });
         it("listens for the specXrm.openRecordRequested event", async () => {
             const openForm = jasmine.createSpy("openForm");
@@ -38,25 +41,18 @@ namespace Capgemini.Dynamics.Testing.Tests {
                     openForm,
                 },
             } as any;
-            dataManager.createData.and.returnValue(
-                Promise.resolve({
-                    entityType: "account",
-                    id: "<account-id>",
-                }));
-            await testDriver.loadTestData(JSON.stringify({
-                "@alias": "someAlias",
-                "@logicalName": "account",
-                "name": "Some Account",
-            } as Data.ITestRecord));
-            const event = new CustomEvent(TestEvents.OpenRecordRequested, { detail: { data: "someAlias" } });
+            dataManager.createdRecordsByAlias.someAlias = { id: "<account-id>", entityType: "account" };
 
+            const event = new CustomEvent(TestEvents.OpenRecordRequested, { detail: { data: "someAlias" } });
             window.top.dispatchEvent(event);
 
             expect(openForm.calls.first().args[0].entityId).toBe("<account-id>");
         });
         describe(".loadJsonData(json)", () => {
             it("uses the TestDataManager to create the test data", () => {
+                const logicalName = "account";
                 const testData = {
+                    "@logicalName": logicalName,
                     name: "Sample Account",
                     primarycontactid:
                     {
@@ -64,20 +60,22 @@ namespace Capgemini.Dynamics.Testing.Tests {
                         lastname: "Smith",
                     },
                 };
+                const createDataCalls = dataManager.createData.calls.count();
 
                 testDriver.loadTestData(JSON.stringify(testData));
 
-                expect(dataManager.createData.calls.count()).toBe(1);
+                expect(dataManager.createData).toHaveBeenCalledTimes(createDataCalls + 1);
             });
         });
         describe(".deleteTestData()", () => {
             it("uses the TestDataManager to delete the test data", () => {
+                dataManager.cleanup.calls.reset();
                 testDriver.deleteTestData();
 
                 expect(dataManager.cleanup.calls.count()).toBe(1);
             });
         });
-        describe(".openTestRecord(alias", () => {
+        describe(".openTestRecord(alias)", () => {
             it("throws an error the record hasn't been created", () => {
                 expect(() => testDriver.openTestRecord("this is not a valid alias")).toThrowError();
             });
@@ -88,15 +86,7 @@ namespace Capgemini.Dynamics.Testing.Tests {
                         openForm,
                     },
                 } as any;
-                dataManager.createData.and.returnValue(Promise.resolve({
-                    entityType: "account",
-                    id: "<account-id>",
-                }));
-                await testDriver.loadTestData(JSON.stringify({
-                    "@alias": "someAlias",
-                    "@logicalName": "account",
-                    "name": "Some Account",
-                } as Data.ITestRecord));
+                dataManager.createdRecordsByAlias.someAlias = { id: "<account-id>", entityType: "account" };
 
                 testDriver.openTestRecord("someAlias");
 

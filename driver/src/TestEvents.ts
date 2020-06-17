@@ -1,7 +1,8 @@
 namespace Capgemini.Dynamics.Testing {
     export enum TestEvents {
-        LoadTestDataRequested = "specXrm.loadTestDataRequested",
-        DeleteTestDataRequested = "specXrm.deleteTestDataRequested",
-        OpenRecordRequested = "specXrm.openRecordRequested",
+        LoadTestDataRequested = "driver.loadTestDataRequested",
+        DeleteTestDataRequested = "driver.deleteTestDataRequested",
+        OpenRecordRequested = "driver.openRecordRequested",
+        GetRecordReferenceRequested = "driver.getRecordReferenceRequested"
     }
 }

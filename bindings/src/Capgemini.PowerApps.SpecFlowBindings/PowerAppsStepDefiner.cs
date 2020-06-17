@@ -82,6 +82,7 @@
 
             xrmApp.Dispose();
             xrmApp = null;
+            client = null;
             testDriver = null;
         }
 
@@ -91,6 +92,7 @@
             {
                 BrowserType = (BrowserType)Enum.Parse(typeof(BrowserType), XrmTestConfig.Browser),
                 RemoteHubServer = XrmTestConfig.RemoteServerUrl,
+                DriversPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
             };
         }
     }

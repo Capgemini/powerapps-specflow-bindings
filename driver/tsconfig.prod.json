@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "none",
     "strict": true,
     "removeComments": true,
     "declaration": true,
+    "sourceMap": true,
     "outFile": "dist/specflow.driver.js",
     "lib": [
       "dom",

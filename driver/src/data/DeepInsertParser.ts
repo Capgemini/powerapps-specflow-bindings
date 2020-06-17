@@ -24,32 +24,36 @@ namespace Capgemini.Dynamics.Testing.Data {
          * A deep insert which returns a reference to all created records.
          *
          * @param {string} logicalName The entity logical name of the root record.
-         * @param {(IRecord | IRecord)} entity The deep insert object.
+         * @param {IRecord} entity The deep insert object.
          * @returns {Promise<IDeepInsertResponse>} An async result containing references to all created records.
          * @memberof DeepInsertParser
          */
-        public async deepInsert(logicalName: string, entity: IRecord | IRecord): Promise<IDeepInsertResponse> {
-            const associatedRecords = [] as Xrm.LookupValue[];
+        public async deepInsert(logicalName: string, entity: IRecord): Promise<IDeepInsertResponse> {
+            const associatedRecords: { alias?: string, reference: Xrm.LookupValue }[] = [];
 
-            const manyToOneRecordMap = this.getManyToOneRecords(entity);
-            await Promise.all(Object.keys(manyToOneRecordMap).map(async (singleNavigationProperty) => {
-                const result = await this.createLookupRecord(logicalName, entity, manyToOneRecordMap, singleNavigationProperty);
+            const lookupRecordsByNavProp = this.getManyToOneRecords(entity);
+            const singleNavProps = Object.keys(lookupRecordsByNavProp);
+            await Promise.all(singleNavProps.map(async (singleNavProp) => {
+                const result = await this.createLookupRecord(logicalName, entity, lookupRecordsByNavProp, singleNavProp);
                 associatedRecords.push(result.record, ...result.associatedRecords);
             }));
 
-            const oneToManyRecordMap = this.getOneToManyRecords(entity);
-            Object.keys(oneToManyRecordMap).forEach((collectionNavigationProperty) => delete entity[collectionNavigationProperty]);
+            const relatedRecordsByNavProp = this.getOneToManyRecords(entity);
+            Object.keys(relatedRecordsByNavProp).forEach((collNavProp) => delete entity[collNavProp]);
 
-            const record = await this.recordRepository.createRecord(logicalName, entity);
+            const rootRecord = await this.recordRepository.createRecord(logicalName, entity);
 
-            await Promise.all(Object.keys(oneToManyRecordMap).map(async (collectionNavigationProperty) => {
-                const result = await this.createCollectionRecords(logicalName, record, oneToManyRecordMap, collectionNavigationProperty);
+            await Promise.all(Object.keys(relatedRecordsByNavProp).map(async (collNavProp) => {
+                const result = await this.createCollectionRecords(logicalName, rootRecord, relatedRecordsByNavProp, collNavProp);
                 associatedRecords.push(...result);
             }));
 
             return {
                 associatedRecords,
-                record,
+                record: {
+                    alias: entity["@alias"] as string | undefined,
+                    reference: rootRecord
+                }
             };
         }
 
@@ -78,10 +82,12 @@ namespace Capgemini.Dynamics.Testing.Data {
             singleNavigationProperty: string,
         ): Promise<IDeepInsertResponse> {
             delete entity[singleNavigationProperty];
-            const entityLogicalName = await this.metadataRepository.GetEntityForLookupProperty(logicalName, singleNavigationProperty);
-            const deepInsertResponse = await this.deepInsert(entityLogicalName, navigationPropertyMap[singleNavigationProperty]);
-            const entitySet = await this.metadataRepository.getEntitySetForEntity(entityLogicalName);
-            entity[`${singleNavigationProperty}@odata.bind`] = `/${entitySet}(${deepInsertResponse.record.id})`;
+
+            const entityName = await this.metadataRepository.GetEntityForLookupProperty(logicalName, singleNavigationProperty);
+            const deepInsertResponse = await this.deepInsert(entityName, navigationPropertyMap[singleNavigationProperty]);
+            const entitySet = await this.metadataRepository.getEntitySetForEntity(entityName);
+
+            entity[`${singleNavigationProperty}@odata.bind`] = `/${entitySet}(${deepInsertResponse.record.reference.id})`;
 
             return deepInsertResponse;
         }
@@ -91,15 +97,18 @@ namespace Capgemini.Dynamics.Testing.Data {
             parentRecord: Xrm.LookupValue,
             navigationPropertyMap: { [navigationProperty: string]: IRecord[] },
             collectionNavigationProperty: string,
-        ): Promise<Xrm.LookupValue[]> {
-            const entityLogicalName = await this.metadataRepository.GetEntityForCollectionProperty(logicalName, collectionNavigationProperty);
+        ): Promise<{ alias: string, reference: Xrm.LookupValue }[]> {
+            const entityName = await this.metadataRepository.GetEntityForCollectionProperty(logicalName, collectionNavigationProperty);
             const entitySet = await this.metadataRepository.getEntitySetForEntity(logicalName);
             const oppositeNavigationProperty = await this.metadataRepository.GetLookupPropertyForCollectionProperty(collectionNavigationProperty);
 
-            return Promise.all(navigationPropertyMap[collectionNavigationProperty].map((oneToManyRecord) => {
+            const results = await Promise.all(navigationPropertyMap[collectionNavigationProperty].map(async (oneToManyRecord) => {
                 oneToManyRecord[`${oppositeNavigationProperty}@odata.bind`] = `/${entitySet}(${parentRecord.id})`;
-                return this.recordRepository.createRecord(entityLogicalName, oneToManyRecord);
+                const result = await this.deepInsert(entityName, oneToManyRecord);
+                return [result.record, ...result.associatedRecords];
             }));
+
+            return [].concat(...results as any);
         }
     }
 }

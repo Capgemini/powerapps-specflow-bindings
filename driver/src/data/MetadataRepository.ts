@@ -12,15 +12,12 @@ namespace Capgemini.Dynamics.Testing.Data {
         private static readonly EntityMetadataSet = "EntityDefinitions";
         private static readonly OneToNMetadataSet = "RelationshipDefinitions/Microsoft.Dynamics.CRM.OneToManyRelationshipMetadata";
 
-        private readonly clientUrl: string;
-
         /**
          * Creates an instance of MetadataRepository.
          * @memberof MetadataRepository
          */
         constructor(webApi: Xrm.WebApiOnline) {
             super(webApi);
-            this.clientUrl = Xrm.Utility.getGlobalContext().getClientUrl();
         }
 
         /**
@@ -31,12 +28,11 @@ namespace Capgemini.Dynamics.Testing.Data {
          * @memberof MetadataRepository
          */
         public async getEntitySetForEntity(entityLogicalName: string): Promise<string> {
-            const response =
-                await this.webApi.retrieveMultipleRecords(
-                    MetadataRepository.EntityMetadataSet,
-                    `$filter=LogicalName eq '${entityLogicalName}'&$select=EntitySetName`);
+            const response = await fetch(
+                `api/data/v9.1/${MetadataRepository.EntityMetadataSet}?$filter=LogicalName eq '${entityLogicalName}'&$select=EntitySetName`);
+            const result = await response.json();
 
-            return response.entities[0].EntitySetName as string;
+            return result.value[0].EntitySetName as string;
         }
 
         /**
@@ -48,24 +44,11 @@ namespace Capgemini.Dynamics.Testing.Data {
          * @memberof MetadataRepository
          */
         public async GetEntityForLookupProperty(entityLogicalName: string, navigationProperty: string): Promise<string> {
-            return new Promise<string>((resolve) => {
-                const xhr = new XMLHttpRequest();
-                xhr.open("GET",
-                    this.clientUrl +
-                    `/api/data/v9.0/EntityDefinitions(LogicalName='${entityLogicalName}')` +
-                    "/Attributes/Microsoft.Dynamics.CRM.LookupAttributeMetadata" +
-                    `?$filter=LogicalName eq '${navigationProperty}'&$select=Targets`, true);
-                xhr.setRequestHeader("Accept", "application/json");
-                xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-                xhr.setRequestHeader("OData-MaxVersion", "4.0");
-                xhr.setRequestHeader("OData-Version", "4.0");
-                xhr.onreadystatechange = () => {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        resolve(JSON.parse(xhr.responseText).value[0].Targets[0]);
-                    }
-                };
-                xhr.send();
-            });
+            const response = await fetch(
+                `api/data/v9.1/${MetadataRepository.EntityMetadataSet}(LogicalName='${entityLogicalName}')/Attributes/Microsoft.Dynamics.CRM.LookupAttributeMetadata?$filter=LogicalName eq '${navigationProperty.toLowerCase()}'&$select=Targets`);
+            const result = await response.json();
+
+            return result.value[0].Targets[0];
         }
 
         /**
@@ -77,12 +60,11 @@ namespace Capgemini.Dynamics.Testing.Data {
          * @memberof MetadataRepository
          */
         public async GetEntityForCollectionProperty(entityLogicalName: string, navigationProperty: string): Promise<string> {
-            const response = await this.webApi.retrieveMultipleRecords(
-                MetadataRepository.OneToNMetadataSet,
-                `$filter=ReferencedEntity eq '${entityLogicalName}' and ReferencedEntityNavigationPropertyName eq '${navigationProperty}'` +
-                `&$select=ReferencingEntity`,
-            );
-            return response.entities[0].ReferencingEntity as string;
+            const response = await fetch(
+                `api/data/v9.1/${MetadataRepository.OneToNMetadataSet}?$filter=ReferencedEntity eq '${entityLogicalName}' and ReferencedEntityNavigationPropertyName eq '${navigationProperty}'&$select=ReferencingEntity`);
+            const result = await response.json();
+
+            return result.value[0].ReferencingEntity;
         }
 
         /**
@@ -93,12 +75,11 @@ namespace Capgemini.Dynamics.Testing.Data {
          * @memberof MetadataRepository
          */
         public async GetLookupPropertyForCollectionProperty(navPropName: string): Promise<string> {
-            const response = await this.webApi.retrieveMultipleRecords(
-                MetadataRepository.OneToNMetadataSet,
-                `$filter=ReferencedEntityNavigationPropertyName eq '${navPropName}'` +
-                "&$select=ReferencingEntityNavigationPropertyName",
-            );
-            return response.entities[0].ReferencingEntityNavigationPropertyName as string;
+            const response = await fetch(
+                `api/data/v9.1/${MetadataRepository.OneToNMetadataSet}?$filter=ReferencedEntityNavigationPropertyName eq '${navPropName}'&$select=ReferencingEntityNavigationPropertyName`);
+            const result = await response.json();
+
+            return result.value[0].ReferencingEntityNavigationPropertyName;
         }
     }
 }

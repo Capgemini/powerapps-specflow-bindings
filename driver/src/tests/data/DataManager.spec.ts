@@ -13,18 +13,23 @@ namespace Capgemini.Dynamics.Testing.Data.Tests {
         });
         describe(".createData(record)", () => {
             it("tracks all created records", async () => {
-                const associatedRecords: Xrm.LookupValue[] = [{
-                    entityType: "opportunity",
-                    id: "<opportunity-id>",
+                const associatedRecords: { alias?: string, reference: Xrm.LookupValue }[] = [{
+                    reference: {
+                        entityType: "opportunity",
+                        id: "<opportunity-id>",
+                    }
                 }];
-                const record: Xrm.LookupValue = {
-                    entityType: "account",
-                    id: "<account-id>",
+                const record: { alias?: string, reference: Xrm.LookupValue } = {
+                    reference: {
+                        entityType: "account",
+                        id: "<account-id>",
+                    }
                 };
                 deepInsertParser.deepInsert.and.returnValue(Promise.resolve({
                     associatedRecords,
                     record,
                 }));
+
                 await dataManager.createData("account",
                     {
                         name: "Sample Account",
@@ -35,7 +40,7 @@ namespace Capgemini.Dynamics.Testing.Data.Tests {
                         },
                     });
 
-                expect(dataManager.createdRecords).toEqual([record, ...associatedRecords]);
+                expect(dataManager.createdRecords).toEqual([record.reference, ...associatedRecords.map(r => r.reference)]);
             });
         });
         describe(".cleanup()", () => {
@@ -43,8 +48,10 @@ namespace Capgemini.Dynamics.Testing.Data.Tests {
                 deepInsertParser.deepInsert.and.returnValue(Promise.resolve({
                     associatedRecords: [],
                     record: {
-                        entityType: "account",
-                        id: "<account-id>",
+                        reference: {
+                            entityType: "account",
+                            id: "<account-id>",
+                        }
                     },
                 }));
                 await dataManager.createData("account",
@@ -59,12 +66,16 @@ namespace Capgemini.Dynamics.Testing.Data.Tests {
             it("deletes associated records", async () => {
                 deepInsertParser.deepInsert.and.returnValue(Promise.resolve({
                     associatedRecords: [{
-                        entityType: "opportunity",
-                        id: "<opportunity-id>",
+                        reference: {
+                            entityType: "opportunity",
+                            id: "<opportunity-id>",
+                        }
                     }],
                     record: {
-                        entityType: "account",
-                        id: "<account-id>",
+                        reference: {
+                            entityType: "account",
+                            id: "<account-id>",
+                        }
                     },
                 }));
                 await dataManager.createData("account",
@@ -85,8 +96,10 @@ namespace Capgemini.Dynamics.Testing.Data.Tests {
                 deepInsertParser.deepInsert.and.returnValue(Promise.resolve({
                     associatedRecords: [],
                     record: {
-                        entityType: "account",
-                        id: "<account-id>",
+                        reference: {
+                            entityType: "account",
+                            id: "<account-id>",
+                        }
                     },
                 }));
                 await dataManager.createData("account",
@@ -103,8 +116,10 @@ namespace Capgemini.Dynamics.Testing.Data.Tests {
                 deepInsertParser.deepInsert.and.returnValue(Promise.resolve({
                     associatedRecords: [],
                     record: {
-                        entityType: "account",
-                        id: "<account-id>",
+                        reference: {
+                            entityType: "account",
+                            id: "<account-id>",
+                        }
                     },
                 }));
                 await dataManager.createData("account",

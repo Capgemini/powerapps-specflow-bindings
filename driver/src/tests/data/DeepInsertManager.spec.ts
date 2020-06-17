@@ -152,7 +152,7 @@ namespace Capgemini.Dynamics.Testing.Data.Tests {
                         },
                     });
 
-                expect(entityReference.record).toBe(expectedEntityReference);
+                expect(entityReference.record.reference).toBe(expectedEntityReference);
             });
         });
     });

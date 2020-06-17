@@ -10,7 +10,6 @@ namespace Capgemini.Dynamics.Testing {
      */
     export class TestDriver {
         private readonly dataManager: Data.DataManager;
-        private readonly testRecords: { [alias: string]: Xrm.LookupValue };
 
         /**
          * Creates an instance of TestDriver.
@@ -26,8 +25,6 @@ namespace Capgemini.Dynamics.Testing {
                 ));
             }
             this.dataManager = dataManager;
-            this.testRecords = {};
-
             this.registerListeners();
         }
 
@@ -41,11 +38,8 @@ namespace Capgemini.Dynamics.Testing {
          */
         public async loadTestData(json: string): Promise<Xrm.LookupValue> {
             const testRecord = JSON.parse(json) as Data.ITestRecord;
-            const entityReference = await this.dataManager.createData(testRecord["@logicalName"], testRecord);
-
-            this.testRecords[testRecord["@alias"]] = entityReference;
-
-            return entityReference;
+            const logicalName = testRecord["@logicalName"];
+            return this.dataManager.createData(logicalName, testRecord);
         }
 
         /**
@@ -53,7 +47,7 @@ namespace Capgemini.Dynamics.Testing {
          *
          * @memberof TestDriver
          */
-        public async deleteTestData(): Promise<void> {
+        public deleteTestData(): Promise<(Xrm.LookupValue | void)[]> {
             return this.dataManager.cleanup();
         }
 
@@ -65,28 +59,43 @@ namespace Capgemini.Dynamics.Testing {
          * @memberof TestDriver
          */
         public openTestRecord(alias: string): Xrm.Async.PromiseLike<Xrm.Navigation.OpenFormResult> {
-            if (this.testRecords[alias] === undefined) {
+            if (this.dataManager.createdRecordsByAlias[alias] === undefined) {
                 throw new Error(`Test record with alias '${alias}' does not exist`);
             }
+
             return Xrm.Navigation.openForm({
-                entityId: this.testRecords[alias].id,
-                entityName: this.testRecords[alias].entityType,
+                entityId: this.dataManager.createdRecordsByAlias[alias].id,
+                entityName: this.dataManager.createdRecordsByAlias[alias].entityType,
             });
         }
 
-        private registerListeners(): void {
-            window.top.addEventListener(TestEvents.LoadTestDataRequested, (e) => this.routeToListener(e, this.loadTestData.bind(this)));
-            window.top.addEventListener(TestEvents.DeleteTestDataRequested, (e) => this.routeToListener(e, this.deleteTestData.bind(this)));
-            window.top.addEventListener(TestEvents.OpenRecordRequested, (e) => this.routeToListener(e, this.openTestRecord.bind(this)));
+        /**
+         * Gets a reference to a test record.
+         * @param alias The alias of the test record.
+         */
+        public getRecordReference(alias: string): Xrm.LookupValue {
+            return this.dataManager.createdRecordsByAlias[alias];
         }
 
-        private routeToListener(e: Event, listener: (...args: any[]) => void | PromiseLike<any>) {
-            const detail = (e as CustomEvent).detail;
+        private registerListeners(): void {
+            top.addEventListener(TestEvents.LoadTestDataRequested, (e) => this.routeToListener(e, this.loadTestData.bind(this)));
+            top.addEventListener(TestEvents.DeleteTestDataRequested, (e) => this.routeToListener(e, this.deleteTestData.bind(this)));
+            top.addEventListener(TestEvents.OpenRecordRequested, (e) => this.routeToListener(e, this.openTestRecord.bind(this)));
+            top.addEventListener(TestEvents.GetRecordReferenceRequested, (e) => this.routeToListener(e, this.getRecordReference.bind(this)));
+        }
 
+        private routeToListener(e: Event, listener: (...args: any[]) => any) {
+            const detail = (e as CustomEvent).detail;
             const result = detail ? listener(detail.data) : listener();
 
-            if (result && result.then !== undefined && detail && detail.callback !== undefined) {
+            if (!detail || !detail.callback) {
+                return;
+            }
+            if (result && result.then) {
                 result.then(detail.callback);
+            }
+            else if (result) {
+                detail.callback(result);
             }
         }
     }

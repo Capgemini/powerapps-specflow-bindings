@@ -1,7 +1,10 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings
 {
+    using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
+    using Microsoft.Xrm.Sdk;
     using OpenQA.Selenium;
 
     /// <summary>
@@ -9,10 +12,11 @@
     /// </summary>
     public class TestDriver : ITestDriver
     {
-        private const string SpecXrmDriverScript = "specflow.driver.js";
-        private const string SpecXrmLoadTestDataEvent = "specXrm.loadTestDataRequested";
-        private const string SpecXrmDeleteTestDataEvent = "specXrm.deleteTestDataRequested";
-        private const string SpecXrmOpenTestRecordEvent = "specXrm.openRecordRequested";
+        private const string DriveScriptPath = "specflow.driver.js";
+        private const string LoadTestDataEvent = "driver.loadTestDataRequested";
+        private const string DeleteTestDataEvent = "driver.deleteTestDataRequested";
+        private const string OpenTestRecordEvent = "driver.openRecordRequested";
+        private const string GetRecordReferenceEvent = "driver.getRecordReferenceRequested";
 
         private readonly IJavaScriptExecutor javascriptExecutor;
 
@@ -30,37 +34,46 @@
             this.Initialise();
         }
 
-        private string FilePath => this.path ?? (this.path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), SpecXrmDriverScript));
+        private string FilePath => this.path ?? (this.path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), DriveScriptPath));
 
         /// <inheritdoc cref="ITestDriver"/>
         public void LoadTestData(string data)
         {
-            this.DispatchEvent(SpecXrmLoadTestDataEvent, data);
+            this.DispatchEvent(LoadTestDataEvent, data);
         }
 
         /// <inheritdoc cref="ITestDriver"/>
         public void DeleteTestData()
         {
-            this.DispatchEvent(SpecXrmDeleteTestDataEvent);
+            this.DispatchEvent(DeleteTestDataEvent);
         }
 
         /// <inheritdoc cref="ITestDriver"/>
         public void OpenTestRecord(string alias)
         {
-            this.DispatchEvent(SpecXrmOpenTestRecordEvent, alias);
+            this.DispatchEvent(OpenTestRecordEvent, alias);
+        }
+
+        /// <inheritdoc/>
+        public EntityReference GetTestRecordReference(string alias)
+        {
+            var obj = (Dictionary<string, object>)this.DispatchEvent(GetRecordReferenceEvent, alias);
+            return new EntityReference((string)obj["entityType"], Guid.Parse((string)obj["id"]));
         }
 
         private void Initialise()
         {
             this.javascriptExecutor.ExecuteScript(
                 $"{File.ReadAllText(this.FilePath)}\n" +
-                $"var testDriver = new Capgemini.Dynamics.Testing.TestDriver();");
+                $"top.testDriver = new Capgemini.Dynamics.Testing.TestDriver();");
         }
 
-        private void DispatchEvent(string eventName, string data = "")
+        private object DispatchEvent(string eventName, string data = "")
         {
-            this.javascriptExecutor.ExecuteAsyncScript(
-                $@"top.dispatchEvent(
+            try
+            {
+                return this.javascriptExecutor.ExecuteAsyncScript(
+                    $@"top.dispatchEvent(
                     new CustomEvent(
                         '{eventName}', 
                         {{ 
@@ -69,6 +82,11 @@
                                 callback: arguments[arguments.length - 1]
                             }}
                         }}));");
+            }
+            catch (WebDriverTimeoutException ex)
+            {
+                throw new Exception($"The test driver script errored while handling the {eventName} event", ex);
+            }
         }
     }
 }
