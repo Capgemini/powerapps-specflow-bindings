@@ -57,7 +57,7 @@
       <HintPath>..\..\packages\Google.Protobuf.3.7.0\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\sepa\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.26\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.26\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Dynamics365.UIAutomation.Api, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Dynamics365.UIAutomation.Api.9.1.0.17139\lib\net46\Microsoft.Dynamics365.UIAutomation.Api.dll</HintPath>
@@ -69,7 +69,7 @@
       <HintPath>..\..\packages\Dynamics365.UIAutomation.Api.9.1.0.17139\lib\net46\Microsoft.Dynamics365.UIAutomation.Browser.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\sepa\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.26\lib\net462\Microsoft.Xrm.Sdk.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.26\lib\net462\Microsoft.Xrm.Sdk.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
