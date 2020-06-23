@@ -162,6 +162,8 @@
     <Compile Include="Steps\GridSteps.cs" />
     <Compile Include="Steps\LoginSteps.cs" />
     <Compile Include="Steps\NavigationSteps.cs" />
+    <Compile Include="Steps\RelatedGridSteps.cs" />
+    <Compile Include="Steps\UtilitySteps.cs" />
     <Compile Include="TestDataRepository.cs" />
     <Compile Include="TestDriver.cs" />
   </ItemGroup>
