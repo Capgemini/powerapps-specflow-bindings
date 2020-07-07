@@ -19,7 +19,42 @@ namespace Capgemini.Dynamics.Testing.Data {
          * @memberof RecordRepository
          */
         public async createRecord(entityLogicalName: string, record: IRecord): Promise<Xrm.LookupValue> {
-            return this.webApi.createRecord(entityLogicalName, record) as any as Xrm.LookupValue;
+            if(record["@key"]) {
+                return this.upsertRecord(entityLogicalName, record);
+            }
+            else {
+                return this.webApi.createRecord(entityLogicalName, record) as any as Xrm.LookupValue;
+            }
+        }
+
+        /**
+         * Upserts an entity record.
+         * 
+         * @param {string} entityLogicalName A logical name for the entity to upsert.
+         * @param {IRecord} record A record to upsert.
+         * @returns {Xrm.LookupValue} An entity reference to the upserted entity.
+         * @memberof RecordRepository
+         */
+        private async upsertRecord(entityLogicalName: string, record: IRecord): Promise<Xrm.LookupValue> {
+            const retrieveResponse = await this.webApi.retrieveMultipleRecords(
+                entityLogicalName,
+                `?$filter=${record["@key"]} eq '${record[record["@key"] as string]}'
+                    &$select=${entityLogicalName}id`
+            );
+
+            if(retrieveResponse.entities.length > 0) {
+                const id = retrieveResponse.entities[0][`${entityLogicalName}id`];
+
+                await this.webApi.updateRecord(entityLogicalName, id, record);
+
+                return {
+                    entityType: entityLogicalName,
+                    id: id
+                };
+            }
+            else {
+                return this.webApi.createRecord(entityLogicalName, record);
+            }
         }
 
         /**
