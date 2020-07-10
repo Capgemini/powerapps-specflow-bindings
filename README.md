@@ -45,7 +45,7 @@ PM> Install-Package Selenium.Chrome.WebDriver
 Installing the NuGet package creates a _power-apps-bindings.yml_ file in your project's root. This is used to configure the URL, browser, users and apps that will be used for your tests. You also have the option to configure a remoteServerUrl if you using a remote WebDriver (e.g. Selenium Grid).
 
 ```yaml
-url: "https://instance.region.dynamics.com"
+url: "SPECFLOW_POWERAPPS_URL"
 browser: Chrome
 remoteServerUrl: "http://localhost:4444/wd/hub"
 users:
@@ -58,7 +58,7 @@ apps:
     name: "Sales App"
 ```
 
-The username and password will be set from an environment variable (if available) or will use the value from the config file if not found.
+The url, username, and password will be set from an environment variable (if found). Otherwise, the value from the config file will be used.
 
 ### Writing feature files
 

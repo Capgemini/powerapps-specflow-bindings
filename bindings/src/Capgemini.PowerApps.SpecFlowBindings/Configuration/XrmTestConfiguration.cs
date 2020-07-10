@@ -23,7 +23,9 @@
         /// Gets or sets the URL of the target Dynamics 365 instance.
         /// </summary>
         [YamlMember(Alias = "url")]
-        public Uri Url { get; set; }
+#pragma warning disable CA1056 // Uri properties should not be strings
+        public string Url { get; set; }
+#pragma warning restore CA1056 // Uri properties should not be strings
 
         /// <summary>
         /// Gets or sets the URL of the WebDriver remote server.
@@ -54,11 +56,22 @@
 #pragma warning restore CA2227 // Collection properties should be read only
 
         /// <summary>
+        /// Gets the target URL.
+        /// </summary>
+        /// <returns>The URL of the test environment</returns>
+        public Uri GetTestUrl()
+        {
+            var urlEnvironmentVariable = Environment.GetEnvironmentVariable(this.Url);
+
+            return string.IsNullOrEmpty(urlEnvironmentVariable) ? new Uri(this.Url) : new Uri(urlEnvironmentVariable);
+        }
+
+        /// <summary>
         /// Retrieves the configuration for a user.
         /// </summary>
         /// <param name="userAlias">The alias of the user.</param>
         /// <returns>The user configuration.</returns>
-        public XrmUserConfiguration GetUserConfiguration(string userAlias)
+        public XrmUserConfiguration GetUser(string userAlias)
         {
             try
             {
@@ -83,7 +96,7 @@
         /// </summary>
         /// <param name="appName">The name of the app.</param>
         /// <returns>The app configuration.</returns>
-        public XrmAppConfiguration GetAppConfiguration(string appName)
+        public XrmAppConfiguration GetApp(string appName)
         {
             try
             {
