@@ -29,7 +29,6 @@ namespace Capgemini.Dynamics.Testing.Data {
 
         /**
          * Upserts an entity record.
-         * 
          * @param {string} entityLogicalName A logical name for the entity to upsert.
          * @param {IRecord} record A record to upsert.
          * @returns {Xrm.LookupValue} An entity reference to the upserted entity.
@@ -49,7 +48,7 @@ namespace Capgemini.Dynamics.Testing.Data {
 
                 return {
                     entityType: entityLogicalName,
-                    id: id
+                    id
                 };
             }
             else {
