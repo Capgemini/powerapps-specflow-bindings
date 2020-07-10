@@ -49,14 +49,16 @@ url: "https://instance.region.dynamics.com"
 browser: Chrome
 remoteServerUrl: "http://localhost:4444/wd/hub"
 users:
-  - username: "salesperson@organisation.onmicrosoft.com"
-    password: "Password123"
+  - username: "SPECFLOW_POWERAPPS_USERNAME_SALESPERSON"
+    password: "SPECFLOW_POWERAPPS_PASSWORD_SALESPERSON"
     isAdfs: false
     alias: "a salesperson"
 apps:
   - id: "7d4981cd-ec11-43b3-bdcc-3cb67b092b29"
     name: "Sales App"
 ```
+
+The username and password will be set from an environment variable (if available) or will use the value from the config file if not found.
 
 ### Writing feature files
 

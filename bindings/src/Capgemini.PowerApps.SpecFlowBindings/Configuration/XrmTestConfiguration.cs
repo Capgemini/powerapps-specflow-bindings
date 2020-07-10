@@ -62,7 +62,15 @@
         {
             try
             {
-                return this.Users.First(user => user.Alias == userAlias);
+                var user = this.Users.First(u => u.Alias == userAlias);
+
+                var usernameEnvironmentVariable = Environment.GetEnvironmentVariable(user.Username);
+                user.Username = string.IsNullOrEmpty(usernameEnvironmentVariable) ? user.Username : usernameEnvironmentVariable;
+
+                var passwordEnvironmentVariable = Environment.GetEnvironmentVariable(user.Password);
+                user.Password = string.IsNullOrEmpty(passwordEnvironmentVariable) ? user.Password : passwordEnvironmentVariable;
+
+                return user;
             }
             catch (Exception ex)
             {
