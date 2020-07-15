@@ -147,6 +147,9 @@
     <Compile Include="Configuration\XrmAppConfiguration.cs" />
     <Compile Include="Configuration\XrmTestConfiguration.cs" />
     <Compile Include="Configuration\XrmUserConfiguration.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\EntityExtensions.cs" />
+    <Compile Include="Extensions\FieldExtensions.cs" />
     <Compile Include="Extensions\GridExtensions.cs" />
     <Compile Include="Extensions\SubGridExtensions.cs" />
     <Compile Include="ITestDataRepository.cs" />
@@ -157,6 +160,7 @@
     <Compile Include="Steps\CommandBarSteps.cs" />
     <Compile Include="Steps\DataSteps.cs" />
     <Compile Include="Steps\DialogSteps.cs" />
+    <Compile Include="Steps\EntitySubGridSteps.cs" />
     <Compile Include="Steps\QuickCreateSteps.cs" />
     <Compile Include="Steps\EntitySteps.cs" />
     <Compile Include="Steps\GridSteps.cs" />

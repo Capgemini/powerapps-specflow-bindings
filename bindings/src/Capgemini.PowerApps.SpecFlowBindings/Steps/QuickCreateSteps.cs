@@ -1,9 +1,8 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Steps
 {
     using System;
-    using System.Linq;
+    using System.Globalization;
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
-    using FluentAssertions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using TechTalk.SpecFlow;
 
@@ -25,6 +24,18 @@
         }
 
         /// <summary>
+        /// Sets the value for the field on the quick create.
+        /// </summary>
+        /// <param name="fieldValue">The Field Value.</param>
+        /// <param name="fieldName">The Field Name.</param>
+        /// <param name="fieldType">The Field Type.</param>
+        [When(@"I enter '(.*)' into the '(.*)' (text|optionset|boolean|numeric|currency|datetime|lookup) field on the quick create")]
+        public static void WhenIEnterInTheFieldOnTheQuickCreate(string fieldValue, string fieldName, string fieldType)
+        {
+            SetFieldValue(fieldName, fieldValue.ReplaceTemplatedText(), fieldType);
+        }
+
+        /// <summary>
         /// Saves a quick create.
         /// </summary>
         [When(@"I save the quick create")]
@@ -33,5 +44,41 @@
             XrmApp.QuickCreate.Save();
         }
 
+        private static void SetFieldValue(string fieldName, string fieldValue, string fieldType)
+        {
+            switch (fieldType)
+            {
+                case "optionset":
+                    XrmApp.QuickCreate.SetValue(new OptionSet()
+                    {
+                        Name = fieldName,
+                        Value = fieldValue,
+                    });
+                    break;
+                case "boolean":
+                    XrmApp.QuickCreate.SetValue(new BooleanItem()
+                    {
+                        Name = fieldName,
+                        Value = bool.Parse(fieldValue),
+                    });
+                    break;
+                case "datetime":
+                    XrmApp.QuickCreate.SetValue(fieldName, DateTime.Parse(fieldValue, CultureInfo.CreateSpecificCulture("en-GB")));
+                    break;
+                case "lookup":
+                    XrmApp.QuickCreate.SetValue(new LookupItem()
+                    {
+                        Name = fieldName,
+                        Value = fieldValue,
+                    });
+                    break;
+                case "currency":
+                case "numeric":
+                case "text":
+                default:
+                    XrmApp.QuickCreate.SetValue(fieldName, fieldValue);
+                    break;
+            }
+        }
     }
 }

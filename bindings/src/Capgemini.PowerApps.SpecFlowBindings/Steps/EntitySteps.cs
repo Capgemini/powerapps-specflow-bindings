@@ -5,6 +5,7 @@
     using System.Linq;
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using FluentAssertions;
+    using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using Microsoft.Dynamics365.UIAutomation.Browser;
     using OpenQA.Selenium;
     using TechTalk.SpecFlow;
@@ -16,43 +17,110 @@
     public class EntitySteps : PowerAppsStepDefiner
     {
         /// <summary>
-        /// Clicks a command on a subgrid.
+        /// Selects a record in a lookup.
         /// </summary>
-        /// <param name="commandName">The name of the command.</param>
-        /// <param name="subGridName">The name of the subgrid.</param>
-        [When(@"I click the '(.*)' command on the '(.*)' subgrid")]
-        public static void WhenISelectTheCommandOnTheSubgrid(string commandName, string subGridName)
+        /// <param name="recordName">The name of the record.</param>
+        /// <param name="lookupName">The logical name of the lookup.</param>
+        [When(@"I select a record named '(.*)' in the '(.*)' lookup")]
+        public static void WhenISelectARecordNamedInTheLookup(string recordName, string lookupName)
+        {
+            XrmApp.Entity.SetValue(new LookupItem { Name = lookupName, Value = recordName });
+        }
+
+        /// <summary>
+        /// Performs an search in a lookup to show available records.
+        /// </summary>
+        /// <param name="searchString">The string to search.</param>
+        /// <param name="lookupName">The lookup logical name.</param>
+        [When(@"I search for '(.*)' in the '(.*)' lookup")]
+        public static void WhenIClickToBrowseRecordsInTheLookup(string searchString, string lookupName)
+        {
+            Driver.WaitForTransaction();
+            var fieldContainer = Driver.WaitUntilAvailable(By.XPath(AppElements.Xpath[AppReference.Entity.TextFieldContainer].Replace("[NAME]", lookupName)));
+            var input = fieldContainer.FindElement(By.TagName("input"));
+            input.Click();
+            input.SendKeys(searchString);
+            input.SendKeys(Keys.Enter);
+        }
+
+        /// <summary>
+        /// Asserts that the given record names are visible in a lookup flyout.
+        /// </summary>
+        /// <param name="lookupName">The name of the lookup.</param>
+        /// <param name="recordNames">The names of the records that should be visible.</param>
+        [Then(@"I can see only the following records in the '(.*)' lookup")]
+        public static void ThenICanSeeOnlyTheFollowingRecordsInTheLookup(string lookupName, Table recordNames)
+        {
+            XrmApp.ThinkTime(1000);
+
+            if (recordNames is null)
+            {
+                throw new ArgumentNullException(nameof(recordNames));
+            }
+
+            IWebElement flyout = null;
+
+            try
+            {
+                flyout = Driver.FindElement(By.CssSelector("[data-id*=SimpleLookupControlFlyout]"));
+            }
+            catch (NoSuchElementException ex)
+            {
+                throw new ElementNotVisibleException($"The flyout is not visible for the {lookupName} lookup.", ex);
+            }
+
+            var items = flyout.FindElements(By.CssSelector("ul[data-id*=LookupResultsDropdown] li[data-id*=LookupResultsDropdown] label:first-child")).Select(e => e.Text).ToList();
+
+            items.Count.Should().Be(recordNames.Rows.Count, because: "the flyout should only contain the given records.");
+            foreach (var item in items)
+            {
+                recordNames.Rows.Should().Contain(r => r[0] == item, because: "every given records should be present in the flyout.");
+            }
+        }
+
+        /// <summary>
+        /// Selects a tab on the form.
+        /// </summary>
+        /// <param name="tabName">The name of the tab.</param>
+        [Given(@"I select the '(.*)' tab")]
+        [When(@"I select the '(.*)' tab")]
+        public static void ISelectTab(string tabName)
         {
             Driver.WaitUntilVisible(
-                By.CssSelector($"div#dataSetRoot_{subGridName} button[aria-label=\"{commandName}\"]"));
-            XrmApp.Entity.SubGrid.ClickCommand(subGridName, commandName);
+                By.CssSelector($"li[title=\"{tabName}\"]"));
+
+            XrmApp.Entity.SelectTab(tabName);
         }
 
         /// <summary>
-        /// Selects a previously created test record in a subgrid.
+        /// Sets the value for the field.
         /// </summary>
-        /// <param name="alias">The alias of the test record.</param>
-        /// <param name="subGridName">The name of the subgrid.</param>
-        [When(@"I select '(.*)' from the '(.*)' subgrid")]
-        public static void WhenISelectFromTheSubgrid(string alias, string subGridName)
+        /// <param name="fieldValue">The Field Value.</param>
+        /// <param name="fieldName">The Field Name.</param>
+        /// <param name="fieldType">The Field Type.</param>
+        [When(@"I enter '(.*)' into the '(.*)' (text|optionset|boolean|numeric|currency|datetime|lookup) field")]
+        public static void WhenIEnterInTheField(string fieldValue, string fieldName, string fieldType)
         {
-            var index = GetSubGridItemIndexByAlias(alias, subGridName);
-            index.HasValue.Should().BeTrue(because: "the record should be found in the grid");
-
-            XrmApp.Entity.SubGrid.HighlightRecord(subGridName, Driver, index.Value);
+            SetFieldValue(fieldName, fieldValue.ReplaceTemplatedText(), fieldType);
         }
 
         /// <summary>
-        /// Asserts that a record is not in a subgrid.
+        /// Select a Form.
         /// </summary>
-        /// <param name="alias">The alias of the test record.</param>
-        /// <param name="subGridName">The name of the subgrid.</param>
-        [Then(@"I can not see '(.*)' in the '(.*)' subgrid")]
-        public static void ThenICanNotSeeInTheSubgrid(string alias, string subGridName)
+        /// <param name="formName">The name of the form.</param>
+        [When(@"I select '(.*)' form")]
+        public static void WhenISelectForm(string formName)
         {
-            GetSubGridItemIndexByAlias(alias, subGridName)
-                .HasValue
-                .Should().BeFalse(because: "the record should not exist in the subgrid");
+            XrmApp.Entity.SelectForm(formName);
+        }
+
+        /// <summary>
+        /// Saves the record.
+        /// </summary>
+        [When(@"I save the record")]
+        public static void WhenISaveTheRecord()
+        {
+            XrmApp.Entity.Save();
         }
 
         /// <summary>
@@ -68,37 +136,14 @@
         }
 
         /// <summary>
-        /// Asserts that the specified subgrid contains the specified test record.
+        /// Asserts that a field is editable on the form.
         /// </summary>
-        /// <param name="subGridName">The name of the subgrid.</param>
-        /// <param name="recordAlias">The alias of the test record.</param>
-        [Then(@"the '(.*)' subgrid contains '(.*)'")]
-        public static void ThenTheGridContains(string subGridName, string recordAlias)
+        /// <param name="fieldName">The name of the field.</param>
+        [Then(@"I can edit the '(.*)' field")]
+        public static void ThenICanEditTheField(string fieldName)
         {
-            var index = GetSubGridItemIndexByAlias(recordAlias, subGridName);
-
-            index.HasValue.Should().BeTrue(because: "the record should be found in the grid");
-        }
-
-        /// <summary>
-        /// Asserts that the specified subgrid contains the specified test records.
-        /// </summary>
-        /// <param name="subGridName">The name of the subgrid.</param>
-        /// <param name="table">The record aliases.</param>
-        [Then(@"the '(.*)' subgrid contains the following records")]
-        public static void ThenTheSubgridContainsTheFollowingRecords(string subGridName, Table table)
-        {
-            if (table is null)
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
-
-            foreach (var row in table.Rows)
-            {
-                GetSubGridItemIndexByAlias(row[0], subGridName)
-                    .HasValue
-                    .Should().BeTrue(because: "the record should be found in the grid");
-            }
+            XrmApp.Entity.GetField(fieldName).IsVisible.Should().BeTrue(because: "the field must be visible to be editable");
+            XrmApp.Entity.GetField(fieldName).IsReadOnly(Driver).Should().BeFalse(because: "the field should be editable");
         }
 
         /// <summary>
@@ -124,52 +169,95 @@
         }
 
         /// <summary>
-        /// Asserts that the subgrid contains a record that has a reference to the given test record in a given column.
+        /// Asserts that a field is read-only.
         /// </summary>
-        /// <param name="subGridName">The name of the subgrid.</param>
-        /// <param name="alias">The alias of the test record.</param>
-        /// <param name="lookup">The logical name of the lookup column.</param>
-        [Then(@"the '(.*)' subgrid contains a record with '(.*)' in the '(.*)' lookup")]
-        public void ThenTheSubgridContainsARecordWithInTheLookup(string subGridName, string alias, string lookup)
+        /// <param name="fieldName">The name of the field.</param>
+        [Then(@"I can not edit the '(.*)' field")]
+        public static void ThenICanNotEditTheField(string fieldName)
         {
-            var reference = TestDriver.GetTestRecordReference(alias);
-
-            var index = (long)Driver.ExecuteScript(
-                $"return Xrm.Page.getControl(\"{subGridName}\").getGrid().getRows().get().findIndex(row => row.data.entity.attributes.get().findIndex(a => a.getName() === \"{lookup}\" && a.getValue() && a.getValue()[0].id === \"{reference.Id.ToString("B").ToUpper(CultureInfo.CurrentCulture)}\") > -1)");
-
-            index.Should().BeGreaterOrEqualTo(0, because: "a matching record should be present in the subgrid");
+            XrmApp.Entity.GetField(fieldName).IsReadOnly(Driver).Should().BeTrue(because: "the field should not be editable");
         }
 
         /// <summary>
-        /// Asserts that the subgrid contains records that have references to the given test records in a given column.
+        /// Asserts that the provided fields are not editable.
         /// </summary>
-        /// <param name="subGridName">The name of the subgrid.</param>
-        /// <param name="lookup">The logical name of the lookup column.</param>
-        /// <param name="table">The record aliases.</param>
-        [Then(@"the '(.*)' subgrid contains records with the following in the '(.*)' lookup")]
-        public void ThenTheSubgridContainsRecordsWithTheFollowingInTheLookup(string subGridName, string lookup, Table table)
+        /// <param name="table">A table containing the fields to assert against.</param>
+        [Then(@"I can not edit the following fields")]
+        public static void ThenICanNotEditTheFollowingFields(Table table)
         {
             if (table is null)
             {
-                throw new System.ArgumentNullException(nameof(table));
+                throw new ArgumentNullException(nameof(table));
             }
 
-            foreach (var row in table.Rows)
+            var fields = table.Rows.Select((row) => XrmApp.Entity.GetField(row.Values.First()));
+
+            foreach (var field in fields)
             {
-                var alias = row[0];
-                var reference = TestDriver.GetTestRecordReference(alias);
-                var index = (long)Driver.ExecuteScript(
-                    $"return Xrm.Page.getControl(\"{subGridName}\").getGrid().getRows().get().findIndex(row => row.data.entity.attributes.get().findIndex(a => a.getName() === \"{lookup}\" && a.getValue() && a.getValue()[0].id === \"{reference.Id.ToString("B").ToUpper(CultureInfo.CurrentCulture)}\") > -1)");
-                index.Should().BeGreaterOrEqualTo(0, because: "a matching record should be present in the subgrid");
+                field.Should().NotBeNull();
+                field.IsVisible.Should().BeTrue();
+                field.IsReadOnly.Should().BeTrue();
             }
         }
 
-        private static int? GetSubGridItemIndexByAlias(string recordAlias, string subGridName)
+        /// <summary>
+        /// Asserts that a field is not visible.
+        /// </summary>
+        /// <param name="fieldName">The name of the field.</param>
+        [Then(@"I can see the '(.*)' field")]
+        public static void ThenICanSeeTheField(string fieldName)
         {
-            var record = TestDriver.GetTestRecordReference(recordAlias);
-            var index = XrmApp.Entity.SubGrid.GetRecordIndexById(subGridName, Driver, record.Id);
+            XrmApp.Entity.IsFieldVisible(Driver, fieldName).Should().BeTrue(because: "the field should be visible");
+        }
 
-            return index > -1 ? index : default(int?);
+        /// <summary>
+        /// Asserts that a field is not visible.
+        /// </summary>
+        /// <param name="fieldName">The name of the field.</param>
+        [Then(@"I can not see the '(.*)' field")]
+        public static void ThenICanNotSeeTheField(string fieldName)
+        {
+            XrmApp.Entity.IsFieldVisible(Driver, fieldName).Should().BeFalse(because: "the field should not be visible");
+        }
+
+        private static void SetFieldValue(string fieldName, string fieldValue, string fieldType)
+        {
+            switch (fieldType)
+            {
+                case "optionset":
+                    XrmApp.Entity.SetValue(new OptionSet()
+                    {
+                        Name = fieldName,
+                        Value = fieldValue,
+                    });
+                    break;
+                case "boolean":
+                    XrmApp.Entity.SetValue(new BooleanItem()
+                    {
+                        Name = fieldName,
+                        Value = bool.Parse(fieldValue),
+                    });
+                    break;
+                case "datetime":
+                    XrmApp.Entity.SetValue(new DateTimeControl(fieldName)
+                    {
+                        Value = DateTime.Parse(fieldValue, CultureInfo.CreateSpecificCulture("en-GB")),
+                    });
+                    break;
+                case "lookup":
+                    XrmApp.Entity.SetValue(new LookupItem()
+                    {
+                        Name = fieldName,
+                        Value = fieldValue,
+                    });
+                    break;
+                case "currency":
+                case "numeric":
+                case "text":
+                default:
+                    XrmApp.Entity.SetValue(fieldName, fieldValue);
+                    break;
+            }
         }
     }
 }

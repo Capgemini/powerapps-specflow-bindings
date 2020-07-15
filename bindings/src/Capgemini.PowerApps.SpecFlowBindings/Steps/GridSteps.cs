@@ -2,6 +2,7 @@
 {
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using FluentAssertions;
+    using Microsoft.Dynamics365.UIAutomation.Browser;
     using TechTalk.SpecFlow;
 
     /// <summary>
@@ -37,7 +38,7 @@
         /// </summary>
         /// <param name="table">The table containing the record aliases</param>
         [When(@"I select the following records from the grid")]
-        public void WhenISelectTheFollowingRecordsFromTheGrid(Table table)
+        public static void WhenISelectTheFollowingRecordsFromTheGrid(Table table)
         {
             if (table is null)
             {
@@ -48,6 +49,18 @@
             {
                 HighlightRowByAlias(row[0]);
             }
+        }
+
+        /// <summary>
+        /// Searches for a string on the grid.
+        /// </summary>
+        /// <param name="searchString">The string to search for.</param>
+        [When(@"I search for '(.*)' in the grid")]
+        public static void WhenISearchForInTheGrid(string searchString)
+        {
+            XrmApp.Grid.Search(searchString);
+
+            Driver.WaitForTransaction();
         }
 
         private static void HighlightRowByAlias(string alias)
