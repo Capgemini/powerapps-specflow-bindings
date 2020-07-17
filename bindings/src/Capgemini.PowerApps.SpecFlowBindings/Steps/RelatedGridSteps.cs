@@ -13,6 +13,16 @@
     public class RelatedGridSteps : PowerAppsStepDefiner
     {
         /// <summary>
+        /// Selects a records in a grid by index.
+        /// </summary>
+        /// <param name="index">The position of the record.</param>
+        [When(@"I open the record at position '(d+)' in the related grid")]
+        public static void WhenIOpenTheRecordAtPositionInTheRelatedGrid(int index)
+        {
+            XrmApp.Entity.RelatedGrid.OpenGridRow(index);
+        }
+
+        /// <summary>
         /// Opens a tab under the 'Related' tab.
         /// </summary>
         /// <param name="relatedTabName">The name of the tab under the 'Related' tab.</param>
@@ -61,6 +71,5 @@
                 .Should()
                 .Throw<NoSuchElementException>(because: "the button in the flyout shouldn't exist");
         }
-
     }
 }

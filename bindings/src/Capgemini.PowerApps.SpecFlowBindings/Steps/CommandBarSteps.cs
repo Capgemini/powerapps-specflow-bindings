@@ -1,5 +1,6 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Steps
 {
+    using FluentAssertions;
     using TechTalk.SpecFlow;
 
     /// <summary>
@@ -16,6 +17,26 @@
         public static void WhenISelectTheCommand(string commandName)
         {
             XrmApp.CommandBar.ClickCommand(commandName);
+        }
+
+        /// <summary>
+        /// Asserts that a command is available in the command bar.
+        /// </summary>
+        /// <param name="commandName">The label of the command.</param>
+        [Then("I can see the '(.*)' command")]
+        public static void ThenICanSeeTheCommand(string commandName)
+        {
+            XrmApp.CommandBar.GetCommandValues(true).Value.Should().Contain(commandName);
+        }
+
+        /// <summary>
+        /// Asserts that a command is available in the command bar.
+        /// </summary>
+        /// <param name="commandName">The label of the command.</param>
+        [Then("I can not see the '(.*)' command")]
+        public static void ThenICanNotSeeTheCommand(string commandName)
+        {
+            XrmApp.CommandBar.GetCommandValues(true).Value.Should().NotContain(commandName);
         }
     }
 }

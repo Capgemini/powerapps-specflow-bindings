@@ -45,6 +45,49 @@
         }
 
         /// <summary>
+        /// Selects all records in a subgrid.
+        /// </summary>
+        /// <param name="subGridName">The name of the subgrid.</param>
+        [When(@"I select all in the '(.*)' subgrid")]
+        public static void WhenISelectAllInTheSubgrid(string subGridName)
+        {
+            XrmApp.Entity.SubGrid.ClickSubgridSelectAll(subGridName);
+        }
+
+        /// <summary>
+        /// Selects a records in a subgrid by index.
+        /// </summary>
+        /// <param name="index">The position of the record.</param>
+        /// <param name="subGridName">The name of the subgrid.</param>
+        [When(@"I open the record at position '(d+)' in the '(.*)' subgrid")]
+        public static void WhenIOpenTheRecordAtPositionInTheSubgrid(int index, string subGridName)
+        {
+            XrmApp.Entity.SubGrid.OpenSubGridRecord(subGridName, index);
+        }
+
+        /// <summary>
+        /// Searches in a subgrid.
+        /// </summary>
+        /// <param name="text">The text to search for.</param>
+        /// <param name="subGridName">The name of the subgrid.</param>
+        [When(@"I search for '(.*)' in the '(.*)' subgrid")]
+        public static void WhenISearchForInTheSubgrid(string text, string subGridName)
+        {
+            XrmApp.Entity.SubGrid.Search(subGridName, text);
+        }
+
+        /// <summary>
+        /// Switches view in a subgrid.
+        /// </summary>
+        /// <param name="viewName">The name of the view.</param>
+        /// <param name="subGridName">The name of the subgrid.</param>
+        [When(@"I switch to the '(.*)' view in the '(.*)' subgrid")]
+        public static void WhenISwitchToTheViewInTheSubgrid(string viewName, string subGridName)
+        {
+            XrmApp.Entity.SubGrid.SwitchView(subGridName, viewName);
+        }
+
+        /// <summary>
         /// Asserts that a record is not in a subgrid.
         /// </summary>
         /// <param name="alias">The alias of the test record.</param>
@@ -55,6 +98,31 @@
             GetSubGridItemIndexByAlias(alias, subGridName)
                 .HasValue
                 .Should().BeFalse(because: "the record should not exist in the subgrid");
+        }
+
+        /// <summary>
+        /// Asserts that a given number of records are present in the subgrid.
+        /// </summary>
+        /// <param name="compare">The type of comparison.</param>
+        /// <param name="count">The count to compare.</param>
+        /// <param name="subGridName">The name of the subgrid.</param>
+        [Then(@"I can see (exactly|more than|less than) (\d+) records in the subgrid")]
+        public static void ThenICanSeeRecordsInTheSubgrid(string compare, int count, string subGridName)
+        {
+            var actualCount = XrmApp.Entity.SubGrid.GetSubGridItemsCount(subGridName);
+
+            switch (compare)
+            {
+                case "exactly":
+                    actualCount.Should().Be(count);
+                    break;
+                case "more than":
+                    actualCount.Should().BeGreaterThan(count);
+                    break;
+                case "less than":
+                    actualCount.Should().BeLessThan(count);
+                    break;
+            }
         }
 
         /// <summary>
@@ -85,9 +153,7 @@
 
             foreach (var row in table.Rows)
             {
-                GetSubGridItemIndexByAlias(row[0], subGridName)
-                    .HasValue
-                    .Should().BeTrue(because: "the record should be found in the grid");
+                ThenTheGridContains(subGridName, row[0]);
             }
         }
 
@@ -119,16 +185,12 @@
         {
             if (table is null)
             {
-                throw new System.ArgumentNullException(nameof(table));
+                throw new ArgumentNullException(nameof(table));
             }
 
             foreach (var row in table.Rows)
             {
-                var alias = row[0];
-                var reference = TestDriver.GetTestRecordReference(alias);
-                var index = (long)Driver.ExecuteScript(
-                    $"return Xrm.Page.getControl(\"{subGridName}\").getGrid().getRows().get().findIndex(row => row.data.entity.attributes.get().findIndex(a => a.getName() === \"{lookup}\" && a.getValue() && a.getValue()[0].id === \"{reference.Id.ToString("B").ToUpper(CultureInfo.CurrentCulture)}\") > -1)");
-                index.Should().BeGreaterOrEqualTo(0, because: "a matching record should be present in the subgrid");
+                ThenTheSubgridContainsARecordWithInTheLookup(subGridName, row[0], lookup);
             }
         }
 

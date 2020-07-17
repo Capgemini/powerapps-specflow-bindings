@@ -17,72 +17,9 @@
     public class EntitySteps : PowerAppsStepDefiner
     {
         /// <summary>
-        /// Selects a record in a lookup.
-        /// </summary>
-        /// <param name="recordName">The name of the record.</param>
-        /// <param name="lookupName">The logical name of the lookup.</param>
-        [When(@"I select a record named '(.*)' in the '(.*)' lookup")]
-        public static void WhenISelectARecordNamedInTheLookup(string recordName, string lookupName)
-        {
-            XrmApp.Entity.SetValue(new LookupItem { Name = lookupName, Value = recordName });
-        }
-
-        /// <summary>
-        /// Performs an search in a lookup to show available records.
-        /// </summary>
-        /// <param name="searchString">The string to search.</param>
-        /// <param name="lookupName">The lookup logical name.</param>
-        [When(@"I search for '(.*)' in the '(.*)' lookup")]
-        public static void WhenIClickToBrowseRecordsInTheLookup(string searchString, string lookupName)
-        {
-            Driver.WaitForTransaction();
-            var fieldContainer = Driver.WaitUntilAvailable(By.XPath(AppElements.Xpath[AppReference.Entity.TextFieldContainer].Replace("[NAME]", lookupName)));
-            var input = fieldContainer.FindElement(By.TagName("input"));
-            input.Click();
-            input.SendKeys(searchString);
-            input.SendKeys(Keys.Enter);
-        }
-
-        /// <summary>
-        /// Asserts that the given record names are visible in a lookup flyout.
-        /// </summary>
-        /// <param name="lookupName">The name of the lookup.</param>
-        /// <param name="recordNames">The names of the records that should be visible.</param>
-        [Then(@"I can see only the following records in the '(.*)' lookup")]
-        public static void ThenICanSeeOnlyTheFollowingRecordsInTheLookup(string lookupName, Table recordNames)
-        {
-            XrmApp.ThinkTime(1000);
-
-            if (recordNames is null)
-            {
-                throw new ArgumentNullException(nameof(recordNames));
-            }
-
-            IWebElement flyout = null;
-
-            try
-            {
-                flyout = Driver.FindElement(By.CssSelector("[data-id*=SimpleLookupControlFlyout]"));
-            }
-            catch (NoSuchElementException ex)
-            {
-                throw new ElementNotVisibleException($"The flyout is not visible for the {lookupName} lookup.", ex);
-            }
-
-            var items = flyout.FindElements(By.CssSelector("ul[data-id*=LookupResultsDropdown] li[data-id*=LookupResultsDropdown] label:first-child")).Select(e => e.Text).ToList();
-
-            items.Count.Should().Be(recordNames.Rows.Count, because: "the flyout should only contain the given records.");
-            foreach (var item in items)
-            {
-                recordNames.Rows.Should().Contain(r => r[0] == item, because: "every given records should be present in the flyout.");
-            }
-        }
-
-        /// <summary>
         /// Selects a tab on the form.
         /// </summary>
         /// <param name="tabName">The name of the tab.</param>
-        [Given(@"I select the '(.*)' tab")]
         [When(@"I select the '(.*)' tab")]
         public static void ISelectTab(string tabName)
         {
@@ -95,13 +32,105 @@
         /// <summary>
         /// Sets the value for the field.
         /// </summary>
-        /// <param name="fieldValue">The Field Value.</param>
-        /// <param name="fieldName">The Field Name.</param>
-        /// <param name="fieldType">The Field Type.</param>
-        [When(@"I enter '(.*)' into the '(.*)' (text|optionset|boolean|numeric|currency|datetime|lookup) field")]
-        public static void WhenIEnterInTheField(string fieldValue, string fieldName, string fieldType)
+        /// <param name="fieldValue">The field value.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="fieldType">The field type.</param>
+        /// <param name="fieldLocation">Whether the field is in the header.</param>
+        [When(@"I enter '(.*)' into the '(.*)' (text|optionset|boolean|numeric|currency|datetime|lookup) (field|header field) on the form")]
+        public static void WhenIEnterInTheField(string fieldValue, string fieldName, string fieldType, string fieldLocation)
         {
-            SetFieldValue(fieldName, fieldValue.ReplaceTemplatedText(), fieldType);
+            if (fieldLocation == "field")
+            {
+                SetFieldValue(fieldName, fieldValue.ReplaceTemplatedText(), fieldType);
+            }
+            else
+            {
+                SetHeaderFieldValue(fieldName, fieldValue.ReplaceTemplatedText(), fieldType);
+            }
+
+            Driver.WaitForTransaction();
+        }
+
+        /// <summary>
+        /// Sets the values of the fields in the table on the form.
+        /// </summary>
+        /// <param name="fields">The fields to set.</param>
+        [When(@"I enter the following into the form")]
+        public static void WhenIEnterTheFollowingIntoTheForm(Table fields)
+        {
+            fields = fields ?? throw new ArgumentNullException(nameof(fields));
+
+            foreach (TableRow row in fields.Rows)
+            {
+                WhenIEnterInTheField(row["Value"], row["Field"], row["Type"], row["Location"]);
+            }
+        }
+
+        /// <summary>
+        /// Clears the value for the field.
+        /// </summary>
+        /// <param name="field">The field name.</param>
+        [When(@"I clear the '(.*)' (?:currency|numeric|text|boolean) field")]
+        public static void WhenIClearTheField(string field)
+        {
+            XrmApp.Entity.ClearValue(field);
+        }
+
+        /// <summary>
+        /// Clears the value for the optionset field.
+        /// </summary>
+        /// <param name="field">The field.</param>
+        [When(@"I clear the '(.*)' optionset field")]
+        public static void WhenIClearTheOptionSetField(OptionSet field)
+        {
+            XrmApp.Entity.ClearValue(field);
+        }
+
+        /// <summary>
+        /// Clears the value for the boolean field.
+        /// </summary>
+        /// <param name="field">The field.</param>
+        [When(@"I clear the '(.*)' datetime field")]
+        public static void WhenIClearTheDateTimeField(DateTimeControl field)
+        {
+            XrmApp.Entity.ClearValue(field);
+        }
+
+        /// <summary>
+        /// Clears the value for the lookup field.
+        /// </summary>
+        /// <param name="field">The field.</param>
+        [When(@"I clear the '(.*)' lookup field")]
+        public static void WhenIClearTheLookupField(LookupItem field)
+        {
+            XrmApp.Entity.ClearValue(field);
+        }
+
+        /// <summary>
+        /// Deletes the record.
+        /// </summary>
+        [When(@"I delete the record")]
+        public static void WhenIDeleteTheRecord()
+        {
+            XrmApp.Entity.Delete();
+        }
+
+        /// <summary>
+        /// Opens the record set navigator.
+        /// </summary>
+        [When(@"I open the record set navigator")]
+        public static void WhenIOpenTheRecordSetNavigator()
+        {
+            XrmApp.Entity.OpenRecordSetNavigator();
+        }
+
+        /// <summary>
+        /// Closes the record set navigator.
+        /// </summary>
+        [When(@"I close the record set navigator")]
+        public static void WhenICloseTheRecordSetNavigator()
+        {
+            XrmApp.Entity.CloseRecordSetNavigator();
         }
 
         /// <summary>
@@ -124,15 +153,146 @@
         }
 
         /// <summary>
+        /// Assigns the record to a user or team.
+        /// </summary>
+        /// <param name="userOrTeamName">The name of the user or team.</param>
+        [When(@"I assign the record to a (?:user|team) named '(.*)'")]
+        public static void WhenIAssignTheRecordToANamed(string userOrTeamName)
+        {
+            XrmApp.Entity.Assign(userOrTeamName);
+        }
+
+        /// <summary>
+        /// Switches business process flow.
+        /// </summary>
+        /// <param name="process">The name of the process.</param>
+        [When(@"I switch process to the '(.*)' process")]
+        public static void WhenISwitchProcessToTheProcess(string process)
+        {
+            XrmApp.Entity.SwitchProcess(process);
+        }
+
+        /// <summary>
+        /// Asserts that a value is shown in a text, currency or numeric field.
+        /// </summary>
+        /// <param name="expectedValue">The expected value.</param>
+        /// <param name="field">The field name.</param>
+        /// <param name="fieldLocation">Where the field is located.</param>
+        [Then("I can see a value of '(.*)' in the '(.*)' (?:currency|numeric|text) (field|header field)")]
+        public static void ThenICanSeeAValueOfInTheField(string expectedValue, string field, string fieldLocation)
+        {
+            string actualValue = fieldLocation == "field" ? XrmApp.Entity.GetValue(field) : XrmApp.Entity.GetHeaderValue(field);
+            actualValue.Should().Be(expectedValue);
+        }
+
+        /// <summary>
+        /// Asserts that a value is shown in an option set field.
+        /// </summary>
+        /// <param name="expectedValue">The expected value.</param>
+        /// <param name="field">The field name.</param>
+        /// <param name="fieldLocation">Where the field is located.</param>
+        [Then("I can see a value of '(.*)' in the '(.*)' optionset (field|header field)")]
+        public static void ThenICanSeeAValueOfInTheOptionSetField(string expectedValue, OptionSet field, string fieldLocation)
+        {
+            string actualValue = fieldLocation == "field" ? XrmApp.Entity.GetValue(field) : XrmApp.Entity.GetHeaderValue(field);
+            actualValue.Should().Be(expectedValue);
+        }
+
+        /// <summary>
+        /// Asserts that a value is shown in a lookup field.
+        /// </summary>
+        /// <param name="expectedValue">The expected value.</param>
+        /// <param name="field">The field name.</param>
+        /// <param name="fieldLocation">Where the field is located.</param>
+        [Then("I can see a value of '(.*)' in the '(.*)' lookup (field|header field)")]
+        public static void ThenICanSeeAValueOfInTheOptionSetField(string expectedValue, LookupItem field, string fieldLocation)
+        {
+            string actualValue = fieldLocation == "field" ? XrmApp.Entity.GetValue(field) : XrmApp.Entity.GetHeaderValue(field);
+            actualValue.Should().Be(expectedValue);
+        }
+
+        /// <summary>
+        /// Asserts that a field is mandatory or optional.
+        /// </summary>
+        /// <param name="fieldName">The name of the field.</param>
+        /// <param name="requirementLevel">Whether the field should be mandatory or optional.</param>
+        [Then(@"the '(.*)' field is (mandatory|optional)")]
+        public static void ThenTheFieldIsMandatory(string fieldName, string requirementLevel)
+        {
+            if (!Driver.TryFindElement(By.CssSelector($"div[data-id=\"{fieldName}-FieldSectionItemContainer\"]"), out var fieldContainer))
+            {
+                throw new InvalidOperationException($"The {fieldName} field is not visible on the form.");
+            }
+
+            fieldContainer.GetAttribute<int>("data-fieldrequirement").Should().Be(requirementLevel == "mandatory" ? 2 : 0, because: $"the field should be {requirementLevel}");
+        }
+
+        /// <summary>
+        /// Asserts that a value is shown in a boolean field.
+        /// </summary>
+        /// <param name="expectedValue">The expected value.</param>
+        /// <param name="field">The field name.</param>
+        /// <param name="fieldLocation">Where the field is located.</param>
+        [Then("I can see a value of '(true|false)' in the '(.*)' boolean (field|header field)")]
+        public static void ThenICanSeeAValueOfInTheBooleanField(bool expectedValue, BooleanItem field, string fieldLocation)
+        {
+            var actualValue = fieldLocation == "field" ? XrmApp.Entity.GetValue(field) : XrmApp.Entity.GetHeaderValue(field);
+            actualValue.Should().Be(expectedValue);
+        }
+
+        /// <summary>
+        /// Asserts that a value is shown in a datetime field.
+        /// </summary>
+        /// <param name="expectedValue">The expected value.</param>
+        /// <param name="field">The field name.</param>
+        /// <param name="fieldLocation">Where the field is located.</param>
+        [Then(@"I can see a value of '((?:0?[1-9]|[12][0-9]|3[01])[\/\-](?:0?[1-9]|1[012])[\/\-]\d{4}(?: \d{1,2}[:-]\d{2}(?:[:-]\d{2,3})*)?)' in the '(.*)' datetime (field|header field)")]
+        public static void ThenICanSeeAValueOfInTheDateTimeField(DateTime expectedValue, DateTimeControl field, string fieldLocation)
+        {
+            var actualValue = fieldLocation == "field" ? XrmApp.Entity.GetValue(field) : XrmApp.Entity.GetHeaderValue(field);
+            actualValue.Should().Be(expectedValue);
+        }
+
+        /// <summary>
+        /// Asserts that a business process error is shown with a given message.
+        /// </summary>
+        /// <param name="expectedMessage">The expected message.</param>
+        [Then(@"I can see a business process error stating '(.*)'")]
+        public static void ThenICanSeeABusinessProcessErrorStating(string expectedMessage)
+        {
+            XrmApp.Entity.GetBusinessProcessError().Should().Be(expectedMessage);
+        }
+
+        /// <summary>
         /// Asserts that the provided form for the provided entity is shown.
         /// </summary>
         /// <param name="formName">The name of the form.</param>
         /// <param name="entityName">The name of the entity.</param>
-        [Then(@"I am presented with a new '(.*)' form for the '(.*)' entity")]
+        [Then(@"I am presented with a '(.*)' form for the '(.*)' entity")]
         public static void ThenIAmPresentedWithANewFormForTheEntity(string formName, string entityName)
         {
             XrmApp.Entity.GetFormName().Should().Be(formName);
             XrmApp.Entity.GetEntityName().Should().Be(entityName);
+        }
+
+        /// <summary>
+        /// Asserts that a form notification can be seen with the given message.
+        /// </summary>
+        /// <param name="message">The message of the notification.</param>
+        [Then(@"I can see a form notification stating '(.*)'")]
+        public static void ThenICanSeeAFormNotificationStating(string message)
+        {
+            XrmApp.Entity.GetFormNotifications().Should().Contain(message);
+        }
+
+        /// <summary>
+        /// Asserts that the given value is in the header title.
+        /// </summary>
+        /// <param name="message">The header title.</param>
+        [Then(@"I can see a value of '(.*)' as the header title")]
+        public static void ThenICanSeeAsTheHeaderTitle(string message)
+        {
+            XrmApp.Entity.GetHeaderTitle().Should().Contain(message);
         }
 
         /// <summary>
@@ -142,8 +302,35 @@
         [Then(@"I can edit the '(.*)' field")]
         public static void ThenICanEditTheField(string fieldName)
         {
-            XrmApp.Entity.GetField(fieldName).IsVisible.Should().BeTrue(because: "the field must be visible to be editable");
-            XrmApp.Entity.GetField(fieldName).IsReadOnly(Driver).Should().BeFalse(because: "the field should be editable");
+            var field = XrmApp.Entity.GetField(fieldName);
+
+            field.IsVisible.Should().BeTrue(because: "the field must be visible to be editable");
+            field.IsReadOnly(Driver).Should().BeFalse(because: "the field should be editable");
+        }
+
+        /// <summary>
+        /// Asserts that the given values are available in an option set.
+        /// </summary>
+        /// <param name="fieldName">The name of the option set field.</param>
+        /// <param name="expectedOptionsTable">The options.</param>
+        [Then(@"I can see the following options in the '(.*)' option set field")]
+        public static void ThenICanSeeTheFollowingOptionsInTheOptionSetField(string fieldName, Table expectedOptionsTable)
+        {
+            if (expectedOptionsTable is null)
+            {
+                throw new ArgumentNullException(nameof(expectedOptionsTable));
+            }
+
+            if (!Driver.TryFindElement(By.CssSelector($"select[data-id*=\"{fieldName}.fieldControl-option-set-select\"]"), out var optionSet))
+            {
+                throw new InvalidOperationException($"Unable to find option set field {fieldName}.");
+            }
+
+            var expectedOptions = expectedOptionsTable.Rows.Select(r => r[0]);
+            foreach (var option in optionSet.FindElements(By.CssSelector("option")).Where(e => e.GetAttribute("value") != "-1"))
+            {
+                expectedOptions.Should().Contain(option.Text, because: "the options be in the list of expected options");
+            }
         }
 
         /// <summary>
@@ -158,13 +345,11 @@
                 throw new ArgumentNullException(nameof(table));
             }
 
-            var fields = table.Rows.Select((row) => XrmApp.Entity.GetField(row.Values.First()));
+            var fields = table.Rows.Select((row) => row.Values.First());
 
             foreach (var field in fields)
             {
-                field.Should().NotBeNull();
-                field.IsVisible.Should().BeTrue();
-                field.IsReadOnly.Should().BeFalse();
+                ThenICanEditTheField(field);
             }
         }
 
@@ -190,13 +375,9 @@
                 throw new ArgumentNullException(nameof(table));
             }
 
-            var fields = table.Rows.Select((row) => XrmApp.Entity.GetField(row.Values.First()));
-
-            foreach (var field in fields)
+            foreach (var field in table.Rows.Select((row) => row.Values.First()))
             {
-                field.Should().NotBeNull();
-                field.IsVisible.Should().BeTrue();
-                field.IsReadOnly.Should().BeTrue();
+                ThenICanNotEditTheField(field);
             }
         }
 
@@ -241,7 +422,7 @@
                 case "datetime":
                     XrmApp.Entity.SetValue(new DateTimeControl(fieldName)
                     {
-                        Value = DateTime.Parse(fieldValue, CultureInfo.CreateSpecificCulture("en-GB")),
+                        Value = DateTime.Parse(fieldValue, CultureInfo.CurrentCulture),
                     });
                     break;
                 case "lookup":
@@ -256,6 +437,46 @@
                 case "text":
                 default:
                     XrmApp.Entity.SetValue(fieldName, fieldValue);
+                    break;
+            }
+        }
+
+        private static void SetHeaderFieldValue(string fieldName, string fieldValue, string fieldType)
+        {
+            switch (fieldType)
+            {
+                case "optionset":
+                    XrmApp.Entity.SetHeaderValue(new OptionSet()
+                    {
+                        Name = fieldName,
+                        Value = fieldValue,
+                    });
+                    break;
+                case "boolean":
+                    XrmApp.Entity.SetHeaderValue(new BooleanItem()
+                    {
+                        Name = fieldName,
+                        Value = bool.Parse(fieldValue),
+                    });
+                    break;
+                case "datetime":
+                    XrmApp.Entity.SetHeaderValue(new DateTimeControl(fieldName)
+                    {
+                        Value = DateTime.Parse(fieldValue, CultureInfo.CurrentCulture),
+                    });
+                    break;
+                case "lookup":
+                    XrmApp.Entity.SetHeaderValue(new LookupItem()
+                    {
+                        Name = fieldName,
+                        Value = fieldValue,
+                    });
+                    break;
+                case "currency":
+                case "numeric":
+                case "text":
+                default:
+                    XrmApp.Entity.SetHeaderValue(fieldName, fieldValue);
                     break;
             }
         }

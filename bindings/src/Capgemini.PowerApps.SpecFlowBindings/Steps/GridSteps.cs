@@ -12,11 +12,50 @@
     public class GridSteps : PowerAppsStepDefiner
     {
         /// <summary>
+        /// Selects a records in a grid by index.
+        /// </summary>
+        /// <param name="index">The position of the record.</param>
+        [When(@"I open the record at position '(d+)' in the grid")]
+        public static void WhenIOpenTheRecordAtPositionInTheGrid(int index)
+        {
+            XrmApp.Grid.OpenRecord(index);
+        }
+
+        /// <summary>
+        /// Clears the search in a grid.
+        /// </summary>
+        [When(@"I clear the search in the grid")]
+        public static void WhenIClearTheSearchInTheGrid()
+        {
+            XrmApp.Grid.ClearSearch();
+        }
+
+        /// <summary>
+        /// Sorts by a column in the grid.
+        /// </summary>
+        /// <param name="column">The column to sort by.</param>
+        [When(@"I sort by '(.*)' in the grid")]
+        public static void WhenISortByInTheGrid(string column)
+        {
+            XrmApp.Grid.Sort(column);
+        }
+
+        /// <summary>
+        /// Switches view in a grid.
+        /// </summary>
+        /// <param name="viewName">The name of the view.</param>
+        [When(@"I switch to the '(.*)' view in the grid")]
+        public static void WhenISwitchToTheViewInTheGrid(string viewName)
+        {
+            XrmApp.Grid.SwitchView(viewName);
+        }
+
+        /// <summary>
         /// Selects a previously created test record from a grid.
         /// </summary>
         /// <param name="recordAlias">The alias of the test record.</param>
         [When(@"I select '(.*)' from the grid")]
-        public static void WhenISelectFromTheGrid(string recordAlias)
+        public static void WhenIOpenTheRecordAtPositionInTheGrid(string recordAlias)
         {
             HighlightRowByAlias(recordAlias);
         }
@@ -36,7 +75,7 @@
         /// <summary>
         /// Selects multiple previously created test records from a grid.
         /// </summary>
-        /// <param name="table">The table containing the record aliases</param>
+        /// <param name="table">The table containing the record aliases.</param>
         [When(@"I select the following records from the grid")]
         public static void WhenISelectTheFollowingRecordsFromTheGrid(Table table)
         {

@@ -14,7 +14,7 @@
         /// </summary>
         /// <param name="alias">The alias of the test record.</param>
         [Given(@"I have opened '(.*)'")]
-        public void GivenIHaveOpened(string alias)
+        public static void GivenIHaveOpened(string alias)
         {
             TestDriver.OpenTestRecord(alias);
         }
@@ -24,7 +24,7 @@
         /// </summary>
         /// <param name="fileName">The name of the file containing the test record.</param>
         [Given(@"I have created '(.*)'")]
-        public void GivenIHaveCreated(string fileName)
+        public static void GivenIHaveCreated(string fileName)
         {
             TestDriver.LoadTestData(TestDataRepository.GetTestData(fileName));
         }

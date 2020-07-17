@@ -157,19 +157,25 @@
     <Compile Include="PowerAppsStepDefiner.cs" />
     <Compile Include="Hooks\AfterScenarioHooks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Steps\BusinessProcessFlowSteps.cs" />
     <Compile Include="Steps\CommandBarSteps.cs" />
+    <Compile Include="Steps\DashboardSteps.cs" />
     <Compile Include="Steps\DataSteps.cs" />
     <Compile Include="Steps\DialogSteps.cs" />
     <Compile Include="Steps\EntitySubGridSteps.cs" />
+    <Compile Include="Steps\GlobalSearchSteps.cs" />
+    <Compile Include="Steps\LookupSteps.cs" />
     <Compile Include="Steps\QuickCreateSteps.cs" />
     <Compile Include="Steps\EntitySteps.cs" />
     <Compile Include="Steps\GridSteps.cs" />
     <Compile Include="Steps\LoginSteps.cs" />
     <Compile Include="Steps\NavigationSteps.cs" />
     <Compile Include="Steps\RelatedGridSteps.cs" />
+    <Compile Include="Steps\TimelineSteps.cs" />
     <Compile Include="Steps\UtilitySteps.cs" />
     <Compile Include="TestDataRepository.cs" />
     <Compile Include="TestDriver.cs" />
+    <Compile Include="Transformations\EasyReproTransformations.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="build\Capgemini.PowerApps.SpecFlowBindings.targets" />

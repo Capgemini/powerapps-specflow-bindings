@@ -54,8 +54,9 @@
                     Directory.CreateDirectory(screenshotsFolder);
                 }
 
+                var fileName = string.Concat(this.scenarioContext.ScenarioInfo.Title.Split(Path.GetInvalidFileNameChars()));
                 Client.Browser.TakeWindowScreenShot(
-                    Path.Combine(screenshotsFolder, $"{this.scenarioContext.ScenarioInfo.Title}.jpg"),
+                    Path.Combine(screenshotsFolder, $"{fileName}.jpg"),
                     ScreenshotImageFormat.Jpeg);
             }
         }
