@@ -304,6 +304,29 @@
                 .Click(false);
         }
 
+        /// <summary>
+        /// Selects a record in the subgrid given a value is in a particular field.
+        /// </summary>
+        /// <param name="fieldValue">The field value.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="subGridName">The subgrid name.</param>
+        [When(@"I select a record with '(.*)' in the '(.*)' field in the '(.*)' subgrid")]
+        public static void WhenISelectARecordWithInTheFieldInTheSubgrid(string fieldValue, string fieldName, string subGridName)
+        {
+            List<GridItem> subGridItems = XrmApp.Entity.SubGrid.GetSubGridItems(subGridName);
+
+            GridItem subGridItem = subGridItems.FirstOrDefault(item => item.GetAttribute<string>(fieldName) == fieldValue);
+
+            if (subGridItem != default(GridItem))
+            {
+                XrmApp.Entity.SubGrid.HighlightRecord(subGridName, Driver, subGridItems.IndexOf(subGridItem));
+            }
+            else
+            {
+                throw new Exception($"Could not find record with field '{fieldName}' with value '{fieldValue}' in the '{subGridName}' subgrid.");
+            }
+        }
+
         private static int? GetSubGridItemIndexByAlias(string recordAlias, string subGridName)
         {
             var record = TestDriver.GetTestRecordReference(recordAlias);

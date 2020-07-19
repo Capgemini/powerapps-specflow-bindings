@@ -147,6 +147,7 @@
     <Compile Include="Configuration\XrmAppConfiguration.cs" />
     <Compile Include="Configuration\XrmTestConfiguration.cs" />
     <Compile Include="Configuration\XrmUserConfiguration.cs" />
+    <Compile Include="Extensions\MultiSelectOptionSetExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\EntityExtensions.cs" />
     <Compile Include="Extensions\FieldExtensions.cs" />

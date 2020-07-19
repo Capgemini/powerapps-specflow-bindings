@@ -36,7 +36,7 @@
         /// <param name="fieldName">The field name.</param>
         /// <param name="fieldType">The field type.</param>
         /// <param name="fieldLocation">Whether the field is in the header.</param>
-        [When(@"I enter '(.*)' into the '(.*)' (text|optionset|boolean|numeric|currency|datetime|lookup) (field|header field) on the form")]
+        [When(@"I enter '(.*)' into the '(.*)' (text|optionset|multioptionset|boolean|numeric|currency|datetime|lookup) (field|header field) on the form")]
         public static void WhenIEnterInTheField(string fieldValue, string fieldName, string fieldType, string fieldLocation)
         {
             if (fieldLocation == "field")
@@ -445,6 +445,19 @@
         {
             switch (fieldType)
             {
+                case "multioptionset":
+                    XrmApp.Entity.SetMultiSelectOptionSetValue(
+                        Driver,
+                        new MultiValueOptionSet()
+                        {
+                            Name = fieldName,
+                            Values = fieldValue
+                                        .Split(',')
+                                        .Select(v => v.Trim())
+                                        .ToArray(),
+                        },
+                        true);
+                    break;
                 case "optionset":
                     XrmApp.Entity.SetHeaderValue(new OptionSet()
                     {

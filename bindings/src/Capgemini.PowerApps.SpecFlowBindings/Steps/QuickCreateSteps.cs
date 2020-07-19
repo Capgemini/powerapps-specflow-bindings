@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using System.Linq;
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using FluentAssertions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
@@ -19,7 +20,7 @@
         /// <param name="fieldValue">The field value.</param>
         /// <param name="fieldName">The field name.</param>
         /// <param name="fieldType">The field type.</param>
-        [When(@"I enter '(.*)' into the '(.*)' (text|optionset|boolean|numeric|currency|datetime|lookup) field on the quick create")]
+        [When(@"I enter '(.*)' into the '(.*)' (text|optionset|multioptionset|boolean|numeric|currency|datetime|lookup) field on the quick create")]
         public static void WhenIEnterInTheFieldOnTheQuickCreate(string fieldValue, string fieldName, string fieldType)
         {
             SetFieldValue(fieldName, fieldValue.ReplaceTemplatedText(), fieldType);
@@ -136,6 +137,19 @@
         {
             switch (fieldType)
             {
+                case "multioptionset":
+                    XrmApp.QuickCreate.SetMultiSelectOptionSetValue(
+                        Driver,
+                        new MultiValueOptionSet()
+                        {
+                            Name = fieldName,
+                            Values = fieldValue
+                                        .Split(',')
+                                        .Select(v => v.Trim())
+                                        .ToArray(),
+                        },
+                        true);
+                    break;
                 case "optionset":
                     XrmApp.QuickCreate.SetValue(new OptionSet()
                     {
