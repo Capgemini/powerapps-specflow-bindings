@@ -106,7 +106,7 @@
         /// <param name="compare">The type of comparison.</param>
         /// <param name="count">The count to compare.</param>
         /// <param name="subGridName">The name of the subgrid.</param>
-        [Then(@"I can see (exactly|more than|less than) (\d+) records in the subgrid")]
+        [Then(@"I can see (exactly|more than|less than) (\d+) records in the '(.*)' subgrid")]
         public static void ThenICanSeeRecordsInTheSubgrid(string compare, int count, string subGridName)
         {
             var actualCount = XrmApp.Entity.SubGrid.GetSubGridItemsCount(subGridName);
