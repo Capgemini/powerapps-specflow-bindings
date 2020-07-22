@@ -99,8 +99,8 @@
             }
 
             new WebDriverWait(Driver, TimeSpan.FromSeconds(5))
-                .Until(d => d.FindElement(By.CssSelector($"li[data-id*=\"LookupResultsDropdown\"] label:first-child")));
-            var items = Driver.FindElements(By.CssSelector("li[data-id*=\"LookupResultsDropdown\"] label:first-child")).Select(e => e.Text).ToList();
+                .Until(d => d.FindElement(By.CssSelector("ul[aria-label=\"Lookup Search Results\"] li")));
+            var items = Driver.FindElements(By.CssSelector("ul[aria-label=\"Lookup Search Results\"] li")).Select(e => e.GetAttribute("aria-label")).ToList();
 
             items.Count.Should().Be(recordNames.Rows.Count, because: "the flyout should only contain the given records");
             foreach (var item in items)
