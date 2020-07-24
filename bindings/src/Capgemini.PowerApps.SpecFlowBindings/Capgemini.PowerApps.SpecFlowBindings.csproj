@@ -144,9 +144,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\XrmAppConfiguration.cs" />
-    <Compile Include="Configuration\XrmTestConfiguration.cs" />
-    <Compile Include="Configuration\XrmUserConfiguration.cs" />
+    <Compile Include="Configuration\BrowserCredentialsYamlTypeConverter.cs" />
+    <Compile Include="Configuration\TestConfiguration.cs" />
+    <Compile Include="Configuration\UserConfiguration.cs" />
     <Compile Include="Extensions\MultiSelectOptionSetExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\EntityExtensions.cs" />
@@ -182,7 +182,6 @@
     <None Include="build\Capgemini.PowerApps.SpecFlowBindings.targets" />
     <None Include="Capgemini.PowerApps.SpecFlowBindings.nuspec" />
     <None Include="Capgemini.PowerApps.SpecFlowBindings.ruleset" />
-    <None Include="Configuration\power-apps-bindings.json" />
     <None Include="content\power-apps-bindings.yml" />
     <None Include="packages.config" />
   </ItemGroup>

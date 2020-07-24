@@ -4,12 +4,13 @@
     using System.Collections.Generic;
     using System.Configuration;
     using System.Linq;
+    using Microsoft.Dynamics365.UIAutomation.Browser;
     using YamlDotNet.Serialization;
 
     /// <summary>
     /// Test configuration for Dynamics 365 automated UI testing.
     /// </summary>
-    public class XrmTestConfiguration
+    public class TestConfiguration
     {
         /// <summary>
         /// The name of the file that stores the test configuration.
@@ -17,48 +18,41 @@
         public const string FileName = "power-apps-bindings.yml";
 
         private const string GetUserException = "Unable to retrieve user configuration. Please ensure a user with the given alias exists in the config.";
-        private const string GetAppException = "Unable to retrieve app configuration. Please ensure an app with the given name exists in the config.";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestConfiguration"/> class.
+        /// </summary>
+        public TestConfiguration()
+        {
+            this.BrowserOptions = new BrowserOptions();
+        }
+
+#pragma warning disable CA1056 // Uri properties should not be strings
         /// <summary>
         /// Gets or sets the URL of the target Dynamics 365 instance.
         /// </summary>
         [YamlMember(Alias = "url")]
-#pragma warning disable CA1056 // Uri properties should not be strings
         public string Url { get; set; }
 #pragma warning restore CA1056 // Uri properties should not be strings
 
         /// <summary>
-        /// Gets or sets the URL of the WebDriver remote server.
+        /// Gets or sets the browser options to use for running tests.
         /// </summary>
-        [YamlMember(Alias = "remoteServerUrl")]
-        public Uri RemoteServerUrl { get; set; }
-
-        /// <summary>
-        /// Gets or sets the browser to use for running tests.
-        /// </summary>
-        [YamlMember(Alias = "browser")]
-        public string Browser { get; set; }
+        [YamlMember(Alias = "browserOptions")]
+        public BrowserOptions BrowserOptions { get; set; }
 
 #pragma warning disable CA2227 // Collection properties should be read only
-
         /// <summary>
         /// Gets or sets users that tests can be run as.
         /// </summary>
         [YamlMember(Alias = "users")]
-        public List<XrmUserConfiguration> Users { get; set; }
-
-        /// <summary>
-        /// Gets or sets apps that tests can navigate to.
-        /// </summary>
-        [YamlMember(Alias = "apps")]
-        public List<XrmAppConfiguration> Apps { get; set; }
-
+        public List<UserConfiguration> Users { get; set; }
 #pragma warning restore CA2227 // Collection properties should be read only
 
         /// <summary>
         /// Gets the target URL.
         /// </summary>
-        /// <returns>The URL of the test environment</returns>
+        /// <returns>The URL of the test environment.</returns>
         public Uri GetTestUrl()
         {
             var urlEnvironmentVariable = Environment.GetEnvironmentVariable(this.Url);
@@ -71,7 +65,7 @@
         /// </summary>
         /// <param name="userAlias">The alias of the user.</param>
         /// <returns>The user configuration.</returns>
-        public XrmUserConfiguration GetUser(string userAlias)
+        public UserConfiguration GetUser(string userAlias)
         {
             try
             {
@@ -88,23 +82,6 @@
             catch (Exception ex)
             {
                 throw new ConfigurationErrorsException($"{GetUserException} User: {userAlias}", ex);
-            }
-        }
-
-        /// <summary>
-        /// Retrieves the configuration for an app.
-        /// </summary>
-        /// <param name="appName">The name of the app.</param>
-        /// <returns>The app configuration.</returns>
-        public XrmAppConfiguration GetApp(string appName)
-        {
-            try
-            {
-                return this.Apps.First(app => app.Name == appName);
-            }
-            catch (Exception ex)
-            {
-                throw new ConfigurationErrorsException($"{GetAppException} App: {appName}", ex);
             }
         }
     }

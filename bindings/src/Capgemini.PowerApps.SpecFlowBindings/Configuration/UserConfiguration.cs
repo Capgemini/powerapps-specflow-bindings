@@ -5,7 +5,7 @@
     /// <summary>
     /// A user that tests can run as.
     /// </summary>
-    public class XrmUserConfiguration
+    public class UserConfiguration
     {
         /// <summary>
         /// Gets or sets the username of the user.
@@ -18,12 +18,6 @@
         /// </summary>
         [YamlMember(Alias = "password")]
         public string Password { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether whether or not the user must login via ADFS.
-        /// </summary>
-        [YamlMember(Alias = "isAdfs")]
-        public bool IsAdfs { get; set; }
 
         /// <summary>
         /// Gets or sets the alias of the user (used to retrieve from configuration).

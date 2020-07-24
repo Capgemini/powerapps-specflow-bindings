@@ -17,10 +17,10 @@
         [Given("I am logged in to the '(.*)' app as '(.*)'")]
         public static void GivenIAmLoggedInToTheAppAs(string appName, string userAlias)
         {
-            var user = XrmTestConfig.GetUser(userAlias);
+            var user = TestConfig.GetUser(userAlias);
 
             XrmApp.OnlineLogin.Login(
-                XrmTestConfig.GetTestUrl(),
+                TestConfig.GetTestUrl(),
                 user.Username.ToSecureString(),
                 user.Password.ToSecureString());
 

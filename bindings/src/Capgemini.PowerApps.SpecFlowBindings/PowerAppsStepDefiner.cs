@@ -8,13 +8,14 @@
     using Microsoft.Dynamics365.UIAutomation.Browser;
     using OpenQA.Selenium;
     using YamlDotNet.Serialization;
+    using YamlDotNet.Serialization.NamingConventions;
 
     /// <summary>
     /// Base class for defining step bindings.
     /// </summary>
     public abstract class PowerAppsStepDefiner
     {
-        private static XrmTestConfiguration xrmTestConfig;
+        private static TestConfiguration testConfig;
 
         [ThreadStatic]
         private static ITestDriver testDriver;
@@ -31,17 +32,30 @@
         /// <summary>
         /// Gets the configuration for the test project.
         /// </summary>
-        protected static XrmTestConfiguration XrmTestConfig
+        protected static TestConfiguration TestConfig
         {
             get
             {
-                if (xrmTestConfig == null)
+                if (testConfig == null)
                 {
-                    var configPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), XrmTestConfiguration.FileName);
-                    xrmTestConfig = new Deserializer().Deserialize<XrmTestConfiguration>(File.ReadAllText(configPath));
+                    var configPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), TestConfiguration.FileName);
+
+                    testConfig = new DeserializerBuilder()
+                        .WithTypeConverter(new BrowserCredentialsYamlTypeConverter())
+                        .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                        .Build()
+                        .Deserialize<TestConfiguration>(File.ReadAllText(configPath));
+
+                    if (testConfig.BrowserOptions.DriversPath == Path.Combine(Directory.GetCurrentDirectory()))
+                    {
+                        if (Directory.GetFiles(testConfig.BrowserOptions.DriversPath, "*driver.exe").Length == 0)
+                        {
+                            testConfig.BrowserOptions.DriversPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                        }
+                    }
                 }
 
-                return xrmTestConfig;
+                return testConfig;
             }
         }
 
@@ -53,7 +67,7 @@
         /// <summary>
         /// Gets the EasyRepro WebClient.
         /// </summary>
-        protected static WebClient Client => client ?? (client = new WebClient(GetBrowserOptions()));
+        protected static WebClient Client => client ?? (client = new WebClient(TestConfig.BrowserOptions));
 
         /// <summary>
         /// Gets the EasyRepro XrmApp.
@@ -84,16 +98,6 @@
             xrmApp = null;
             client = null;
             testDriver = null;
-        }
-
-        private static BrowserOptions GetBrowserOptions()
-        {
-            return new BrowserOptions
-            {
-                BrowserType = (BrowserType)Enum.Parse(typeof(BrowserType), XrmTestConfig.Browser),
-                RemoteHubServer = XrmTestConfig.RemoteServerUrl,
-                DriversPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-            };
         }
     }
 }

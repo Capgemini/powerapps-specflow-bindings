@@ -1,9 +1,8 @@
 url: 
-browser: 
-remoteServerUrl: 
+browserOptions: 
+  browserType:
 users: 
   - username:
     password:
     isAdfs:
     alias:
-apps: []

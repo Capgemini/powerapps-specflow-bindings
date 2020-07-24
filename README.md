@@ -42,23 +42,20 @@ PM> Install-Package Selenium.Chrome.WebDriver
 
 ### Configuration
 
-Installing the NuGet package creates a _power-apps-bindings.yml_ file in your project's root. This is used to configure the URL, browser, users and apps that will be used for your tests. You also have the option to configure a remoteServerUrl if you using a remote WebDriver (e.g. Selenium Grid).
+Installing the NuGet package creates a _power-apps-bindings.yml_ file in your project's root. This is used to configure the URL, browser, and users that will be used for your tests.
 
 ```yaml
 url: "SPECFLOW_POWERAPPS_URL"
-browser: Chrome
-remoteServerUrl: "http://localhost:4444/wd/hub"
+browserOptions:
+  browserType: Chrome
+  headless: true
 users:
   - username: "SPECFLOW_POWERAPPS_USERNAME_SALESPERSON"
     password: "SPECFLOW_POWERAPPS_PASSWORD_SALESPERSON"
-    isAdfs: false
     alias: "a salesperson"
-apps:
-  - id: "7d4981cd-ec11-43b3-bdcc-3cb67b092b29"
-    name: "Sales App"
 ```
 
-The url, username, and password will be set from an environment variable (if found). Otherwise, the value from the config file will be used.
+The url, usernames, and passwords will be set from an environment variable (if found). Otherwise, the value from the config file will be used. The browserOptions node supports anything in the EasyRepro `BrowserOptions` class.
 
 ### Writing feature files
 
@@ -127,17 +124,3 @@ The JSON is the same as expected by WebAPI when creating records via a [deep ins
   ]
 }
 ```
-
-## Contributing
-
-The source code for will be made available soon. All contributions will be appreciated.
-
-To contact us, please email nuget.uk@capgemini.com.
-
-## Credits
-
-Capgemini UK Microsoft Team
-
-## License
-
-SpecFlow for Power Apps is released under the [MIT license](./License).
