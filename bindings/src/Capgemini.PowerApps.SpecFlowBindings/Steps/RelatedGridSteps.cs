@@ -16,7 +16,7 @@
         /// Selects a records in a grid by index.
         /// </summary>
         /// <param name="index">The position of the record.</param>
-        [When(@"I open the record at position '(d+)' in the related grid")]
+        [When(@"I open the record at position '(\d+)' in the related grid")]
         public static void WhenIOpenTheRecordAtPositionInTheRelatedGrid(int index)
         {
             XrmApp.Entity.RelatedGrid.OpenGridRow(index);
