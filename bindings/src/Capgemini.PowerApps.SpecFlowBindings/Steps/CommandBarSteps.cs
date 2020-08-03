@@ -20,6 +20,17 @@
         }
 
         /// <summary>
+        /// Selects a command under a flyout with the given label.
+        /// </summary>
+        /// <param name="commandName">The label of the command.</param>
+        /// <param name="flyoutName">The label of the flyout.</param>
+        [When("I select the '([^']+)' command under the '([^']+)' flyout")]
+        public static void WhenISelectTheCommandUnderTheFlyout(string commandName, string flyoutName)
+        {
+            XrmApp.CommandBar.ClickCommand(flyoutName, commandName);
+        }
+
+        /// <summary>
         /// Asserts that a command is available in the command bar.
         /// </summary>
         /// <param name="commandName">The label of the command.</param>

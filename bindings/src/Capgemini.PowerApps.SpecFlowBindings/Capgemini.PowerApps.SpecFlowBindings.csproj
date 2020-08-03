@@ -162,6 +162,7 @@
     <Compile Include="Steps\CommandBarSteps.cs" />
     <Compile Include="Steps\DashboardSteps.cs" />
     <Compile Include="Steps\DataSteps.cs" />
+    <Compile Include="Steps\LookupDialogSteps.cs" />
     <Compile Include="Steps\DialogSteps.cs" />
     <Compile Include="Steps\EntitySubGridSteps.cs" />
     <Compile Include="Steps\GlobalSearchSteps.cs" />
