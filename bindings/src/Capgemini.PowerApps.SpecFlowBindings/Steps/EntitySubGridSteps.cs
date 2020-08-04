@@ -195,18 +195,22 @@
         }
 
         /// <summary>
-        /// Asserts that the subgrid contains a record with a field matchting the criteria.
+        /// Asserts that the subgrid contains a record with a field matching the criteria. Not all field types currently supported.
         /// </summary>
         /// <param name="subGridName">The name of the subgrid.</param>
         /// <param name="fieldValue">The expected value of the field.</param>
         /// <param name="fieldName">The name of the field.</param>
-        [Then(@"the '(.*)' subgrid contains a record with '(.*)' in the '(.*)' field")]
+        [Then(@"the '(.*)' subgrid contains a record with '(.*)' in the '(.*)' (?:text|numeric|currency) field")]
         public static void ThenTheSubgridContainsRecordsWithInTheField(string subGridName, string fieldValue, string fieldName)
         {
-            List<GridItem> subGridItems = XrmApp.Entity.SubGrid.GetSubGridItems(subGridName);
+            // Bug in GetSubGridItems returns the same attribute values for every record. Using deprecated Xrm.Page for now
+            // List<GridItem> subGridItems = XrmApp.Entity.SubGrid.GetSubGridItems(subGridName);
+            // subGridItems.Any(item => item.GetAttribute<string>(fieldName) == fieldValue)
+            //   .Should().BeTrue(because: "a matching record should be present in the subgrid);
+            var index = (long)Driver.ExecuteScript(
+                $"return Xrm.Page.getControl(\"{subGridName}\").getGrid().getRows().get().findIndex(row => row.data.entity.attributes.get().findIndex(a => a.getName() === \"{fieldName}\" && a.getValue() == \"{fieldValue}\") > -1)");
 
-            subGridItems.Any(item => item.GetAttribute<string>(fieldName) == fieldValue)
-                .Should().BeTrue(because: "a matching record should be present in the subgrid");
+            index.Should().BeGreaterOrEqualTo(0, because: "a matching record should be present in the subgrid");
         }
 
         /// <summary>
