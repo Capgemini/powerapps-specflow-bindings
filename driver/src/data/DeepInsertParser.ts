@@ -83,7 +83,7 @@ namespace Capgemini.Dynamics.Testing.Data {
         ): Promise<IDeepInsertResponse> {
             delete entity[singleNavigationProperty];
 
-            const entityName = await this.metadataRepository.GetEntityForLookupProperty(logicalName, singleNavigationProperty);
+            const entityName = await this.metadataRepository.getEntityForLookupProperty(logicalName, singleNavigationProperty);
             const deepInsertResponse = await this.deepInsert(entityName, navigationPropertyMap[singleNavigationProperty]);
             const entitySet = await this.metadataRepository.getEntitySetForEntity(entityName);
 
@@ -94,21 +94,61 @@ namespace Capgemini.Dynamics.Testing.Data {
 
         private async createCollectionRecords(
             logicalName: string,
-            parentRecord: Xrm.LookupValue,
-            navigationPropertyMap: { [navigationProperty: string]: IRecord[] },
-            collectionNavigationProperty: string,
-        ): Promise<{ alias: string, reference: Xrm.LookupValue }[]> {
-            const entityName = await this.metadataRepository.GetEntityForCollectionProperty(logicalName, collectionNavigationProperty);
+            parent: Xrm.LookupValue,
+            navPropMap: { [navigationProperty: string]: IRecord[] },
+            collNavProp: string,
+        ): Promise<{ alias?: string, reference: Xrm.LookupValue }[]> {
+            const relMetadata = await this.metadataRepository.getRelationshipMetadata(collNavProp);
             const entitySet = await this.metadataRepository.getEntitySetForEntity(logicalName);
-            const oppositeNavigationProperty = await this.metadataRepository.GetLookupPropertyForCollectionProperty(collectionNavigationProperty);
 
-            const results = await Promise.all(navigationPropertyMap[collectionNavigationProperty].map(async (oneToManyRecord) => {
-                oneToManyRecord[`${oppositeNavigationProperty}@odata.bind`] = `/${entitySet}(${parentRecord.id})`;
-                const result = await this.deepInsert(entityName, oneToManyRecord);
-                return [result.record, ...result.associatedRecords];
+            switch (relMetadata.RelationshipType) {
+                case "OneToManyRelationship":
+                    return this.createOneToManyRecords(relMetadata.ReferencingEntity, entitySet, collNavProp, navPropMap, parent)
+                case "ManyToManyRelationship":
+                    const entity = relMetadata.Entity1LogicalName !== logicalName ? relMetadata.Entity1LogicalName : relMetadata.Entity2LogicalName;
+                    return this.createManyToManyRecords(entity, collNavProp, navPropMap, parent);
+                default:
+                    throw new Error(`Unknown relationship type ${relMetadata.RelationshipType}`);
+            }
+        }
+
+        private async createOneToManyRecords(
+            entity: string,
+            entitySet: string,
+            navProp: string,
+            navPropMap: { [navProp: string]: IRecord[] },
+            parent: Xrm.LookupValue
+        ): Promise<{ alias?: string, reference: Xrm.LookupValue }[]> {
+            const oppNavProp = await this.metadataRepository.getLookupPropertyForCollectionProperty(navProp);
+
+            const res = await Promise.all(navPropMap[navProp].map((oneToManyRecord) => {
+                oneToManyRecord[`${oppNavProp}@odata.bind`] = `/${entitySet}(${parent.id})`;
+                return this.deepInsert(entity, oneToManyRecord);
             }));
 
-            return [].concat(...results as any);
+            return res.reduce<{ reference: Xrm.LookupValue; alias?: string | undefined; }[]>(
+                (prev, curr, _i, _arr) => prev.concat([curr.record, ...curr.associatedRecords]), []);
+        }
+
+        private async createManyToManyRecords(
+            entity: string,
+            navProp: string,
+            navPropMap: { [navProp: string]: IRecord[] },
+            parent: Xrm.LookupValue
+        ): Promise<{ alias?: string, reference: Xrm.LookupValue }[]> {
+            const res = await Promise.all(navPropMap[navProp].map(async (manyToManyRecord) => {
+                const deepInsertResult = await this.deepInsert(entity, manyToManyRecord);
+
+                await this.recordRepository.associateManyToManyRecords(
+                    parent,
+                    [ deepInsertResult.record.reference ],
+                    navProp
+                );
+
+                return [deepInsertResult.record, ...deepInsertResult.associatedRecords];
+            }));
+
+            return res.reduce((prev, curr) => prev.concat(curr))
         }
     }
 }

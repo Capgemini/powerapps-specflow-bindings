@@ -19,10 +19,13 @@ namespace Capgemini.Dynamics.Testing {
         constructor(dataManager?: Data.DataManager) {
             if (dataManager === undefined) {
                 const recordRepository = new Data.RecordRepository(Xrm.WebApi.online);
-                dataManager = new Data.DataManager(recordRepository, new Data.DeepInsertParser(
-                    new Data.MetadataRepository(Xrm.WebApi.online),
+                dataManager = new Data.DataManager(
                     recordRepository,
-                ));
+                    new Data.DeepInsertParser(
+                        new Data.MetadataRepository(Xrm.WebApi.online),
+                        recordRepository,
+                    )
+                );
             }
             this.dataManager = dataManager;
             this.registerListeners();

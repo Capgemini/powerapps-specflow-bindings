@@ -9,16 +9,9 @@ namespace Capgemini.Dynamics.Testing.Data {
      * @extends {Repository}
      */
     export class MetadataRepository extends Core.Repository {
+        private static readonly RelationshipMetadataSet = "RelationshipDefinitions"
         private static readonly EntityMetadataSet = "EntityDefinitions";
         private static readonly OneToNMetadataSet = "RelationshipDefinitions/Microsoft.Dynamics.CRM.OneToManyRelationshipMetadata";
-
-        /**
-         * Creates an instance of MetadataRepository.
-         * @memberof MetadataRepository
-         */
-        constructor(webApi: Xrm.WebApiOnline) {
-            super(webApi);
-        }
 
         /**
          * Gets the entity set for an entity.
@@ -43,28 +36,12 @@ namespace Capgemini.Dynamics.Testing.Data {
          * @returns {Promise<string>} A promise which contains the logical name of the related entity.
          * @memberof MetadataRepository
          */
-        public async GetEntityForLookupProperty(entityLogicalName: string, navigationProperty: string): Promise<string> {
+        public async getEntityForLookupProperty(entityLogicalName: string, navigationProperty: string): Promise<string> {
             const response = await fetch(
                 `api/data/v9.1/${MetadataRepository.EntityMetadataSet}(LogicalName='${entityLogicalName}')/Attributes/Microsoft.Dynamics.CRM.LookupAttributeMetadata?$filter=LogicalName eq '${navigationProperty.toLowerCase()}'&$select=Targets`);
             const result = await response.json();
 
             return result.value[0].Targets[0];
-        }
-
-        /**
-         * Retrieves the referenced entity for a 1:N navigation property.
-         *
-         * @param {string} entityLogicalName The logical name of the entity which has a collection navigation property.
-         * @param {string} navigationProperty The navigation property name for the collection.
-         * @returns {Promise<string>} An async result which resolves to the entity name for collection.
-         * @memberof MetadataRepository
-         */
-        public async GetEntityForCollectionProperty(entityLogicalName: string, navigationProperty: string): Promise<string> {
-            const response = await fetch(
-                `api/data/v9.1/${MetadataRepository.OneToNMetadataSet}?$filter=ReferencedEntity eq '${entityLogicalName}' and ReferencedEntityNavigationPropertyName eq '${navigationProperty}'&$select=ReferencingEntity`);
-            const result = await response.json();
-
-            return result.value[0].ReferencingEntity;
         }
 
         /**
@@ -74,12 +51,24 @@ namespace Capgemini.Dynamics.Testing.Data {
          * @returns {Promise<string>} A 1:N navigation property name
          * @memberof MetadataRepository
          */
-        public async GetLookupPropertyForCollectionProperty(navPropName: string): Promise<string> {
+        public async getLookupPropertyForCollectionProperty(navPropName: string): Promise<string> {
             const response = await fetch(
                 `api/data/v9.1/${MetadataRepository.OneToNMetadataSet}?$filter=ReferencedEntityNavigationPropertyName eq '${navPropName}'&$select=ReferencingEntityNavigationPropertyName`);
             const result = await response.json();
 
             return result.value[0].ReferencingEntityNavigationPropertyName;
+        }
+
+        /**
+         * Retrieves the relationship metadata for the supplied relationship name.
+         * @param {string} relationshipSchemaName The schema name of the relationship.
+         * @returns {any} The relationship metadata object.
+         */
+        public async getRelationshipMetadata(relationshipSchemaName: string): Promise<any> {
+            const response = await fetch(
+                `api/data/v9.1/${MetadataRepository.RelationshipMetadataSet}(SchemaName='${relationshipSchemaName}')`);
+
+            return response.json();
         }
     }
 }

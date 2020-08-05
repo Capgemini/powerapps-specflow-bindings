@@ -7,19 +7,25 @@ namespace Capgemini.Dynamics.Testing.Data.Tests {
         let deepInsertParser: DeepInsertParser;
         beforeEach(() => {
             recordRepository = jasmine.createSpyObj<RecordRepository>(
-                "RecordRepository", ["createRecord", "deleteRecord"]);
+                "RecordRepository",
+                [
+                    "createRecord",
+                    "deleteRecord"
+                ]);
             metadataRepository = jasmine.createSpyObj<MetadataRepository>(
-                "MetadataRepository", [
-                "getEntitySetForEntity",
-                "GetLookupPropertyForCollectionProperty",
-                "GetEntityForLookupProperty",
-                "GetEntityForCollectionProperty",
-            ]);
+                "MetadataRepository",
+                [
+                    "getEntitySetForEntity",
+                    "getLookupPropertyForCollectionProperty",
+                    "getEntityForLookupProperty",
+                    "getRelationshipMetadata"
+                ]);
             deepInsertParser = new DeepInsertParser(metadataRepository, recordRepository);
         });
         describe(".deepInsert(logicalName, record)", () => {
             it("creates each object in the object graph", async () => {
-                metadataRepository.GetLookupPropertyForCollectionProperty.and.returnValue(Promise.resolve("customerid_account"));
+                metadataRepository.getLookupPropertyForCollectionProperty.and.returnValue(Promise.resolve("customerid_account"));
+                metadataRepository.getRelationshipMetadata.and.returnValue(Promise.resolve({RelationshipType: "OneToManyRelationship"}))
                 recordRepository.createRecord
                     .and.returnValues(
                         Promise.resolve({ id: "<company-id>", entityType: "account" }),
@@ -72,7 +78,8 @@ namespace Capgemini.Dynamics.Testing.Data.Tests {
             });
             it("removes nested arrays from the record", async () => {
                 metadataRepository.getEntitySetForEntity.and.returnValue(Promise.resolve("accounts"));
-                metadataRepository.GetLookupPropertyForCollectionProperty.and.returnValue(Promise.resolve("customerid_account"));
+                metadataRepository.getRelationshipMetadata.and.returnValue(Promise.resolve({RelationshipType: "OneToManyRelationship"}))
+                metadataRepository.getLookupPropertyForCollectionProperty.and.returnValue(Promise.resolve("customerid_account"));
                 recordRepository.createRecord.and.returnValue(Promise.resolve({
                     entityType: "account",
                     id: "accountid",
@@ -99,7 +106,8 @@ namespace Capgemini.Dynamics.Testing.Data.Tests {
                     id: "accountid",
                 };
                 metadataRepository.getEntitySetForEntity.and.returnValue(Promise.resolve(entitySet));
-                metadataRepository.GetLookupPropertyForCollectionProperty.and.returnValue(Promise.resolve(navigationProperty));
+                metadataRepository.getRelationshipMetadata.and.returnValue(Promise.resolve({RelationshipType: "OneToManyRelationship"}))
+                metadataRepository.getLookupPropertyForCollectionProperty.and.returnValue(Promise.resolve(navigationProperty));
                 recordRepository.createRecord.and.returnValue(Promise.resolve(createdRecord));
                 const testRecord: IRecord = {
                     name: "Sample Account",
