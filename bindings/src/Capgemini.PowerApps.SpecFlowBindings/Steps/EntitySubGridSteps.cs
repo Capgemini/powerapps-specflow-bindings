@@ -163,7 +163,7 @@
         /// <param name="subGridName">The name of the subgrid.</param>
         /// <param name="alias">The alias of the test record.</param>
         /// <param name="lookup">The logical name of the lookup column.</param>
-        [Then(@"the '(.*)' subgrid contains a record with '(.*)' in the '(.*)' lookup")]
+        [Then(@"the '(.*)' subgrid contains a record with a reference to '(.*)' in the '(.*)' lookup field")]
         public static void ThenTheSubgridContainsARecordWithInTheLookup(string subGridName, string alias, string lookup)
         {
             var reference = TestDriver.GetTestRecordReference(alias);
@@ -195,7 +195,7 @@
         }
 
         /// <summary>
-        /// Asserts that the subgrid contains a record with a field matching the criteria. Not all field types currently supported.
+        /// Asserts that the subgrid contains a record with a field matching the criteria.
         /// </summary>
         /// <param name="subGridName">The name of the subgrid.</param>
         /// <param name="fieldValue">The expected value of the field.</param>
@@ -209,6 +209,22 @@
             //   .Should().BeTrue(because: "a matching record should be present in the subgrid);
             var index = (long)Driver.ExecuteScript(
                 $"return Xrm.Page.getControl(\"{subGridName}\").getGrid().getRows().get().findIndex(row => row.data.entity.attributes.get().findIndex(a => a.getName() === \"{fieldName}\" && a.getValue() == \"{fieldValue}\") > -1)");
+
+            index.Should().BeGreaterOrEqualTo(0, because: "a matching record should be present in the subgrid");
+        }
+
+        /// <summary>
+        /// Asserts that the subgrid contains a record with a lookup matching the criteria.
+        /// </summary>
+        /// <param name="subGridName">The name of the subgrid.</param>
+        /// <param name="fieldValue">The expected value of the field.</param>
+        /// <param name="fieldName">The name of the field.</param>
+        [Then(@"the '(.*)' subgrid contains a record with '(.*)' in the '(.*)' lookup field")]
+        public static void ThenTheSubgridContainsARecordWithInTheLookupField(string subGridName, string fieldValue, string fieldName)
+        {
+            // Bug in GetSubGridItems returns the same attribute values for every record. Using deprecated Xrm.Page for now
+            var index = (long)Driver.ExecuteScript(
+                $"return Xrm.Page.getControl(\"{subGridName}\").getGrid().getRows().get().findIndex(row => row.data.entity.attributes.get().findIndex(a => a.getName() === \"{fieldName}\" && a.getValue() && a.getValue()[0].name === \"{fieldValue}\") > -1)");
 
             index.Should().BeGreaterOrEqualTo(0, because: "a matching record should be present in the subgrid");
         }
