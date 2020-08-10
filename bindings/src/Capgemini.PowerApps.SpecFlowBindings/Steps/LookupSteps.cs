@@ -100,9 +100,11 @@
 
             new WebDriverWait(Driver, TimeSpan.FromSeconds(5))
                 .Until(d => d.FindElement(By.CssSelector("ul[aria-label=\"Lookup Search Results\"] li")));
-            var items = Driver.FindElements(By.CssSelector("ul[aria-label=\"Lookup Search Results\"] li")).Select(e => e.GetAttribute("aria-label")).ToList();
+            var items = Driver
+                .FindElements(By.CssSelector("ul[aria-label=\"Lookup Search Results\"] li"))
+                .Select(e => e.Text.Split(new string[] { "\r\n" }, StringSplitOptions.None)[0]);
 
-            items.Count.Should().Be(recordNames.Rows.Count, because: "the flyout should only contain the given records");
+            items.Count().Should().Be(recordNames.Rows.Count, because: "the flyout should only contain the given records");
             foreach (var item in items)
             {
                 recordNames.Rows.Should().Contain(r => r[0] == item, because: "every given records should be present in the flyout");

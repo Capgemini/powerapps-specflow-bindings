@@ -401,6 +401,16 @@
             XrmApp.Entity.IsFieldVisible(Driver, fieldName).Should().BeFalse(because: "the field should not be visible");
         }
 
+        /// <summary>
+        /// Asserts that a record is active or inactive.
+        /// </summary>
+        /// <param name="status">The status.</param>
+        [Then("the status of the record is (active|inactive)")]
+        public static void ThenTheStatusOfTheRecordIs(string status)
+        {
+            XrmApp.Entity.GetFooterStatusValue().Should().BeEquivalentTo(status);
+        }
+
         private static void SetFieldValue(string fieldName, string fieldValue, string fieldType)
         {
             switch (fieldType)
