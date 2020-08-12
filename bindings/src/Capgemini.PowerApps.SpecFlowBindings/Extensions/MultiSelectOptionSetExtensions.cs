@@ -66,9 +66,9 @@
             IWebElement fieldContainer = GetMultiSelectOptionSetFieldContainer(driver, option, formContextType);
 
             fieldContainer.Click();
-            fieldContainer.FindElement(By.XPath("//div[@class=\"msos-caret-container\"]")).Click();
+            fieldContainer.FindElement(By.XPath(".//div[@class=\"msos-caret-container\"]")).Click();
 
-            var selectedItems = fieldContainer.FindElements(By.XPath("//li[contains(@class, \"msos-option-selected\")]"));
+            var selectedItems = fieldContainer.FindElements(By.XPath(".//li[contains(@class, \"msos-option-selected\")]"));
 
             foreach (IWebElement item in selectedItems)
             {
@@ -88,9 +88,9 @@
                 input.Clear();
                 input.SendKeys(optionValue);
 
-                var searchFlyout = fieldContainer.WaitUntilAvailable(By.XPath("//div[contains(@class,\"msos-selection-container\")]//ul"));
+                var searchFlyout = fieldContainer.WaitUntilAvailable(By.XPath(".//div[contains(@class,\"msos-selection-container\")]//ul"));
 
-                var searchResultList = searchFlyout.FindElements(By.XPath("//li//label[@name=\"[NAME]msos-label\"]".Replace("[NAME]", option.Name)));
+                var searchResultList = searchFlyout.FindElements(By.XPath(".//li//label[@name=\"[NAME]msos-label\"]".Replace("[NAME]", option.Name)));
 
                 if (searchResultList.Any(x => x.GetAttribute("title").Contains(optionValue, StringComparison.OrdinalIgnoreCase)))
                 {
@@ -103,7 +103,7 @@
                 }
             }
 
-            driver.FindElement(By.XPath("//div[@class=\"msos-caret-container\"]"))
+            fieldContainer.FindElement(By.XPath(".//div[@class=\"msos-caret-container\"]"))
                 .Click();
         }
 
