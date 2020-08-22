@@ -144,6 +144,16 @@
         }
 
         /// <summary>
+        /// Select a lookup on the form.
+        /// </summary>
+        /// <param name="fieldName">The name of the lookup.</param>
+        [When(@"I select '(.*)' lookup")]
+        public static void WhenISelectLookup(string fieldName)
+        {
+            XrmApp.Entity.SelectLookup(new LookupItem { Name = fieldName });
+        }
+
+        /// <summary>
         /// Saves the record.
         /// </summary>
         [When(@"I save the record")]

@@ -13,6 +13,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1BA90815-A57
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Capgemini.PowerApps.SpecFlowBindings", "src\Capgemini.PowerApps.SpecFlowBindings\Capgemini.PowerApps.SpecFlowBindings.csproj", "{88DD21C5-5EE8-4023-847E-2A87E434AD22}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8F8FAAAA-5C66-4ECC-BC4A-1127C1E7FFC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Capgemini.PowerApps.SpecFlowBindings.UiTests", "tests\Capgemini.PowerApps.SpecFlowBindings.UiTests\Capgemini.PowerApps.SpecFlowBindings.UiTests.csproj", "{EFDA0239-5116-4DFA-90AA-644DD7509017}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +27,17 @@ Global
 		{88DD21C5-5EE8-4023-847E-2A87E434AD22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88DD21C5-5EE8-4023-847E-2A87E434AD22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88DD21C5-5EE8-4023-847E-2A87E434AD22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFDA0239-5116-4DFA-90AA-644DD7509017}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFDA0239-5116-4DFA-90AA-644DD7509017}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFDA0239-5116-4DFA-90AA-644DD7509017}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFDA0239-5116-4DFA-90AA-644DD7509017}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{88DD21C5-5EE8-4023-847E-2A87E434AD22} = {1BA90815-A570-44B9-96C8-1D087FF8A060}
+		{EFDA0239-5116-4DFA-90AA-644DD7509017} = {8F8FAAAA-5C66-4ECC-BC4A-1127C1E7FFC8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8038BFA0-6A34-41DE-992A-1B4228585614}

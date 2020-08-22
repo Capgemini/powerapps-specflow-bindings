@@ -18,7 +18,7 @@
         /// <param name="description">Appointment description.</param>
         /// <param name="duration">Appointment duration.</param>
         /// <param name="location">Appointment location.</param>
-        [When("I add an appointment to the timeline with the subject '(.*), the description '(.*)', the duration '(.*)', and the location '(.*)'")]
+        [When("I add an appointment to the timeline with the subject '(.*)', the description '(.*)', the duration '(.*)', and the location '(.*)'")]
         public static void WhenIAddAnAppointmentToTheTimeline(string subject, string description, string duration, string location)
         {
             XrmApp.Timeline.AddAppointment(subject, location, duration, description);
@@ -30,7 +30,7 @@
         /// </summary>
         /// <param name="title">Note title.</param>
         /// <param name="body">Note body.</param>
-        [When("I add a note to the timeline with the title '(.*) and the body '(.*)'")]
+        [When("I add a note to the timeline with the title '(.*)' and the body '(.*)'")]
         public static void WhenIAddANoteToTheTimeline(string title, string body)
         {
             XrmApp.Timeline.AddNote(title, body);
@@ -43,7 +43,7 @@
         /// <param name="description">Phone call description.</param>
         /// <param name="duration">Phone call duration.</param>
         /// <param name="number">Phone call number.</param>
-        [When(@"I add a phone call to the timeline with the subject '(.*), the description '(.*)', the duration '(.*)', and the number '(\d*)'")]
+        [When(@"I add a phone call to the timeline with the subject '(.*)', the description '(.*)', the duration '(.*)', and the number '(\d*)'")]
         public static void WhenIAddAPhoneCallToTheTimeline(string subject, string description, string duration, string number)
         {
             XrmApp.Timeline.AddPhoneCall(subject, number, description, duration);
@@ -66,7 +66,7 @@
         /// <param name="subject">Task subject.</param>
         /// <param name="description">Task description.</param>
         /// <param name="duration">Task duration.</param>
-        [When(@"I add a task to the timeline with the subject '(.*), the description '(.*)' and the duration '(.*)'")]
+        [When(@"I add a task to the timeline with the subject '(.*)', the description '(.*)' and the duration '(.*)'")]
         public static void WhenIAddATaskToTheTimeline(string subject, string description, string duration)
         {
             XrmApp.Timeline.AddTask(subject, description, duration);
@@ -79,7 +79,7 @@
         /// <param name="subject">Task subject.</param>
         /// <param name="duration">Task duration.</param>
         /// <param name="contacts">List of contacts.</param>
-        [When(@"I add an email to the timeline with the subject '(.*), the duration '(.*), and the following contacts'")]
+        [When(@"I add an email to the timeline with the subject '(.*)', the duration '(.*)', and the following contacts")]
         public static void WhenIAddAnEmailToTheTimeline(string subject, string duration, Table contacts)
         {
             if (contacts is null)

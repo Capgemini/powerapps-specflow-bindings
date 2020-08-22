@@ -1,7 +1,7 @@
-# SpecFlow for Power Apps
-## Description
+# Power Apps SpecFlow Bindings
 
 A SpecFlow bindings library for Power Apps.
+
 The aim of this project is to make Power Apps test automation easier, faster and more accessible. It does this by providing a library of generic SpecFlow step bindings that adhere to test automation best practices. This allows effective automated tests to be written without the dependency on developers who are both proficient with Power Apps and test automation.
 
 ## Table of Contents
@@ -45,35 +45,37 @@ PM> Install-Package Selenium.Chrome.WebDriver
 Installing the NuGet package creates a _power-apps-bindings.yml_ file in your project's root. This is used to configure the URL, browser, and users that will be used for your tests.
 
 ```yaml
-url: "SPECFLOW_POWERAPPS_URL"
+url: SPECFLOW_POWERAPPS_URL
 browserOptions:
   browserType: Chrome
   headless: true
+  width: 1920
+  height: 1080
+  startMaximized: false
 users:
-  - username: "SPECFLOW_POWERAPPS_USERNAME_SALESPERSON"
-    password: "SPECFLOW_POWERAPPS_PASSWORD_SALESPERSON"
-    alias: "a salesperson"
+  - username: SPECFLOW_POWERAPPS_USERNAME_SALESPERSON
+    password: SPECFLOW_POWERAPPS_PASSWORD_SALESPERSON
+    alias: a salesperson
 ```
 
-The url, usernames, and passwords will be set from an environment variable (if found). Otherwise, the value from the config file will be used. The browserOptions node supports anything in the EasyRepro `BrowserOptions` class.
+The URL, usernames, and passwords will be set from environment variable (if found). Otherwise, the value from the config file will be used. The browserOptions node supports anything in the EasyRepro `BrowserOptions` class.
 
 ### Writing feature files
 
 You can use the predefined step bindings to write your tests.
 
 ```gherkin
-Scenario: Save a record with no name
-	Given I am logged in as "a salesperson"
-	And I have created "a demo record with no name"
-	When I save the record
-	Then I should see an error on the "cap_name" field which reads "You must provide a value for Name."
+Scenario: User can create a new account
+	Given I am logged in to the 'Sales Team Member' app as 'an admin'
+	When I open the 'Accounts' sub area of the 'Customers' group
+	Then I can see the 'New' command
 ```
 
 Alternatively, write your own step bindings (see below).
 
 ### Writing step bindings
 
-You can write your own step bindings that have thread-safe access to EasyRepro and the Selenium WebDriver. This ensures that your tests can be ran safely in parallel. You can do this by creating a class decorated with the SpecFlow `BindingAttribute` and inheriting from the `PowerAppsStepDefiner` base class. You can then createing your SpecFlow step bindings while interacting with the `XrmApp` and `Driver` properties.
+You can write your own step bindings that have thread-safe access to EasyRepro and the Selenium WebDriver. This ensures that your tests can be ran safely in parallel. You can do this by creating a class decorated with the SpecFlow `BindingAttribute` and inheriting from the `PowerAppsStepDefiner` base class. You can then create your SpecFlow step bindings by interacting with the `XrmApp` and `Driver` properties.
 
 ```csharp
 [Binding]
@@ -83,7 +85,7 @@ public class MyCustomSteps : PowerAppsStepDefiner
     public void GivenIHaveACustomStep()
     {
       // Interact with the inherited EasyRepro 'Browser' object.
-      // Interact with the inherited Selenium 'WebDriver' object.
+      // Interact with the inherited Selenium 'Driver' object.
     }
 }
 ```
@@ -124,3 +126,13 @@ The JSON is the same as expected by WebAPI when creating records via a [deep ins
   ]
 }
 ```
+
+The `@logicalName` property is required for the root record. `@alias` property can optionally be added to any record and allows the record to be referenced in certain bindings.
+
+## Contributing
+
+Ensure that your changes are thoroughly tested before creating a pull request. If applicable, update the UI test project within the tests folder to ensure coverage for your changes.
+
+## License
+
+Power Apps SpecFlow Bindings is released under the [MIT license](./LICENCE).

@@ -28,11 +28,13 @@
         }
 
 #pragma warning disable CA1056 // Uri properties should not be strings
+
         /// <summary>
         /// Gets or sets the URL of the target Dynamics 365 instance.
         /// </summary>
         [YamlMember(Alias = "url")]
         public string Url { get; set; }
+
 #pragma warning restore CA1056 // Uri properties should not be strings
 
         /// <summary>
@@ -42,11 +44,13 @@
         public BrowserOptions BrowserOptions { get; set; }
 
 #pragma warning disable CA2227 // Collection properties should be read only
+
         /// <summary>
         /// Gets or sets users that tests can be run as.
         /// </summary>
         [YamlMember(Alias = "users")]
         public List<UserConfiguration> Users { get; set; }
+
 #pragma warning restore CA2227 // Collection properties should be read only
 
         /// <summary>

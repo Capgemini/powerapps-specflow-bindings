@@ -1,7 +1,7 @@
-﻿using Microsoft.Xrm.Sdk;
-
-namespace Capgemini.PowerApps.SpecFlowBindings
+﻿namespace Capgemini.PowerApps.SpecFlowBindings
 {
+    using Microsoft.Xrm.Sdk;
+
     /// <summary>
     /// An interface for a test driver used to perform setup and teardown via the Power Apps Client APIs.
     /// </summary>

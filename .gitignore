@@ -289,3 +289,6 @@ __pycache__/
 
 # Cake tools
 /tools
+
+# Ignore SpecFlow build output
+*feature.cs

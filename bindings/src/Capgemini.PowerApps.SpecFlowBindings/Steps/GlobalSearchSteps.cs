@@ -54,7 +54,7 @@
         /// </summary>
         /// <param name="entityName">Attribute to filter by.</param>
         /// <param name="recordIndex">Attribute filter value.</param>
-        [When("I open a record from global search on the entity '(.*)' in the position of '(.*)' group")]
+        [When("I open a record from global search on the entity '(.*)' in the position of '(.*)'")]
         public static void WhenIOpenARecordFromSearchUsingIndex(string entityName, int recordIndex)
         {
             XrmApp.GlobalSearch.OpenRecord(entityName, recordIndex);
