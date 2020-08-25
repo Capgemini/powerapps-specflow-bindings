@@ -13,3 +13,4 @@ Scenario: User Creates a record for a given entity
 		| PowerAppsTest | name  | text | field    |
 	When I save the record
 	Then I can see a value of 'PowerAppsTest' in the 'name' text field
+	And I can see the 'Details' tab

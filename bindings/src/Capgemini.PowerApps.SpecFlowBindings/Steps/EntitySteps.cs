@@ -23,10 +23,29 @@
         [When(@"I select the '(.*)' tab")]
         public static void ISelectTab(string tabName)
         {
-            Driver.WaitUntilVisible(
-                By.CssSelector($"li[title=\"{tabName}\"]"));
+            Driver.WaitUntilVisible(By.CssSelector($"li[title=\"{tabName}\"]"));
 
             XrmApp.Entity.SelectTab(tabName);
+        }
+
+        /// <summary>
+        /// Asserts whether a tab is currently visible.
+        /// </summary>
+        /// <param name="canOrCannot">Whether the tab should be visible.</param>
+        /// <param name="tabName">The name of the tab.</param>
+        [Then(@"I (can|cannot) see the '(.*)' tab")]
+        public static void ICanSeeTab(string canOrCannot, string tabName)
+        {
+            canOrCannot = canOrCannot ?? throw new ArgumentNullException(nameof(canOrCannot));
+            tabName = tabName ?? throw new ArgumentNullException(nameof(tabName));
+
+            bool shouldBeVisible = canOrCannot.Equals("can", StringComparison.InvariantCultureIgnoreCase);
+
+            Driver.IsVisible(By.CssSelector($"li[title=\"{tabName}\"]"))
+                .Should()
+                .Be(
+                    shouldBeVisible,
+                    because: $"The tab '{tabName}' {(shouldBeVisible ? "should" : "should not")} be visible.");
         }
 
         /// <summary>
