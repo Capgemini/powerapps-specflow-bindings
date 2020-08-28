@@ -1,6 +1,7 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Steps
 {
     using Capgemini.PowerApps.SpecFlowBindings;
+    using Microsoft.Dynamics365.UIAutomation.Browser;
     using TechTalk.SpecFlow;
 
     /// <summary>
@@ -17,6 +18,8 @@
         public static void GivenIHaveOpened(string alias)
         {
             TestDriver.OpenTestRecord(alias);
+
+            Driver.WaitForTransaction();
         }
 
         /// <summary>
