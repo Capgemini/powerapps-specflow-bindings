@@ -6,6 +6,8 @@
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using FluentAssertions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
+    using Microsoft.Dynamics365.UIAutomation.Browser;
+    using OpenQA.Selenium;
     using TechTalk.SpecFlow;
 
     /// <summary>
@@ -24,6 +26,11 @@
         public static void WhenIEnterInTheFieldOnTheQuickCreate(string fieldValue, string fieldName, string fieldType)
         {
             SetFieldValue(fieldName, fieldValue.ReplaceTemplatedText(), fieldType);
+
+            // Click to lose focus - So that business rules and other form events can occur
+            Driver.FindElement(By.XPath("html")).Click();
+
+            Driver.WaitForTransaction();
         }
 
         /// <summary>
@@ -37,7 +44,7 @@
 
             foreach (TableRow row in fields.Rows)
             {
-                SetFieldValue(row["Field"], row["Value"], row["Type"]);
+                WhenIEnterInTheFieldOnTheQuickCreate(row["Value"], row["Field"], row["Type"]);
             }
         }
 

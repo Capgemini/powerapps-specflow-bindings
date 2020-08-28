@@ -4,6 +4,8 @@
     using System.Globalization;
     using FluentAssertions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
+    using Microsoft.Dynamics365.UIAutomation.Browser;
+    using OpenQA.Selenium;
     using TechTalk.SpecFlow;
 
     /// <summary>
@@ -69,9 +71,14 @@
         /// <param name="fieldName">The field name.</param>
         /// <param name="fieldType">The field type.</param>
         [When("I enter '(.*)' into the '(.*)' (text|optionset|boolean|numeric|currency|datetime|lookup) field on the business process flow")]
-        public static void WhenISetTheStageOfTheBusinessProcessFlowAsActive(string fieldValue, string fieldName, string fieldType)
+        public static void IEnterIntoTheFieldOnTheBusinessProcessFlow(string fieldValue, string fieldName, string fieldType)
         {
             SetFieldValue(fieldName, fieldValue, fieldType);
+
+            // Click to lose focus - So that business rules and other form events can occur
+            Driver.FindElement(By.XPath("html")).Click();
+
+            Driver.WaitForTransaction();
         }
 
         /// <summary>
