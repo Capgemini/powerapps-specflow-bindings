@@ -25,7 +25,7 @@ namespace Capgemini.Dynamics.Testing.Data.Tests {
         describe(".deepInsert(logicalName, record)", () => {
             it("creates each object in the object graph", async () => {
                 metadataRepository.getLookupPropertyForCollectionProperty.and.returnValue(Promise.resolve("customerid_account"));
-                metadataRepository.getRelationshipMetadata.and.returnValue(Promise.resolve({RelationshipType: "OneToManyRelationship"}))
+                metadataRepository.getRelationshipMetadata.and.returnValue(Promise.resolve({ RelationshipType: "OneToManyRelationship" }))
                 recordRepository.createRecord
                     .and.returnValues(
                         Promise.resolve({ id: "<company-id>", entityType: "account" }),
@@ -76,9 +76,41 @@ namespace Capgemini.Dynamics.Testing.Data.Tests {
                 expect(recordRepository.createRecord.calls.mostRecent().args[1]["primarycontactid@odata.bind"])
                     .toBe(`/${entitySetName}(${contactId})`);
             });
+            it("replaces @alias.bind", async () => {
+                let createdRecordsByAlias: { [alias: string]: Xrm.LookupValue }
+                createdRecordsByAlias = {};
+                const entitySetName = "contacts";
+                const contactId = "<contact-id>";
+                let createdRecords: Xrm.LookupValue[];
+                createdRecords = [];
+                metadataRepository.getEntitySetForEntity.and.returnValue(Promise.resolve(entitySetName));
+                recordRepository.createRecord.and.returnValues(
+                    Promise.resolve({ id: contactId, entityType: "contact" }),
+                    Promise.resolve({ id: "<account-id>", entityType: "account" }));
+                const deepInsertResponse = await deepInsertParser.deepInsert("contact",
+                    {
+                        "@alias": "a contact",
+                        firstname: "John",
+                        lastname: "Smith",
+                    });
+                const newRecords = [deepInsertResponse.record, ...deepInsertResponse.associatedRecords];
+                createdRecords.push(...newRecords.map(r => r.reference));
+                newRecords
+                    .filter(r => r.alias)
+                    .forEach(aliasedRecord => createdRecordsByAlias[aliasedRecord.alias!] = aliasedRecord.reference)
+                await deepInsertParser.deepInsert("account",
+                    {
+                        name: "Sample Account",
+                        "primarycontactid@alias.bind": "a contact"
+                    }, createdRecordsByAlias);
+
+
+                expect(recordRepository.createRecord.calls.mostRecent().args[1]["primarycontactid@odata.bind"])
+                    .toBe(`/${entitySetName}(${contactId})`);
+            });
             it("removes nested arrays from the record", async () => {
                 metadataRepository.getEntitySetForEntity.and.returnValue(Promise.resolve("accounts"));
-                metadataRepository.getRelationshipMetadata.and.returnValue(Promise.resolve({RelationshipType: "OneToManyRelationship"}))
+                metadataRepository.getRelationshipMetadata.and.returnValue(Promise.resolve({ RelationshipType: "OneToManyRelationship" }))
                 metadataRepository.getLookupPropertyForCollectionProperty.and.returnValue(Promise.resolve("customerid_account"));
                 recordRepository.createRecord.and.returnValue(Promise.resolve({
                     entityType: "account",
@@ -106,7 +138,7 @@ namespace Capgemini.Dynamics.Testing.Data.Tests {
                     id: "accountid",
                 };
                 metadataRepository.getEntitySetForEntity.and.returnValue(Promise.resolve(entitySet));
-                metadataRepository.getRelationshipMetadata.and.returnValue(Promise.resolve({RelationshipType: "OneToManyRelationship"}))
+                metadataRepository.getRelationshipMetadata.and.returnValue(Promise.resolve({ RelationshipType: "OneToManyRelationship" }))
                 metadataRepository.getLookupPropertyForCollectionProperty.and.returnValue(Promise.resolve(navigationProperty));
                 recordRepository.createRecord.and.returnValue(Promise.resolve(createdRecord));
                 const testRecord: IRecord = {

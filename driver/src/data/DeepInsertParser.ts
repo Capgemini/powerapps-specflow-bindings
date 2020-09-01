@@ -28,8 +28,16 @@ namespace Capgemini.Dynamics.Testing.Data {
          * @returns {Promise<IDeepInsertResponse>} An async result containing references to all created records.
          * @memberof DeepInsertParser
          */
-        public async deepInsert(logicalName: string, entity: IRecord): Promise<IDeepInsertResponse> {
+        public async deepInsert(logicalName: string, entity: IRecord, createdRecordsByAlias?: any): Promise<IDeepInsertResponse> {
             const associatedRecords: { alias?: string, reference: Xrm.LookupValue }[] = [];
+
+            const aliasedRecordsByNavProp = this.getAliasedLookups(entity);
+            await Promise.all(Object.keys(aliasedRecordsByNavProp).map(async (aliasedRecordNavProp) => {
+                const theAlias: string = entity[aliasedRecordNavProp] as string;
+                const entitySet = await this.metadataRepository.getEntitySetForEntity(createdRecordsByAlias[theAlias].entityType);
+                delete entity[aliasedRecordNavProp];
+                entity[aliasedRecordNavProp.replace("@alias.bind", "@odata.bind")] = `/${entitySet}(${createdRecordsByAlias[theAlias].id})`;
+            }));
 
             const lookupRecordsByNavProp = this.getManyToOneRecords(entity);
             const singleNavProps = Object.keys(lookupRecordsByNavProp);
@@ -55,6 +63,15 @@ namespace Capgemini.Dynamics.Testing.Data {
                     reference: rootRecord
                 }
             };
+        }
+
+        private getAliasedLookups(record: IRecord | IRecord) {
+            return Object.keys(record)
+                .filter((key) => key.indexOf("@alias.bind") > -1)
+                .reduce((prev, curr) => {
+                    prev[curr] = record[curr] as IRecord[];
+                    return prev;
+                }, {} as { [navigationProperty: string]: IRecord[] });
         }
 
         private getOneToManyRecords(record: IRecord | IRecord): { [navigationProperty: string]: IRecord[] } {
@@ -141,7 +158,7 @@ namespace Capgemini.Dynamics.Testing.Data {
 
                 await this.recordRepository.associateManyToManyRecords(
                     parent,
-                    [ deepInsertResult.record.reference ],
+                    [deepInsertResult.record.reference],
                     navProp
                 );
 

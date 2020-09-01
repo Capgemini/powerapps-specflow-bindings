@@ -32,7 +32,7 @@ namespace Capgemini.Dynamics.Testing.Data {
          * @memberof DataManager
          */
         public async createData(logicalName: string, record: IRecord): Promise<Xrm.LookupValue> {
-            const deepInsertResponse = await this.deepInsertParser.deepInsert(logicalName, record);
+            const deepInsertResponse = await this.deepInsertParser.deepInsert(logicalName, record, this.createdRecordsByAlias);
             const newRecords = [deepInsertResponse.record, ...deepInsertResponse.associatedRecords];
 
             this.createdRecords.push(...newRecords.map(r => r.reference));

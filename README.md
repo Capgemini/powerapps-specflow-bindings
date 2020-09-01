@@ -127,7 +127,29 @@ The JSON is the same as expected by WebAPI when creating records via a [deep ins
 }
 ```
 
-The `@logicalName` property is required for the root record. `@alias` property can optionally be added to any record and allows the record to be referenced in certain bindings.
+The `@logicalName` property is required for the root record.
+`@alias` property can optionally be added to any record and allows the record to be referenced in certain bindings including the json for subsequent data creation steps per the example below:
+
+Step 1 Given I have created "a contact"
+
+```json
+{
+  "@logicalName": "contact",
+  "@alias": "sample contact",
+  "firstname": "John",
+  "lastname": "Smith"
+}
+
+```
+Step 2 Given I have created "a account"
+```json
+{
+  "@logicalName": "account",
+  "@alias": "sample account",
+  "name": "Sample Account",
+  "primarycontactid@alias.bind": "sample contact" 
+}
+```
 
 ## Contributing
 
