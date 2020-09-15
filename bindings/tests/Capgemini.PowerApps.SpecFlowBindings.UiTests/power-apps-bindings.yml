@@ -1,0 +1,11 @@
+url: POWERAPPS_SPECFLOW_BINDINGS_TEST_URL
+browserOptions:
+  browserType: Chrome
+  headless: true
+  width: 1920
+  height: 1080
+  startMaximized: false
+users: 
+  - username: POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME
+    password: POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_PASSWORD
+    alias: an admin

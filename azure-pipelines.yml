@@ -1,0 +1,124 @@
+trigger:
+  - master
+pool:
+  vmImage: 'windows-latest'
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+stages:
+  - stage: Build
+    jobs:
+    - job: BuildJob
+      displayName: Build
+      steps:
+        - task: NuGetToolInstaller@1
+          displayName: Install NuGet
+        - task: NuGetCommand@2
+          displayName: Restore NuGet packages
+          inputs:
+            restoreSolution: '$(solution)'
+        - task: Npm@1
+          displayName: Restore npm packages
+          inputs:
+            verbose: false
+            workingDir: driver
+        - task: VSBuild@1
+          displayName: Build solution
+          inputs:
+            solution: '$(solution)'
+            platform: '$(buildPlatform)'
+            configuration: '$(buildConfiguration)'
+        - task: NuGetCommand@2
+          displayName: Pack NuGet package
+          inputs:
+            command: pack
+            packagesToPack: bindings\src\Capgemini.PowerApps.SpecFlowBindings\Capgemini.PowerApps.SpecFlowBindings.csproj
+            includeReferencedProjects: true
+            packDestination: '$(Build.ArtifactStagingDirectory)/out'
+            configuration: $(buildConfiguration) 
+        - publish: $(Build.ArtifactStagingDirectory)/out
+          displayName: Publish NuGet artifact
+          artifact: Capgemini.PowerApps.SpecFlowBindings
+        - publish: driver
+          displayName: Publish driver
+          artifact: driver
+        - publish: bindings\tests\Capgemini.PowerApps.SpecFlowBindings.UiTests\bin\$(buildConfiguration)
+          displayName: Publish tests
+          artifact: tests
+  - stage: UnitTest
+    displayName: Unit test
+    dependsOn: Build
+    jobs:
+    - job: UnitTestJob
+      displayName: Unit Test
+      steps:
+        - checkout: none
+        - download: current
+          displayName: Download driver
+          artifact: driver
+        - task: Npm@1
+          displayName: Run tests
+          continueOnError: true
+          inputs:
+            command: custom
+            verbose: false
+            customCommand: 'run test'
+            publishRegistry: useFeed
+            workingDir: $(Pipeline.Workspace)/driver
+        - task: PublishTestResults@2
+          displayName: Publish test results
+          inputs:
+            testResultsFiles: '$(Pipeline.Workspace)\driver\**\TESTS-*.xml'
+        - task: PublishCodeCoverageResults@1
+          displayName: Publish code coverage results
+          inputs:
+            codeCoverageTool: Cobertura
+            summaryFileLocation: '$(Pipeline.Workspace)/driver/coverage/cobertura/cobertura.xml'
+            reportDirectory: '$(Pipeline.Workspace)/driver/coverage/html'
+  - stage: UiTest
+    displayName: UI Test
+    dependsOn: Build
+    jobs:
+    - job: UiTestJob
+      displayName: UI Test
+      variables:
+        - group: Cap Dev - CI
+      steps:
+        - checkout: none
+        - download: current
+          displayName: Download tests
+          artifact: tests
+        - task: VSTest@2
+          displayName: Run tests
+          inputs:
+            uiTests: true
+            runInParallel: true
+            testAssemblyVer2: |
+              **\*UiTests.dll
+              !**\*TestAdapter.dll
+              !**\obj\**
+            searchFolder: $(Pipeline.Workspace)\tests
+          continueOnError: true
+          env:
+            POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME: $(User ADO Integration Username)
+            POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_PASSWORD: $(User ADO Integration Password)
+            POWERAPPS_SPECFLOW_BINDINGS_TEST_URL: $(URL)
+  - stage: PublishtoPrivateFeed
+    displayName: Publish to Private Feed
+    jobs:
+      - job: PublishPrivateJob
+        displayName: Publish to Private Feed
+        steps:
+          - checkout: none
+          - download: current
+            displayName: Download NuGet package artifact
+            artifact: Capgemini.PowerApps.SpecFlowBindings
+          - task: NuGetCommand@2
+            displayName: Push to private feed
+            inputs:
+              command: push
+              packagesToPush: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*.nupkg'
+              nuGetFeedType: 'internal'
+              publishVstsFeed: '25162f08-da5e-4c04-bac0-40216eaa4bf9'
+      

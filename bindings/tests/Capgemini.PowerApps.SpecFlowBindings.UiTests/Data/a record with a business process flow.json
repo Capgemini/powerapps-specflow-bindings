@@ -1,0 +1,7 @@
+{
+  "@logicalName": "lead",
+  "@alias": "the record",
+  "subject": "Automated Test Topic",
+  "lastname": "User",
+  "firstname": "Test"
+}
