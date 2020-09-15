@@ -1,0 +1,8 @@
+url: 
+browserOptions: 
+  browserType:
+users: 
+  - username:
+    password:
+    isAdfs:
+    alias:

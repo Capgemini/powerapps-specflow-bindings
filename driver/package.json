@@ -1,0 +1,32 @@
+{
+  "description": "Used to help drive tests using SpecXRM.",
+  "scripts": {
+    "clean": "if exist dist rd dist /s /q",
+    "build": "npm install && npm run clean && tslint --project ./ && tsc --project ./tsconfig.prod.json && tsc --project ./tsconfig.test.json",
+    "build:debug": "npm run clean && tsc --project ./tsconfig.json && tsc --project ./tsconfig.test.json",
+    "test": "npm run build && karma start --single-run",
+    "test:watch": "karma start"
+  },
+  "files": [
+    "dist"
+  ],
+  "author": "Capgemini",
+  "license": "ISC",
+  "types": "./dist/specflow.driver.d.ts",
+  "devDependencies": {
+    "@types/jasmine": "^3.5.10",
+    "@types/jasmine-ajax": "^3.3.1",
+    "@types/xrm": "^9.0.27",
+    "jasmine": "^3.5.0",
+    "jasmine-ajax": "^4.0.0",
+    "karma": "^5.0.9",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-coverage": "^2.0.2",
+    "karma-jasmine": "^3.3.1",
+    "karma-junit-reporter": "^2.0.1",
+    "karma-remap-coverage": "^0.1.5",
+    "karma-sourcemap-loader": "^0.3.7",
+    "tslint": "^6.1.2",
+    "typescript": "^3.9.5"
+  }
+}

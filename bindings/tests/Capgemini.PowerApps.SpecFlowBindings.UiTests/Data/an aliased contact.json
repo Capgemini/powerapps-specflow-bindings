@@ -1,0 +1,6 @@
+{
+  "@logicalName": "contact",
+  "@alias": "a sample contact",
+  "firstname": "John",
+  "lastname": "Smith"
+}
