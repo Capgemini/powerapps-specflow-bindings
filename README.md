@@ -10,7 +10,7 @@ The aim of this project is to make Power Apps test automation easier, faster and
 1. [Usage](#Usage)
 1. [Contributing](#Contributing)
 1. [Credits](#Credits)
-1. [License](#License)
+1. [Licence](#Licence)
 
 ## Installation
 
@@ -155,6 +155,6 @@ Step 2 Given I have created "a account"
 
 Ensure that your changes are thoroughly tested before creating a pull request. If applicable, update the UI test project within the tests folder to ensure coverage for your changes.
 
-## License
+## Licence
 
-Power Apps SpecFlow Bindings is released under the [MIT license](./LICENCE).
+Power Apps SpecFlow Bindings is released under the [MIT licence](./LICENCE).
