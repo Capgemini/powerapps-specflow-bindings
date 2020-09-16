@@ -2,19 +2,23 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Capgemini.PowerApps.SpecFlowBindings</id>
+    <title>Power Apps SpecFlow Bindings</title>
+    <icon>images\icon.png</icon>
     <version>0.7.0-alpha</version>
-    <authors>Capgemini</authors>
-    <owners>Capgemini</owners>
-    <licenseUrl>https://github.com/Capgemini/specflow-xrm-bindings/blob/master/LICENSE</licenseUrl>
-    <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <projectUrl>https://github.com/Capgemini/specflow-xrm-bindings</projectUrl>
     <description>A SpecFlow bindings library for Power Apps.</description>
-    <copyright>Capgemini Copyright ©  2020</copyright>
+    <authors>Capgemini_UK, ewingjm</authors>
+    <owners>Capgemini_UK, ewingjm</owners>
+    <license type="expression">MIT</license>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <projectUrl>https://github.com/Capgemini/powerapps-specflow-bindings</projectUrl>
+    <repository type="git" url="https://github.com/Capgemini/powerapps-specflow-bindings.git" />
+    <copyright>Capgemini Copyright © 2020</copyright>
     <tags>powerapps specflow bindings automated-testing testing</tags>
   </metadata>
   <files>
     <file src="content\**\*" target="content"/>
     <file src="build\**" target="build"/>
     <file src="bin\lib\specflow.driver.js" target="build"/>
+    <file src="icon.png" target="images" />
   </files>
 </package>
