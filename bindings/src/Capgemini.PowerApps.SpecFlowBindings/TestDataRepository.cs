@@ -12,10 +12,9 @@
         private static readonly string RootDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
         /// <inheritdoc cref="ITestDataRepository"/>
-        /// <param name="fileName">The name of the JSON file.</param>
-        public string GetTestData(string fileName)
+        public string GetTestData(string identifier)
         {
-            return File.ReadAllText(Path.Combine(RootDirectory, FileDirectory, Path.HasExtension(fileName) ? fileName : $"{fileName}.json"));
+            return File.ReadAllText(Path.Combine(RootDirectory, FileDirectory, Path.HasExtension(identifier) ? identifier : $"{identifier}.json"));
         }
     }
 }

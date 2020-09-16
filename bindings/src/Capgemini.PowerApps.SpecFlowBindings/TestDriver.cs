@@ -49,15 +49,15 @@
         }
 
         /// <inheritdoc cref="ITestDriver"/>
-        public void OpenTestRecord(string alias)
+        public void OpenTestRecord(string recordAlias)
         {
-            this.DispatchEvent(OpenTestRecordEvent, alias);
+            this.DispatchEvent(OpenTestRecordEvent, recordAlias);
         }
 
         /// <inheritdoc/>
-        public EntityReference GetTestRecordReference(string alias)
+        public EntityReference GetTestRecordReference(string recordAlias)
         {
-            var obj = (Dictionary<string, object>)this.DispatchEvent(GetRecordReferenceEvent, alias);
+            var obj = (Dictionary<string, object>)this.DispatchEvent(GetRecordReferenceEvent, recordAlias);
             return new EntityReference((string)obj["entityType"], Guid.Parse((string)obj["id"]));
         }
 
