@@ -128,4 +128,4 @@ stages:
               command: push
               packagesToPush: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*.nupkg'
               nuGetFeedType: external
-              publishFeedCredentials: NuGet
+              publishFeedCredentials: Capgemini_UK
