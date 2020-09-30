@@ -1,3 +1,4 @@
+name: $(GITVERSION_FullSemVer)
 trigger:
  batch: true
  branches:
@@ -16,6 +17,11 @@ stages:
     - job: BuildJob
       displayName: Build
       steps:
+        - task: GitVersion@5
+          inputs:
+            runtime: 'core'
+            updateAssemblyInfo: true
+            updateAssemblyInfoFilename: 'bindings\src\Capgemini.PowerApps.SpecFlowBindings\Properties\AssemblyInfo.cs'
         - task: NuGetToolInstaller@1
           displayName: Install NuGet
         - task: NuGetCommand@2
@@ -38,9 +44,11 @@ stages:
           inputs:
             command: pack
             packagesToPack: bindings\src\Capgemini.PowerApps.SpecFlowBindings\Capgemini.PowerApps.SpecFlowBindings.csproj
-            includeReferencedProjects: true
+            includeReferencedProjects: false
             packDestination: '$(Build.ArtifactStagingDirectory)/out'
             configuration: $(buildConfiguration) 
+            versioningScheme: byEnvVar
+            versionEnvVar: 'GitVersion.NuGetVersionV2'
         - publish: $(Build.ArtifactStagingDirectory)/out
           displayName: Publish NuGet artifact
           artifact: Capgemini.PowerApps.SpecFlowBindings
@@ -50,8 +58,8 @@ stages:
         - publish: bindings\tests\Capgemini.PowerApps.SpecFlowBindings.UiTests\bin\$(buildConfiguration)
           displayName: Publish tests
           artifact: tests
-  - stage: UnitTest
-    displayName: Unit test
+  - stage: Test
+    displayName: Test
     dependsOn: Build
     jobs:
     - job: UnitTestJob
@@ -80,10 +88,6 @@ stages:
             codeCoverageTool: Cobertura
             summaryFileLocation: '$(Pipeline.Workspace)/driver/coverage/cobertura/cobertura.xml'
             reportDirectory: '$(Pipeline.Workspace)/driver/coverage/html'
-  - stage: UiTest
-    displayName: UI Test
-    dependsOn: Build
-    jobs:
     - job: UiTestJob
       displayName: UI Test
       variables:
@@ -108,11 +112,11 @@ stages:
             POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME: $(User ADO Integration Username)
             POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_PASSWORD: $(User ADO Integration Password)
             POWERAPPS_SPECFLOW_BINDINGS_TEST_URL: $(URL)
-  - stage: PublishPackage
-    displayName: Publish Package
+  - stage: Publish
+    displayName: Publish
     jobs:
-      - job: PublishToNuGetGalleryJob
-        displayName: Publish To NuGet Gallery
+      - job: PublishJob
+        displayName: Publish 
         steps:
           - checkout: none
           - download: current
