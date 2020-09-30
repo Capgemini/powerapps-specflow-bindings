@@ -58,74 +58,74 @@ stages:
         - publish: bindings\tests\Capgemini.PowerApps.SpecFlowBindings.UiTests\bin\$(buildConfiguration)
           displayName: Publish tests
           artifact: tests
-  - stage: Test
-    displayName: Test
-    dependsOn: Build
-    jobs:
-    - job: UnitTestJob
-      displayName: Unit Test
-      steps:
-        - checkout: none
-        - download: current
-          displayName: Download driver
-          artifact: driver
-        - task: Npm@1
-          displayName: Run tests
-          continueOnError: true
-          inputs:
-            command: custom
-            verbose: false
-            customCommand: 'run test'
-            publishRegistry: useFeed
-            workingDir: $(Pipeline.Workspace)/driver
-        - task: PublishTestResults@2
-          displayName: Publish test results
-          inputs:
-            testResultsFiles: '$(Pipeline.Workspace)\driver\**\TESTS-*.xml'
-        - task: PublishCodeCoverageResults@1
-          displayName: Publish code coverage results
-          inputs:
-            codeCoverageTool: Cobertura
-            summaryFileLocation: '$(Pipeline.Workspace)/driver/coverage/cobertura/cobertura.xml'
-            reportDirectory: '$(Pipeline.Workspace)/driver/coverage/html'
-    - job: UiTestJob
-      displayName: UI Test
-      variables:
-        - group: Cap Dev - CI
-      steps:
-        - checkout: none
-        - download: current
-          displayName: Download tests
-          artifact: tests
-        - task: VSTest@2
-          displayName: Run tests
-          inputs:
-            uiTests: true
-            runInParallel: true
-            testAssemblyVer2: |
-              **\*UiTests.dll
-              !**\*TestAdapter.dll
-              !**\obj\**
-            searchFolder: $(Pipeline.Workspace)\tests
-          continueOnError: true
-          env:
-            POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME: $(User ADO Integration Username)
-            POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_PASSWORD: $(User ADO Integration Password)
-            POWERAPPS_SPECFLOW_BINDINGS_TEST_URL: $(URL)
-  - stage: Publish
-    displayName: Publish
-    jobs:
-      - job: PublishJob
-        displayName: Publish 
-        steps:
-          - checkout: none
-          - download: current
-            displayName: Download NuGet package artifact
-            artifact: Capgemini.PowerApps.SpecFlowBindings
-          - task: NuGetCommand@2
-            displayName: 'NuGet push'
-            inputs:
-              command: push
-              packagesToPush: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*.nupkg'
-              nuGetFeedType: external
-              publishFeedCredentials: Capgemini_UK
+  # - stage: Test
+  #   displayName: Test
+  #   dependsOn: Build
+  #   jobs:
+  #   - job: UnitTestJob
+  #     displayName: Unit Test
+  #     steps:
+  #       - checkout: none
+  #       - download: current
+  #         displayName: Download driver
+  #         artifact: driver
+  #       - task: Npm@1
+  #         displayName: Run tests
+  #         continueOnError: true
+  #         inputs:
+  #           command: custom
+  #           verbose: false
+  #           customCommand: 'run test'
+  #           publishRegistry: useFeed
+  #           workingDir: $(Pipeline.Workspace)/driver
+  #       - task: PublishTestResults@2
+  #         displayName: Publish test results
+  #         inputs:
+  #           testResultsFiles: '$(Pipeline.Workspace)\driver\**\TESTS-*.xml'
+  #       - task: PublishCodeCoverageResults@1
+  #         displayName: Publish code coverage results
+  #         inputs:
+  #           codeCoverageTool: Cobertura
+  #           summaryFileLocation: '$(Pipeline.Workspace)/driver/coverage/cobertura/cobertura.xml'
+  #           reportDirectory: '$(Pipeline.Workspace)/driver/coverage/html'
+  #   - job: UiTestJob
+  #     displayName: UI Test
+  #     variables:
+  #       - group: Cap Dev - CI
+  #     steps:
+  #       - checkout: none
+  #       - download: current
+  #         displayName: Download tests
+  #         artifact: tests
+  #       - task: VSTest@2
+  #         displayName: Run tests
+  #         inputs:
+  #           uiTests: true
+  #           runInParallel: true
+  #           testAssemblyVer2: |
+  #             **\*UiTests.dll
+  #             !**\*TestAdapter.dll
+  #             !**\obj\**
+  #           searchFolder: $(Pipeline.Workspace)\tests
+  #         continueOnError: true
+  #         env:
+  #           POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME: $(User ADO Integration Username)
+  #           POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_PASSWORD: $(User ADO Integration Password)
+  #           POWERAPPS_SPECFLOW_BINDINGS_TEST_URL: $(URL)
+  # - stage: Publish
+  #   displayName: Publish
+  #   jobs:
+  #     - job: PublishJob
+  #       displayName: Publish 
+  #       steps:
+  #         - checkout: none
+  #         - download: current
+  #           displayName: Download NuGet package artifact
+  #           artifact: Capgemini.PowerApps.SpecFlowBindings
+  #         - task: NuGetCommand@2
+  #           displayName: 'NuGet push'
+  #           inputs:
+  #             command: push
+  #             packagesToPush: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*.nupkg'
+  #             nuGetFeedType: external
+  #             publishFeedCredentials: Capgemini_UK
