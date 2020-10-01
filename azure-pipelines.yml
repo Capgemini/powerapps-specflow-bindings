@@ -109,6 +109,7 @@ stages:
             uiTests: true
             runInParallel: true
             codeCoverageEnabled: true
+            runSettingsFile: $(Pipeline.Workspace)\tests\CodeCoverage.runsettings
             testAssemblyVer2: |
               **\*UiTests.dll
               !**\*TestAdapter.dll
