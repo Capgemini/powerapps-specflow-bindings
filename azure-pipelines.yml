@@ -18,11 +18,14 @@ stages:
       displayName: Build
       steps:
         - task: gitversion/setup@0
+          displayName: Install GitVersion
           inputs:
             versionSpec: '5.x'
         - task: gitversion/execute@0
+          displayName: Execute GitVersion
           inputs:
             useConfigFile: true
+            configFilePath: 'GitVersion.yml'
             updateAssemblyInfo: true
             updateAssemblyInfoFilename: 'bindings\src\Capgemini.PowerApps.SpecFlowBindings\Properties\AssemblyInfo.cs'
         - task: NuGetToolInstaller@1
