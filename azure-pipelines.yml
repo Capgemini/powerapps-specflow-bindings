@@ -108,6 +108,7 @@ stages:
           inputs:
             uiTests: true
             runInParallel: true
+            codeCoverageEnabled: true
             testAssemblyVer2: |
               **\*UiTests.dll
               !**\*TestAdapter.dll
