@@ -25,9 +25,9 @@ stages:
           displayName: Execute GitVersion
           inputs:
             useConfigFile: true
-            configFilePath: 'GitVersion.yml'
+            configFilePath: '$(Build.SourcesDirectory)\GitVersion.yml'
             updateAssemblyInfo: true
-            updateAssemblyInfoFilename: 'bindings\src\Capgemini.PowerApps.SpecFlowBindings\Properties\AssemblyInfo.cs'
+            updateAssemblyInfoFilename: '$(Build.SourcesDirectory)\bindings\src\Capgemini.PowerApps.SpecFlowBindings\Properties\AssemblyInfo.cs'
         - task: NuGetToolInstaller@1
           displayName: Install NuGet
         - task: NuGetCommand@2
