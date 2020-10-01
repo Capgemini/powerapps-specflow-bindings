@@ -17,9 +17,12 @@ stages:
     - job: BuildJob
       displayName: Build
       steps:
-        - task: GitVersion@5
+        - task: gitversion/setup@0
           inputs:
-            runtime: 'core'
+            versionSpec: '5.x'
+        - task: gitversion/execute@0
+          inputs:
+            useConfigFile: true
             updateAssemblyInfo: true
             updateAssemblyInfoFilename: 'bindings\src\Capgemini.PowerApps.SpecFlowBindings\Properties\AssemblyInfo.cs'
         - task: NuGetToolInstaller@1
