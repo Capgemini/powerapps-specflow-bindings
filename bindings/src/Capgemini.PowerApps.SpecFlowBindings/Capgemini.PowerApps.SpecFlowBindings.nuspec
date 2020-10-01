@@ -4,7 +4,7 @@
     <id>Capgemini.PowerApps.SpecFlowBindings</id>
     <title>Power Apps SpecFlow Bindings</title>
     <icon>images\icon.png</icon>
-    <version>0.7.1-alpha</version>
+    <version>0.1.0</version>
     <description>A SpecFlow bindings library for Power Apps.</description>
     <authors>Capgemini_UK, ewingjm</authors>
     <owners>Capgemini_UK, ewingjm</owners>
