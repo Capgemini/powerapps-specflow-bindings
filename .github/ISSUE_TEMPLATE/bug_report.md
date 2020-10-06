@@ -7,29 +7,24 @@ assignees: ''
 
 ---
 
-**Describe the bug**
+##Describe the bug
+_A clear and concise description of what the bug is._
 
-A clear and concise description of what the bug is.
+##To reproduce
 
-**To reproduce**
+_Steps to reproduce the behaviour._
 
-Steps to reproduce the behaviour.
+##Expected behaviour
+_A clear and concise description of what you expected to happen._
 
-**Expected behaviour**
+##Screenshots
+_If applicable, add screenshots to help explain your problem._
 
-A clear and concise description of what you expected to happen.
-
-**Screenshots**
-
-If applicable, add screenshots to help explain your problem.
-
-**Environment (please complete the following information):**
-
+##Environment (please complete the following information):
  - Test framework [e.g. NUnit/MSTest/xUnit]
  - Browser [e.g. chrome, safari]
  - Version [e.g. 22]
  - Power Apps environment version
 
-**Additional context**
-
-Add any other context about the problem here.
+##Additional context
+_Add any other context about the problem here._
