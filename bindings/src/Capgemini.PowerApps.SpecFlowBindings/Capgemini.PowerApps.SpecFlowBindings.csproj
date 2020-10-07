@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\Microsoft.SourceLink.GitHub.1.0.0\build\Microsoft.SourceLink.GitHub.props" Condition="Exists('..\..\packages\Microsoft.SourceLink.GitHub.1.0.0\build\Microsoft.SourceLink.GitHub.props')" />
+  <Import Project="..\..\packages\Microsoft.SourceLink.Common.1.0.0\build\Microsoft.SourceLink.Common.props" Condition="Exists('..\..\packages\Microsoft.SourceLink.Common.1.0.0\build\Microsoft.SourceLink.Common.props')" />
+  <Import Project="..\..\packages\Microsoft.Build.Tasks.Git.1.0.0\build\Microsoft.Build.Tasks.Git.props" Condition="Exists('..\..\packages\Microsoft.Build.Tasks.Git.1.0.0\build\Microsoft.Build.Tasks.Git.props')" />
   <Import Project="..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.3.0.0\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.3.0.0\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
   <Import Project="..\..\packages\Microsoft.NetFramework.Analyzers.3.0.0\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\..\packages\Microsoft.NetFramework.Analyzers.3.0.0\build\Microsoft.NetFramework.Analyzers.props')" />
   <Import Project="..\..\packages\Microsoft.NetCore.Analyzers.3.0.0\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\..\packages\Microsoft.NetCore.Analyzers.3.0.0\build\Microsoft.NetCore.Analyzers.props')" />
@@ -39,6 +42,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>Capgemini.PowerApps.SpecFlowBindings.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BoDi, Version=1.4.1.0, Culture=neutral, PublicKeyToken=ff7cd5ea2744b496, processorArchitecture=MSIL">
@@ -214,6 +223,15 @@
     <Error Condition="!Exists('..\..\packages\Microsoft.NetFramework.Analyzers.3.0.0\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.NetFramework.Analyzers.3.0.0\build\Microsoft.NetFramework.Analyzers.props'))" />
     <Error Condition="!Exists('..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.3.0.0\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.3.0.0\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
     <Error Condition="!Exists('..\..\packages\SpecFlow.3.1.97\build\SpecFlow.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SpecFlow.3.1.97\build\SpecFlow.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.Build.Tasks.Git.1.0.0\build\Microsoft.Build.Tasks.Git.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Build.Tasks.Git.1.0.0\build\Microsoft.Build.Tasks.Git.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.Build.Tasks.Git.1.0.0\build\Microsoft.Build.Tasks.Git.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Build.Tasks.Git.1.0.0\build\Microsoft.Build.Tasks.Git.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.SourceLink.Common.1.0.0\build\Microsoft.SourceLink.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.SourceLink.Common.1.0.0\build\Microsoft.SourceLink.Common.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.SourceLink.Common.1.0.0\build\Microsoft.SourceLink.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.SourceLink.Common.1.0.0\build\Microsoft.SourceLink.Common.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.SourceLink.GitHub.1.0.0\build\Microsoft.SourceLink.GitHub.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.SourceLink.GitHub.1.0.0\build\Microsoft.SourceLink.GitHub.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.SourceLink.GitHub.1.0.0\build\Microsoft.SourceLink.GitHub.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.SourceLink.GitHub.1.0.0\build\Microsoft.SourceLink.GitHub.targets'))" />
   </Target>
   <Import Project="..\..\packages\SpecFlow.3.1.97\build\SpecFlow.targets" Condition="Exists('..\..\packages\SpecFlow.3.1.97\build\SpecFlow.targets')" />
+  <Import Project="..\..\packages\Microsoft.Build.Tasks.Git.1.0.0\build\Microsoft.Build.Tasks.Git.targets" Condition="Exists('..\..\packages\Microsoft.Build.Tasks.Git.1.0.0\build\Microsoft.Build.Tasks.Git.targets')" />
+  <Import Project="..\..\packages\Microsoft.SourceLink.Common.1.0.0\build\Microsoft.SourceLink.Common.targets" Condition="Exists('..\..\packages\Microsoft.SourceLink.Common.1.0.0\build\Microsoft.SourceLink.Common.targets')" />
+  <Import Project="..\..\packages\Microsoft.SourceLink.GitHub.1.0.0\build\Microsoft.SourceLink.GitHub.targets" Condition="Exists('..\..\packages\Microsoft.SourceLink.GitHub.1.0.0\build\Microsoft.SourceLink.GitHub.targets')" />
 </Project>

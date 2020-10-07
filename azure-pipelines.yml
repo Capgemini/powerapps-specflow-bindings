@@ -55,6 +55,7 @@ stages:
             configuration: $(buildConfiguration) 
             versioningScheme: byEnvVar
             versionEnvVar: 'GitVersion.NuGetVersionV2'
+            includeSymbols: true
         - publish: $(Build.ArtifactStagingDirectory)/out
           displayName: Publish NuGet artifact
           artifact: Capgemini.PowerApps.SpecFlowBindings
@@ -131,7 +132,7 @@ stages:
             displayName: Download NuGet package artifact
             artifact: Capgemini.PowerApps.SpecFlowBindings
           - task: NuGetCommand@2
-            displayName: 'NuGet push'
+            displayName: Push to NuGet.org
             inputs:
               command: push
               packagesToPush: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*.nupkg'
