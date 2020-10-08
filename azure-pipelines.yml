@@ -61,7 +61,7 @@ stages:
           inputs:
             targetType: filePath
             filePath: scripts/Remove-InvalidSymbolsPackageFiles.ps1
-            arguments: '-SymbolsPackageDirectory "$(Build.ArtifactStagingDirectory)/out"'
+            arguments: '-SymbolPackageDirectory "$(Build.ArtifactStagingDirectory)/out"'
             errorActionPreference: stop
             failOnStderr: true
         - publish: $(Build.ArtifactStagingDirectory)/out
