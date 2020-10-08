@@ -56,6 +56,14 @@ stages:
             versioningScheme: byEnvVar
             versionEnvVar: 'GitVersion.NuGetVersionV2'
             includeSymbols: true
+        - task: PowerShell@2
+          displayName: Remove invalid symbols package files
+          inputs:
+            targetType: filePath
+            filePath: scripts/Remove-InvalidSymbolsPackageFiles.ps1
+            arguments: '-SymbolsPackageDirectory "$(Build.ArtifactStagingDirectory)/out"'
+            errorActionPreference: stop
+            failOnStderr: true
         - publish: $(Build.ArtifactStagingDirectory)/out
           displayName: Publish NuGet artifact
           artifact: Capgemini.PowerApps.SpecFlowBindings
