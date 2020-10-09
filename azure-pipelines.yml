@@ -45,16 +45,20 @@ stages:
             solution: '$(solution)'
             platform: '$(buildPlatform)'
             configuration: '$(buildConfiguration)'
+        # Using custom because pack produces legacy symbols packages
         - task: NuGetCommand@2
           displayName: Pack NuGet package
           inputs:
-            command: pack
-            packagesToPack: bindings\src\Capgemini.PowerApps.SpecFlowBindings\Capgemini.PowerApps.SpecFlowBindings.csproj
-            includeReferencedProjects: false
-            packDestination: '$(Build.ArtifactStagingDirectory)/out'
-            configuration: $(buildConfiguration) 
-            versioningScheme: byEnvVar
-            versionEnvVar: 'GitVersion.NuGetVersionV2'
+            command: custom
+            arguments: 'pack "./bindings\src\Capgemini.PowerApps.SpecFlowBindings\Capgemini.PowerApps.SpecFlowBindings.csproj" -Prop "Configuration=$(buildConfiguration)" -Version "$(GitVersion.NuGetVersionV2)" -OutputDirectory "$(Build.ArtifactStagingDirectory)/out" -Symbols -SymbolPackageFormat snupkg'
+        - task: PowerShell@2
+          displayName: Remove invalid symbols package files
+          inputs:
+            targetType: filePath
+            filePath: scripts/Remove-InvalidSymbolsPackageFiles.ps1
+            arguments: '-SymbolPackageDirectory "$(Build.ArtifactStagingDirectory)/out"'
+            errorActionPreference: stop
+            failOnStderr: true
         - publish: $(Build.ArtifactStagingDirectory)/out
           displayName: Publish NuGet artifact
           artifact: Capgemini.PowerApps.SpecFlowBindings
@@ -131,7 +135,7 @@ stages:
             displayName: Download NuGet package artifact
             artifact: Capgemini.PowerApps.SpecFlowBindings
           - task: NuGetCommand@2
-            displayName: 'NuGet push'
+            displayName: Push to NuGet.org
             inputs:
               command: push
               packagesToPush: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*.nupkg'
