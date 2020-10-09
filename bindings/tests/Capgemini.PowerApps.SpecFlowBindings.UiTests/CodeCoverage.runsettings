@@ -8,7 +8,7 @@
                     <CodeCoverage>
                         <ModulePaths>
                             <Include>
-                                <ModulePath>Capgemini.PowerApps.SpecFlowBindings.dll</ModulePath>
+                                <ModulePath>.*\.SpecFlowBindings.dll</ModulePath>
                             </Include>
                         </ModulePaths>
                     </CodeCoverage>
