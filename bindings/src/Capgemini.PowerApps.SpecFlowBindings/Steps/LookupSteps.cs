@@ -69,7 +69,7 @@
             // XrmApp.Lookup.SwitchView(viewName);
             Driver.WaitUntilAvailable(By.XPath(AppElements.Xpath[AppReference.Lookup.ChangeViewButton])).Click(true);
             Driver.WaitUntilAvailable(By.XPath("//li[contains(@role,'treeitem') and contains(@class,'bu')]"));
-            Driver.WaitUntilAvailable(By.CssSelector("li[a ria-label='" + viewName + "']")).Click();
+            Driver.WaitUntilAvailable(By.CssSelector($"li[aria-label='{viewName}']")).Click();
             Driver.WaitForTransaction();
         }
 
