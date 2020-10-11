@@ -9,45 +9,6 @@ namespace Capgemini.Dynamics.Testing.Tests {
             dataManager = jasmine.createSpyObj<Data.DataManager>("DataManager", ["createData", "cleanup", "createdRecords", "createdRecordsByAlias"]);
             testDriver = new TestDriver(dataManager);
         });
-        it("listens for the specXrm.loadTestDataRequested event", () => {
-            const data = JSON.stringify({
-                name: "Sample Account",
-            });
-            const event = new CustomEvent(
-                TestEvents.LoadTestDataRequested,
-                {
-                    detail: {
-                        data,
-                    },
-                });
-            const createDataCalls = dataManager.createData.calls.count();
-
-            window.top.dispatchEvent(event);
-
-            expect(dataManager.createData).toHaveBeenCalledTimes(createDataCalls + 1);
-        });
-        it("listens for the specXrm.deleteTestDataRequested event", () => {
-            const event = new CustomEvent(TestEvents.DeleteTestDataRequested);
-            const cleanupCalls = dataManager.cleanup.calls.count();
-
-            window.top.dispatchEvent(event);
-
-            expect(dataManager.cleanup).toHaveBeenCalledTimes(cleanupCalls + 1);
-        });
-        it("listens for the specXrm.openRecordRequested event", async () => {
-            const openForm = jasmine.createSpy("openForm");
-            window.Xrm = {
-                Navigation: {
-                    openForm,
-                },
-            } as any;
-            dataManager.createdRecordsByAlias.someAlias = { id: "<account-id>", entityType: "account" };
-
-            const event = new CustomEvent(TestEvents.OpenRecordRequested, { detail: { data: "someAlias" } });
-            window.top.dispatchEvent(event);
-
-            expect(openForm.calls.first().args[0].entityId).toBe("<account-id>");
-        });
         describe(".loadJsonData(json)", () => {
             it("uses the TestDataManager to create the test data", () => {
                 const logicalName = "account";

@@ -1,5 +1,4 @@
 /// <reference path="./data/DataManager.ts"/>
-/// <reference path="./TestEvents.ts"/>
 
 namespace Capgemini.Dynamics.Testing {
     /**
@@ -28,7 +27,6 @@ namespace Capgemini.Dynamics.Testing {
                 );
             }
             this.dataManager = dataManager;
-            this.registerListeners();
         }
 
         /**
@@ -42,6 +40,7 @@ namespace Capgemini.Dynamics.Testing {
         public async loadTestData(json: string): Promise<Xrm.LookupValue> {
             const testRecord = JSON.parse(json) as Data.ITestRecord;
             const logicalName = testRecord["@logicalName"];
+
             return this.dataManager.createData(logicalName, testRecord);
         }
 
@@ -78,28 +77,6 @@ namespace Capgemini.Dynamics.Testing {
          */
         public getRecordReference(alias: string): Xrm.LookupValue {
             return this.dataManager.createdRecordsByAlias[alias];
-        }
-
-        private registerListeners(): void {
-            top.addEventListener(TestEvents.LoadTestDataRequested, (e) => this.routeToListener(e, this.loadTestData.bind(this)));
-            top.addEventListener(TestEvents.DeleteTestDataRequested, (e) => this.routeToListener(e, this.deleteTestData.bind(this)));
-            top.addEventListener(TestEvents.OpenRecordRequested, (e) => this.routeToListener(e, this.openTestRecord.bind(this)));
-            top.addEventListener(TestEvents.GetRecordReferenceRequested, (e) => this.routeToListener(e, this.getRecordReference.bind(this)));
-        }
-
-        private routeToListener(e: Event, listener: (...args: any[]) => any) {
-            const detail = (e as CustomEvent).detail;
-            const result = detail ? listener(detail.data) : listener();
-
-            if (!detail || !detail.callback) {
-                return;
-            }
-            if (result && result.then) {
-                result.then(detail.callback);
-            }
-            else if (result) {
-                detail.callback(result);
-            }
         }
     }
 }

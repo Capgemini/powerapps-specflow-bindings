@@ -183,7 +183,7 @@
     <Compile Include="Steps\RelatedGridSteps.cs" />
     <Compile Include="Steps\TimelineSteps.cs" />
     <Compile Include="Steps\UtilitySteps.cs" />
-    <Compile Include="TestDataRepository.cs" />
+    <Compile Include="FileDataRepository.cs" />
     <Compile Include="TestDriver.cs" />
     <Compile Include="Transformations\EasyReproTransformations.cs" />
   </ItemGroup>
