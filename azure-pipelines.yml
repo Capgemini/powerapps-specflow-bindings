@@ -11,6 +11,7 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  GitVersion.SemVer: ''
 stages:
   - stage: Build
     jobs:
@@ -155,11 +156,8 @@ stages:
               target: '$(Build.SourceVersion)'
               tagSource: 'userSpecifiedTag'
               tag: 'v$(GitVersion.SemVer)'
-              assets: '$(Build.ArtifactStagingDirectory)/out/*'
+              releaseNotesSource: 'inline'
+              assets: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*'
+              isPreRelease: true
               changeLogCompareToRelease: 'lastFullRelease'
-              changeLogType: 'issueBased'
-              changeLogLabels: |
-                [
-                { "label" : "bug", "displayName" : "Bugs", "state" : "closed" },
-                { "label" : "enhancement", "displayName" : "Impovements", "state" : "closed" }
-                ]
+              changeLogType: 'commitBased'
