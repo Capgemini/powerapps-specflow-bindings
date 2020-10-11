@@ -29,7 +29,6 @@ stages:
             configFilePath: '$(Build.SourcesDirectory)\GitVersion.yml'
             updateAssemblyInfo: true
             updateAssemblyInfoFilename: '$(Build.SourcesDirectory)\bindings\src\Capgemini.PowerApps.SpecFlowBindings\Properties\AssemblyInfo.cs'
-        - bash: 'echo $(GitVersion.SemVer)' 
         - task: NuGetToolInstaller@1
           displayName: Install NuGet
         - task: NuGetCommand@2
