@@ -68,6 +68,10 @@ stages:
         - publish: bindings\tests\Capgemini.PowerApps.SpecFlowBindings.UiTests\bin\$(buildConfiguration)
           displayName: Publish tests
           artifact: tests
+        - task: WhiteSource Bolt@20
+          displayName: Detect security and licence issues
+          inputs:
+            cwd: '$(Build.SourcesDirectory)'
   - stage: Test
     displayName: Test
     dependsOn: Build
