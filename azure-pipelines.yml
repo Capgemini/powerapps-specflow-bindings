@@ -145,3 +145,21 @@ stages:
               packagesToPush: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*.nupkg'
               nuGetFeedType: external
               publishFeedCredentials: Capgemini_UK
+          - task: GitHubRelease@1
+            displayName: Create GitHub releaes
+            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+            inputs:
+              gitHubConnection: 'Github Capgemini'
+              repositoryName: '$(Build.Repository.Name)'
+              action: 'create'
+              target: '$(Build.SourceVersion)'
+              tagSource: 'userSpecifiedTag'
+              tag: 'v$(GitVersion.SemVer)'
+              assets: '$(Build.ArtifactStagingDirectory)/out/*'
+              changeLogCompareToRelease: 'lastFullRelease'
+              changeLogType: 'issueBased'
+              changeLogLabels: |
+                [
+                { "label" : "bug", "displayName" : "Bugs", "state" : "closed" },
+                { "label" : "enhancement", "displayName" : "Impovements", "state" : "closed" }
+                ]
