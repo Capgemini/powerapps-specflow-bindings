@@ -6,7 +6,7 @@
     /// <summary>
     /// Reads test data from JSON files.
     /// </summary>
-    public class TestDataRepository : ITestDataRepository
+    public class FileDataRepository : ITestDataRepository
     {
         private const string FileDirectory = "data";
         private static readonly string RootDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

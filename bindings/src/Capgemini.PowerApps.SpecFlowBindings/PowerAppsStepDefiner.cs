@@ -62,7 +62,7 @@
         /// <summary>
         /// Gets a repository provides access to test data.
         /// </summary>
-        protected static ITestDataRepository TestDataRepository => testDataRepository ?? (testDataRepository = new TestDataRepository());
+        protected static ITestDataRepository TestDataRepository => testDataRepository ?? (testDataRepository = new FileDataRepository());
 
         /// <summary>
         /// Gets the EasyRepro WebClient.
