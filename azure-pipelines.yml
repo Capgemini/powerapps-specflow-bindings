@@ -12,6 +12,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   GitVersion.SemVer: ''
+  GitVersion.PreReleaseTag: ''
 stages:
   - stage: Build
     jobs:
@@ -161,4 +162,5 @@ stages:
               assets: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*'
               isPreRelease: true
               changeLogCompareToRelease: 'lastFullRelease'
-              changeLogType: 'commitBased'
+              changeLogType: 'issueBased'
+              changeLogLabels: '[{ "label" : "bug", "displayName" : "Bugs", "state" : "closed" }, { "label" : "enhancement", "displayName" : "Improvements", "state" : "closed" }]'
