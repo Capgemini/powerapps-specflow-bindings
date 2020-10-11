@@ -11,6 +11,7 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  GitVersion.SemVer: ''
 stages:
   - stage: Build
     jobs:
@@ -69,6 +70,7 @@ stages:
           displayName: Publish tests
           artifact: tests
         - task: WhiteSource Bolt@20
+          condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
           displayName: Detect security and licence issues
           inputs:
             cwd: '$(Build.SourcesDirectory)'
@@ -155,11 +157,9 @@ stages:
               target: '$(Build.SourceVersion)'
               tagSource: 'userSpecifiedTag'
               tag: 'v$(GitVersion.SemVer)'
-              assets: '$(Build.ArtifactStagingDirectory)/out/*'
+              releaseNotesSource: 'inline'
+              assets: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*'
+              isPreRelease: true
               changeLogCompareToRelease: 'lastFullRelease'
               changeLogType: 'issueBased'
-              changeLogLabels: |
-                [
-                { "label" : "bug", "displayName" : "Bugs", "state" : "closed" },
-                { "label" : "enhancement", "displayName" : "Impovements", "state" : "closed" }
-                ]
+              changeLogLabels: '[{ "label" : "bug", "displayName" : "Bugs", "state" : "closed" }, { "label" : "enhancement", "displayName" : "Improvements", "state" : "closed" }]'
