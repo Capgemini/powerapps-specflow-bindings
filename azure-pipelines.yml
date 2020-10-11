@@ -12,7 +12,6 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   GitVersion.SemVer: ''
-  GitVersion.PreReleaseTag: ''
 stages:
   - stage: Build
     jobs:
