@@ -70,6 +70,7 @@ stages:
           displayName: Publish tests
           artifact: tests
         - task: WhiteSource Bolt@20
+          condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
           displayName: Detect security and licence issues
           inputs:
             cwd: '$(Build.SourcesDirectory)'
