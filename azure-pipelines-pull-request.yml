@@ -69,8 +69,8 @@ stages:
           displayName: Publish unit code coverage results
           inputs:
             codeCoverageTool: Cobertura
-            summaryFileLocation: driver/coverage/cobertura/cobertura.xml
-            reportDirectory: driver/coverage/html 
+            summaryFileLocation: driver/tests/reports/coverage/cobertura.xml
+            reportDirectory: driver/tests/reports/coverage/html 
         - task: VSTest@2
           displayName: Run UI tests
           inputs:

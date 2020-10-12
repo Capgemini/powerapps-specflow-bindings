@@ -116,7 +116,7 @@ stages:
           displayName: Publish code coverage results
           inputs:
             codeCoverageTool: Cobertura
-            summaryFileLocation: '$(Pipeline.Workspace)/driver/coverage/cobertura/cobertura.xml'
+            summaryFileLocation: '$(Pipeline.Workspace)/driver/tests/reports/coverage/cobertura.xml'
             reportDirectory: '$(Pipeline.Workspace)/driver/coverage/html'
     - job: UiTestJob
       displayName: UI Test
