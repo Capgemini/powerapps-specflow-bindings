@@ -29,14 +29,6 @@ stages:
             configFilePath: '$(Build.SourcesDirectory)\GitVersion.yml'
             updateAssemblyInfo: true
             updateAssemblyInfoFilename: '$(Build.SourcesDirectory)\bindings\src\Capgemini.PowerApps.SpecFlowBindings\Properties\AssemblyInfo.cs'
-        - task: SonarCloudPrepare@1
-          inputs:
-            SonarCloud: 'SonarCloud'
-            organization: 'capgemini-1'
-            scannerMode: 'MSBuild'
-            projectKey: 'Capgemini_powerapps-specflow-bindings'
-            projectName: 'powerapps-specflow-bindings'
-            projectVersion: '$(GitVersion.SemVer)'
         - task: NuGetToolInstaller@1
           displayName: Install NuGet
         - task: NuGetCommand@2
@@ -48,14 +40,24 @@ stages:
           inputs:
             verbose: false
             workingDir: driver
+        - task: SonarCloudPrepare@1
+          displayName: Prepare SonarCloud
+          inputs:
+            SonarCloud: 'SonarCloud'
+            organization: 'capgemini-1'
+            scannerMode: 'MSBuild'
+            projectKey: 'Capgemini_powerapps-specflow-bindings'
+            projectName: 'powerapps-specflow-bindings'
+            projectVersion: '$(GitVersion.SemVer)'
         - task: VSBuild@1
           displayName: Build solution
           inputs:
             solution: '$(solution)'
             platform: '$(buildPlatform)'
             configuration: '$(buildConfiguration)'
-        - task: SonarCloudAnalyze@1
-        - task: SonarCloudPublish@1
+        - task: Analyze with SonarCloud@1
+          displayName: Prepare SonarCloud
+        - task: Publish SonarCloud results@1
           inputs:
             pollingTimeoutSec: '300'
         # Using custom because pack produces legacy symbols packages
@@ -82,7 +84,6 @@ stages:
           displayName: Publish tests
           artifact: tests
         - task: WhiteSource Bolt@20
-          condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
           displayName: Detect security and licence issues
           inputs:
             cwd: '$(Build.SourcesDirectory)'
