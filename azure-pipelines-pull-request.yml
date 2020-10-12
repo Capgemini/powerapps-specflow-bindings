@@ -1,3 +1,4 @@
+name: $(GITVERSION_FullSemVer)
 trigger: none
 pr:
   - master
@@ -7,12 +8,25 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  GitVersion.SemVer: ''
 stages:
   - stage: Build
     jobs:
     - job: BuildJob
       displayName: Build
+      variables:
+        - group: Cap Dev - CI
       steps:
+        - task: gitversion/setup@0
+          displayName: Install GitVersion
+          inputs:
+            versionSpec: '5.x'
+        - task: gitversion/execute@0
+          displayName: Execute GitVersion
+          inputs:
+            useConfigFile: true
+            configFilePath: '$(Build.SourcesDirectory)\GitVersion.yml'
+            updateAssemblyInfo: false
         - task: NuGetToolInstaller@1
           displayName: Install NuGet
         - task: NuGetCommand@2
@@ -24,6 +38,15 @@ stages:
           inputs:
             verbose: false
             workingDir: driver
+        - task: SonarCloudPrepare@1
+          displayName: Prepare SonarCloud
+          inputs:
+            SonarCloud: 'SonarCloud'
+            organization: 'capgemini-1'
+            scannerMode: 'MSBuild'
+            projectKey: 'Capgemini_powerapps-specflow-bindings'
+            projectName: 'powerapps-specflow-bindings'
+            projectVersion: '$(GitVersion.SemVer)'
         - task: VSBuild@1
           displayName: Build solution
           inputs:
@@ -31,7 +54,7 @@ stages:
             platform: '$(buildPlatform)'
             configuration: '$(buildConfiguration)'
         - task: Npm@1
-          displayName: Run tests
+          displayName: Run unit tests
           inputs:
             command: custom
             verbose: false
@@ -39,12 +62,35 @@ stages:
             publishRegistry: useFeed
             workingDir: driver
         - task: PublishTestResults@2
-          displayName: Publish test results
+          displayName: Publish unit test results
           inputs:
             testResultsFiles: driver\**\TESTS-*.xml
         - task: PublishCodeCoverageResults@1
-          displayName: Publish code coverage results
+          displayName: Publish unit code coverage results
           inputs:
             codeCoverageTool: Cobertura
             summaryFileLocation: driver/coverage/cobertura/cobertura.xml
-            reportDirectory: driver/coverage/html        
+            reportDirectory: driver/coverage/html 
+        - task: VSTest@2
+          displayName: Run UI tests
+          inputs:
+            uiTests: true
+            runInParallel: true
+            codeCoverageEnabled: true
+            runSettingsFile: bindings\tests\Capgemini.PowerApps.SpecFlowBindings.UiTests\CodeCoverage.runsettings
+            testAssemblyVer2: |
+              **\*UiTests.dll
+              !**\*TestAdapter.dll
+              !**\obj\**
+            searchFolder: bindings\tests\Capgemini.PowerApps.SpecFlowBindings.UiTests
+          continueOnError: true
+          env:
+            POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME: $(User ADO Integration Username)
+            POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_PASSWORD: $(User ADO Integration Password)
+            POWERAPPS_SPECFLOW_BINDINGS_TEST_URL: $(URL)  
+        - task: SonarCloudAnalyze@1
+          displayName: Analyse with SonarCloud
+        - task: SonarCloudPublish@1
+          displayName: Publish SonarCloud results
+          inputs:
+            pollingTimeoutSec: '300'     
