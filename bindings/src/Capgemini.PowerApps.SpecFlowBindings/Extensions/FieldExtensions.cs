@@ -20,11 +20,11 @@
         public static bool IsReadOnly(this Field field, IWebDriver driver)
         {
             field = field ?? throw new ArgumentNullException(nameof(field));
-
             driver = driver ?? throw new ArgumentNullException(nameof(driver));
 
             ReadOnlyCollection<IWebElement> lockedIcons = driver.FindElements(By.CssSelector($"div[data-id={field.Name}-locked-iconWrapper]"));
 
+            throw new Exception("no detail");
             return lockedIcons.Any();
         }
     }
