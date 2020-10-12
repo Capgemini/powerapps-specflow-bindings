@@ -47,6 +47,7 @@ stages:
             projectKey: 'Capgemini_powerapps-specflow-bindings'
             projectName: 'powerapps-specflow-bindings'
             projectVersion: '$(GitVersion.SemVer)'
+            extraProperties: 'sonar.javascript.lcov.reportPaths=driver/tests/reports/coverage/lcov.info'
         - task: VSBuild@1
           displayName: Build solution
           inputs:
