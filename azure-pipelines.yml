@@ -29,6 +29,14 @@ stages:
             configFilePath: '$(Build.SourcesDirectory)\GitVersion.yml'
             updateAssemblyInfo: true
             updateAssemblyInfoFilename: '$(Build.SourcesDirectory)\bindings\src\Capgemini.PowerApps.SpecFlowBindings\Properties\AssemblyInfo.cs'
+        - task: SonarCloudPrepare@1
+          inputs:
+            SonarCloud: 'SonarCloud'
+            organization: 'capgemini-1'
+            scannerMode: 'MSBuild'
+            projectKey: 'Capgemini_powerapps-specflow-bindings'
+            projectName: 'powerapps-specflow-bindings'
+            projectVersion: '$(GitVersion.SemVer)'
         - task: NuGetToolInstaller@1
           displayName: Install NuGet
         - task: NuGetCommand@2
@@ -46,6 +54,10 @@ stages:
             solution: '$(solution)'
             platform: '$(buildPlatform)'
             configuration: '$(buildConfiguration)'
+        - task: SonarCloudAnalyze@1
+        - task: SonarCloudPublish@1
+          inputs:
+            pollingTimeoutSec: '300'
         # Using custom because pack produces legacy symbols packages
         - task: NuGetCommand@2
           displayName: Pack NuGet package
