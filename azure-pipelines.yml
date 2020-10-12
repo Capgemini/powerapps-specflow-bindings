@@ -55,9 +55,10 @@ stages:
             solution: '$(solution)'
             platform: '$(buildPlatform)'
             configuration: '$(buildConfiguration)'
-        - task: Analyze with SonarCloud@1
-          displayName: Prepare SonarCloud
-        - task: Publish SonarCloud results@1
+        - task: SonarCloudAnalyze@1
+          displayName: Analyse with SonarCloud
+        - task: SonarCloudPublish@1
+          displayName: Publish SonarCloud results
           inputs:
             pollingTimeoutSec: '300'
         # Using custom because pack produces legacy symbols packages
