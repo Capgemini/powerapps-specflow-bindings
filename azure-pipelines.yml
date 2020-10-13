@@ -13,7 +13,8 @@ variables:
   buildConfiguration: 'Release'
   GitVersion.SemVer: ''
 stages:
-  - stage: Build and Test
+  - stage: BuildAndTest
+    displayName: Build and test
     jobs:
     - template: templates/include-build-and-test-steps.yml
   - stage: Publish

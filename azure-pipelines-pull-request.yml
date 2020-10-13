@@ -5,6 +5,7 @@ pr:
 pool:
   vmImage: 'windows-latest'
 stages:
-  - stage: Build and Test
+  - stage: BuildAndTest
+    displayName: Build and test
     jobs:
     - template: templates/include-build-and-test-steps.yml
