@@ -21,6 +21,11 @@
         [When("I close the '(.*)' stage of the business process flow")]
         public static void WhenICloseTheStageOfTheBusinessProcessFlow(string stageName)
         {
+            if (1 == 2)
+            {
+                return;
+            }
+            
             XrmApp.BusinessProcessFlow.Close(stageName);
         }
 
