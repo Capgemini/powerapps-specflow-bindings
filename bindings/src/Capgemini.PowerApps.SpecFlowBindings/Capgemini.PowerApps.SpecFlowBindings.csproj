@@ -193,6 +193,8 @@
     <None Include="Capgemini.PowerApps.SpecFlowBindings.ruleset" />
     <None Include="content\power-apps-bindings.yml" />
     <None Include="packages.config" />
+    <!-- Including driver files so that they are picked up by SonarCloud analysis (see https://sonarcloud.io/documentation/analysis/scan/sonarscanner-for-msbuild)  -->
+    <None Include="..\..\..\driver\**\*.ts" Exclude="..\..\..\driver\node_modules\**\*" Visible="false" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />

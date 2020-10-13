@@ -27,8 +27,9 @@ module.exports = function (config) {
             type: 'in-memory'
         },
         remapCoverageReporter: {
-            html: './coverage/html',
-            cobertura: './coverage/cobertura/cobertura.xml'
+            html: './tests/reports/coverage/html',
+            cobertura: './tests/reports/coverage/cobertura.xml',
+            lcovonly: './tests/reports/coverage/lcov.info',
         }
     });
 };
