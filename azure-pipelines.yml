@@ -11,119 +11,12 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  GitVersion.SemVer: ''
 stages:
-  - stage: Build
+  - stage: BuildAndTest
+    displayName: Build and test
     jobs:
-    - job: BuildJob
-      displayName: Build
-      steps:
-        - task: gitversion/setup@0
-          displayName: Install GitVersion
-          inputs:
-            versionSpec: '5.x'
-        - task: gitversion/execute@0
-          displayName: Execute GitVersion
-          inputs:
-            useConfigFile: true
-            configFilePath: '$(Build.SourcesDirectory)\GitVersion.yml'
-            updateAssemblyInfo: true
-            updateAssemblyInfoFilename: '$(Build.SourcesDirectory)\bindings\src\Capgemini.PowerApps.SpecFlowBindings\Properties\AssemblyInfo.cs'
-        - task: NuGetToolInstaller@1
-          displayName: Install NuGet
-        - task: NuGetCommand@2
-          displayName: Restore NuGet packages
-          inputs:
-            restoreSolution: '$(solution)'
-        - task: Npm@1
-          displayName: Restore npm packages
-          inputs:
-            verbose: false
-            workingDir: driver
-        - task: VSBuild@1
-          displayName: Build solution
-          inputs:
-            solution: '$(solution)'
-            platform: '$(buildPlatform)'
-            configuration: '$(buildConfiguration)'
-        # Using custom because pack produces legacy symbols packages
-        - task: NuGetCommand@2
-          displayName: Pack NuGet package
-          inputs:
-            command: custom
-            arguments: 'pack "./bindings\src\Capgemini.PowerApps.SpecFlowBindings\Capgemini.PowerApps.SpecFlowBindings.csproj" -Prop "Configuration=$(buildConfiguration)" -Version "$(GitVersion.NuGetVersionV2)" -OutputDirectory "$(Build.ArtifactStagingDirectory)/out" -Symbols -SymbolPackageFormat snupkg'
-        - task: PowerShell@2
-          displayName: Remove invalid symbols package files
-          inputs:
-            targetType: filePath
-            filePath: scripts/Remove-InvalidSymbolsPackageFiles.ps1
-            arguments: '-SymbolPackageDirectory "$(Build.ArtifactStagingDirectory)/out"'
-            errorActionPreference: stop
-            failOnStderr: true
-        - publish: $(Build.ArtifactStagingDirectory)/out
-          displayName: Publish NuGet artifact
-          artifact: Capgemini.PowerApps.SpecFlowBindings
-        - publish: driver
-          displayName: Publish driver
-          artifact: driver
-        - publish: bindings\tests\Capgemini.PowerApps.SpecFlowBindings.UiTests\bin\$(buildConfiguration)
-          displayName: Publish tests
-          artifact: tests
-  - stage: Test
-    displayName: Test
-    dependsOn: Build
-    jobs:
-    - job: UnitTestJob
-      displayName: Unit Test
-      steps:
-        - checkout: none
-        - download: current
-          displayName: Download driver
-          artifact: driver
-        - task: Npm@1
-          displayName: Run tests
-          continueOnError: true
-          inputs:
-            command: custom
-            verbose: false
-            customCommand: 'run test'
-            publishRegistry: useFeed
-            workingDir: $(Pipeline.Workspace)/driver
-        - task: PublishTestResults@2
-          displayName: Publish test results
-          inputs:
-            testResultsFiles: '$(Pipeline.Workspace)\driver\**\TESTS-*.xml'
-        - task: PublishCodeCoverageResults@1
-          displayName: Publish code coverage results
-          inputs:
-            codeCoverageTool: Cobertura
-            summaryFileLocation: '$(Pipeline.Workspace)/driver/coverage/cobertura/cobertura.xml'
-            reportDirectory: '$(Pipeline.Workspace)/driver/coverage/html'
-    - job: UiTestJob
-      displayName: UI Test
-      variables:
-        - group: Cap Dev - CI
-      steps:
-        - checkout: none
-        - download: current
-          displayName: Download tests
-          artifact: tests
-        - task: VSTest@2
-          displayName: Run tests
-          inputs:
-            uiTests: true
-            runInParallel: true
-            codeCoverageEnabled: true
-            runSettingsFile: $(Pipeline.Workspace)\tests\CodeCoverage.runsettings
-            testAssemblyVer2: |
-              **\*UiTests.dll
-              !**\*TestAdapter.dll
-              !**\obj\**
-            searchFolder: $(Pipeline.Workspace)\tests
-          continueOnError: true
-          env:
-            POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME: $(User ADO Integration Username)
-            POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_PASSWORD: $(User ADO Integration Password)
-            POWERAPPS_SPECFLOW_BINDINGS_TEST_URL: $(URL)
+    - template: templates/include-build-and-test-steps.yml
   - stage: Publish
     displayName: Publish
     jobs:
@@ -141,3 +34,18 @@ stages:
               packagesToPush: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*.nupkg'
               nuGetFeedType: external
               publishFeedCredentials: Capgemini_UK
+          - task: GitHubRelease@1
+            displayName: Create GitHub releaes
+            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+            inputs:
+              gitHubConnection: 'Github Capgemini'
+              repositoryName: '$(Build.Repository.Name)'
+              action: 'create'
+              target: '$(Build.SourceVersion)'
+              tagSource: 'userSpecifiedTag'
+              tag: 'v$(GitVersion.SemVer)'
+              releaseNotesSource: 'inline'
+              assets: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*'
+              isPreRelease: true
+              changeLogCompareToRelease: 'lastFullRelease'
+              changeLogType: commitBased
