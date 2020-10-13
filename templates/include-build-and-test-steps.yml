@@ -10,7 +10,8 @@ jobs:
         value: 'Any CPU'
       - name: buildConfiguration
         value: 'Release'
-    displayName: Build
+    # build and tests executed in single job in order to allow SonarCloud to capture coverage
+    displayName: Build and Test
     steps:
       - task: gitversion/setup@0
         displayName: Install GitVersion
@@ -111,6 +112,3 @@ jobs:
       - publish: $(Build.ArtifactStagingDirectory)/out
         displayName: Publish NuGet artifact
         artifact: Capgemini.PowerApps.SpecFlowBindings
-      - publish: driver
-        displayName: Publish driver
-        artifact: driver
