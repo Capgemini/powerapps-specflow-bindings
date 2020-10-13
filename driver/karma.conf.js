@@ -3,13 +3,11 @@ module.exports = function (config) {
         frameworks: ['jasmine'],
         browsers: ['ChromeDebugging'],
         files: [
-            './dist/*.js',
-            './tests/**/*.js',
-            './node_modules/jasmine-ajax/lib/mock-ajax.js'
+            './dist/**/*.js',
         ],
         preprocessors: {
-            './dist/specflow.driver.js': ['coverage'],
-            '**/*.js': ['sourcemap']
+            './dist/src/**/*.js': ['coverage'],
+            './dist/**/*.js': ['sourcemap']
         },
         customLaunchers: {
             ChromeDebugging: {
@@ -19,16 +17,16 @@ module.exports = function (config) {
         },
         reporters: ['progress', 'coverage', 'remap-coverage', 'junit'],
         junitReporter: {
-            outputDir: './tests/reports',
-            suite: 'power-apps-specflow-bindings',
+            outputDir: './dist/test/reports',
+            suite: 'powerapps-specflow-bindings',
             useBrowserName: true,
         },
         coverageReporter: {
             type: 'in-memory'
         },
         remapCoverageReporter: {
-            html: './coverage/html',
-            cobertura: './coverage/cobertura/cobertura.xml'
+            html: './dist/test/reports/coverage/html',
+            cobertura: './dist/test/reports/coverage/cobertura.xml'
         }
     });
 };

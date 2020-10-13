@@ -1,30 +1,26 @@
 {
-  "description": "Used to help drive tests using SpecXRM.",
   "scripts": {
     "clean": "if exist dist rd dist /s /q",
-    "build": "npm install && npm run clean && tslint --project ./ && tsc --project ./tsconfig.prod.json && tsc --project ./tsconfig.test.json",
-    "build:debug": "npm run clean && tsc --project ./tsconfig.json && tsc --project ./tsconfig.test.json",
+    "build": "npm install && npm run clean && npx eslint . --fix && tsc",
     "test": "npm run build && karma start --single-run",
-    "test:watch": "karma start"
+    "test:watch": "npm run build && karma start"
   },
   "files": [
     "dist"
   ],
-  "author": "Capgemini",
-  "license": "ISC",
-  "types": "./dist/specflow.driver.d.ts",
   "devDependencies": {
     "@types/jasmine": "^3.5.10",
-    "@types/jasmine-ajax": "^3.3.1",
     "@types/xrm": "^9.0.27",
-    "@typescript-eslint/eslint-plugin": "^4.4.0",
+    "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.4.0",
     "eslint": "^7.11.0",
+    "eslint-config-airbnb-typescript": "^11.0.0",
     "eslint-config-prettier": "^6.12.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jasmine": "^4.1.1",
     "eslint-plugin-jsdoc": "^30.6.4",
     "eslint-plugin-prefer-arrow": "^1.2.2",
     "jasmine": "^3.5.0",
-    "jasmine-ajax": "^4.0.0",
     "karma": "^5.0.9",
     "karma-chrome-launcher": "^3.1.0",
     "karma-coverage": "^2.0.2",
