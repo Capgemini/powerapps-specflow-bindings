@@ -72,7 +72,7 @@ jobs:
         displayName: Run UI tests
         inputs:
           uiTests: true
-          runInParallel: true
+          runInParallel: false
           codeCoverageEnabled: true
           runSettingsFile: bindings\tests\Capgemini.PowerApps.SpecFlowBindings.UiTests\CodeCoverage.runsettings
           testAssemblyVer2: |
