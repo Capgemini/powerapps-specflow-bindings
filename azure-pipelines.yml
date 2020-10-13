@@ -175,5 +175,4 @@ stages:
               assets: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*'
               isPreRelease: true
               changeLogCompareToRelease: 'lastFullRelease'
-              changeLogType: 'issueBased'
-              changeLogLabels: '[{ "label" : "bug", "displayName" : "Bugs", "state" : "closed" }, { "label" : "enhancement", "displayName" : "Improvements", "state" : "closed" }]'
+              changeLogType: commitBased
