@@ -1,89 +1,116 @@
-variables:
-  - name: GitVersion.SemVer
-    value: ''
-  - group: Cap Dev - CI
-  - name: solution
-    value: '**/*.sln'
-  - name: buildPlatform
-    value: 'Any CPU'
-  - name: buildConfiguration
-    value: 'Release'
-steps:
-  - task: gitversion/setup@0
-    displayName: Install GitVersion
-    inputs:
-      versionSpec: '5.x'
-  - task: gitversion/execute@0
-    displayName: Execute GitVersion
-    inputs:
-      useConfigFile: true
-      configFilePath: '$(Build.SourcesDirectory)\GitVersion.yml'
-      updateAssemblyInfo: false
-  - task: NuGetToolInstaller@1
-    displayName: Install NuGet
-  - task: NuGetCommand@2
-    displayName: Restore NuGet packages
-    inputs:
-      restoreSolution: '$(solution)'
-  - task: Npm@1
-    displayName: Restore npm packages
-    inputs:
-      verbose: false
-      workingDir: driver
-  - task: SonarCloudPrepare@1
-    displayName: Prepare SonarCloud
-    inputs:
-      SonarCloud: 'SonarCloud'
-      organization: 'capgemini-1'
-      scannerMode: 'MSBuild'
-      projectKey: 'Capgemini_powerapps-specflow-bindings'
-      projectName: 'powerapps-specflow-bindings'
-      projectVersion: '$(GitVersion.SemVer)'
-      extraProperties: 'sonar.javascript.lcov.reportPaths=driver/tests/reports/coverage/lcov.info'
-  - task: VSBuild@1
-    displayName: Build solution
-    inputs:
-      solution: '$(solution)'
-      platform: '$(buildPlatform)'
-      configuration: '$(buildConfiguration)'
-  - task: Npm@1
-    displayName: Run unit tests
-    inputs:
-      command: custom
-      verbose: false
-      customCommand: run test
-      publishRegistry: useFeed
-      workingDir: driver
-  - task: PublishTestResults@2
-    displayName: Publish unit test results
-    inputs:
-      testResultsFiles: driver\**\TESTS-*.xml
-  - task: PublishCodeCoverageResults@1
-    displayName: Publish unit code coverage results
-    inputs:
-      codeCoverageTool: Cobertura
-      summaryFileLocation: driver/tests/reports/coverage/cobertura.xml
-      reportDirectory: driver/tests/reports/coverage/html 
-  - task: VSTest@2
-    displayName: Run UI tests
-    inputs:
-      uiTests: true
-      runInParallel: true
-      codeCoverageEnabled: true
-      runSettingsFile: bindings\tests\Capgemini.PowerApps.SpecFlowBindings.UiTests\CodeCoverage.runsettings
-      testAssemblyVer2: |
-        **\*UiTests.dll
-        !**\*TestAdapter.dll
-        !**\obj\**
-      searchFolder: bindings\tests\Capgemini.PowerApps.SpecFlowBindings.UiTests
-    continueOnError: true
-    env:
-      POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME: $(User ADO Integration Username)
-      POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_PASSWORD: $(User ADO Integration Password)
-      POWERAPPS_SPECFLOW_BINDINGS_TEST_URL: $(URL)  
-  - task: SonarCloudAnalyze@1
-    displayName: Analyse with SonarCloud
-  - task: SonarCloudPublish@1
-    displayName: Publish SonarCloud results
-    inputs:
-      pollingTimeoutSec: '300'
+jobs: 
+  - job: BuildJob
+    variables:
+      - name: GitVersion.SemVer
+        value: ''
+      - group: Cap Dev - CI
+      - name: solution
+        value: '**/*.sln'
+      - name: buildPlatform
+        value: 'Any CPU'
+      - name: buildConfiguration
+        value: 'Release'
+    displayName: Build
+    steps:
+      - task: gitversion/setup@0
+        displayName: Install GitVersion
+        inputs:
+          versionSpec: '5.x'
+      - task: gitversion/execute@0
+        displayName: Execute GitVersion
+        inputs:
+          useConfigFile: true
+          configFilePath: '$(Build.SourcesDirectory)\GitVersion.yml'
+          updateAssemblyInfo: false
+      - task: NuGetToolInstaller@1
+        displayName: Install NuGet
+      - task: NuGetCommand@2
+        displayName: Restore NuGet packages
+        inputs:
+          restoreSolution: '$(solution)'
+      - task: Npm@1
+        displayName: Restore npm packages
+        inputs:
+          verbose: false
+          workingDir: driver
+      - task: SonarCloudPrepare@1
+        displayName: Prepare SonarCloud
+        inputs:
+          SonarCloud: 'SonarCloud'
+          organization: 'capgemini-1'
+          scannerMode: 'MSBuild'
+          projectKey: 'Capgemini_powerapps-specflow-bindings'
+          projectName: 'powerapps-specflow-bindings'
+          projectVersion: '$(GitVersion.SemVer)'
+          extraProperties: 'sonar.javascript.lcov.reportPaths=driver/tests/reports/coverage/lcov.info'
+      - task: VSBuild@1
+        displayName: Build solution
+        inputs:
+          solution: '$(solution)'
+          platform: '$(buildPlatform)'
+          configuration: '$(buildConfiguration)'
+      - task: Npm@1
+        displayName: Run unit tests
+        inputs:
+          command: custom
+          verbose: false
+          customCommand: run test
+          publishRegistry: useFeed
+          workingDir: driver
+      - task: PublishTestResults@2
+        displayName: Publish unit test results
+        inputs:
+          testResultsFiles: driver\**\TESTS-*.xml
+      - task: PublishCodeCoverageResults@1
+        displayName: Publish unit code coverage results
+        inputs:
+          codeCoverageTool: Cobertura
+          summaryFileLocation: driver/tests/reports/coverage/cobertura.xml
+          reportDirectory: driver/tests/reports/coverage/html 
+      - task: VSTest@2
+        displayName: Run UI tests
+        inputs:
+          uiTests: true
+          runInParallel: true
+          codeCoverageEnabled: true
+          runSettingsFile: bindings\tests\Capgemini.PowerApps.SpecFlowBindings.UiTests\CodeCoverage.runsettings
+          testAssemblyVer2: |
+            **\*UiTests.dll
+            !**\*TestAdapter.dll
+            !**\obj\**
+          searchFolder: bindings\tests\Capgemini.PowerApps.SpecFlowBindings.UiTests
+        continueOnError: true
+        env:
+          POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME: $(User ADO Integration Username)
+          POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_PASSWORD: $(User ADO Integration Password)
+          POWERAPPS_SPECFLOW_BINDINGS_TEST_URL: $(URL)  
+      - task: SonarCloudAnalyze@1
+        displayName: Analyse with SonarCloud
+      - task: SonarCloudPublish@1
+        displayName: Publish SonarCloud results
+        inputs:
+          pollingTimeoutSec: '300'
+      - task: WhiteSource Bolt@20
+        displayName: Detect security and licence issues
+        inputs:
+          cwd: '$(Build.SourcesDirectory)'
+      # Using custom because pack produces legacy symbols packages
+      - task: NuGetCommand@2
+        displayName: Pack NuGet package
+        inputs:
+          command: custom
+          arguments: 'pack "./bindings\src\Capgemini.PowerApps.SpecFlowBindings\Capgemini.PowerApps.SpecFlowBindings.csproj" -Prop "Configuration=$(buildConfiguration)" -Version "$(GitVersion.NuGetVersionV2)" -OutputDirectory "$(Build.ArtifactStagingDirectory)/out" -Symbols -SymbolPackageFormat snupkg'
+      - task: PowerShell@2
+        displayName: Remove invalid symbols package files
+        inputs:
+          targetType: filePath
+          filePath: scripts/Remove-InvalidSymbolsPackageFiles.ps1
+          arguments: '-SymbolPackageDirectory "$(Build.ArtifactStagingDirectory)/out"'
+          errorActionPreference: stop
+          failOnStderr: true
+      - publish: $(Build.ArtifactStagingDirectory)/out
+        displayName: Publish NuGet artifact
+        artifact: Capgemini.PowerApps.SpecFlowBindings
+      - publish: driver
+        displayName: Publish driver
+        artifact: driver

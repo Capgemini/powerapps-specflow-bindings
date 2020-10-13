@@ -7,7 +7,4 @@ pool:
 stages:
   - stage: Build
     jobs:
-    - job: BuildJob
-      displayName: Build
-      steps:
-        - template: templates/include-build-and-test-steps.yml
+    - template: templates/include-build-and-test-steps.yml
