@@ -5,6 +5,7 @@ describe('TestDriver', () => {
   let recordRepository: jasmine.SpyObj<RecordRepository>;
   let deepInsertService: jasmine.SpyObj<DeepInsertService>;
   let dataManager: DataManager;
+
   beforeEach(() => {
     recordRepository = jasmine.createSpyObj<RecordRepository>(
       'RecordRepository', ['createRecord', 'deleteRecord'],
@@ -47,95 +48,48 @@ describe('TestDriver', () => {
   });
 
   describe('.cleanup()', () => {
-    it('deletes the root record', async () => {
-      deepInsertService.deepInsert.and.returnValue(Promise.resolve({
-        associatedRecords: [],
-        record: {
-          reference: {
-            entityType: 'account',
-            id: '<account-id>',
-          },
-        },
-      }));
-      await dataManager.createData('account',
-        {
-          name: 'Sample Account',
-        });
+    const associatedRecord = { entityType: 'opportunity', id: '<opportunity-id>' };
+    const rootRecord = { entityType: 'account', id: '<account-id>' };
 
+    beforeEach(async () => {
+      const mockDeepInsertResponse = Promise.resolve(
+        {
+          associatedRecords: [{ reference: associatedRecord }],
+          record: { reference: rootRecord },
+        },
+      );
+      deepInsertService.deepInsert.and.returnValue(mockDeepInsertResponse);
+
+      await dataManager.createData('', {});
+    });
+
+    it('deletes the root record', async () => {
       await dataManager.cleanup();
 
-      expect(recordRepository.deleteRecord.calls.count()).toBe(1);
+      expect(
+        recordRepository.deleteRecord.calls.allArgs().find((args) => args[0].id === rootRecord.id),
+      ).not.toBeNull();
     });
 
     it('deletes associated records', async () => {
-      deepInsertService.deepInsert.and.returnValue(Promise.resolve({
-        associatedRecords: [{
-          reference: {
-            entityType: 'opportunity',
-            id: '<opportunity-id>',
-          },
-        }],
-        record: {
-          reference: {
-            entityType: 'account',
-            id: '<account-id>',
-          },
-        },
-      }));
-      await dataManager.createData('account',
-        {
-          name: 'Sample Account',
-          primarycontactid:
-          {
-            firstname: 'John',
-            lastname: 'Smith',
-          },
-        });
-
       await dataManager.cleanup();
 
       expect(recordRepository.deleteRecord.calls.count()).toBe(2);
     });
 
     it('does not attempt to delete previously deleted records', async () => {
-      deepInsertService.deepInsert.and.returnValue(Promise.resolve({
-        associatedRecords: [],
-        record: {
-          reference: {
-            entityType: 'account',
-            id: '<account-id>',
-          },
-        },
-      }));
-      await dataManager.createData('account',
-        {
-          name: 'Sample Account',
-        });
-
+      await dataManager.cleanup();
       await dataManager.cleanup();
 
-      expect(recordRepository.deleteRecord.calls.count()).toBe(1);
+      expect(recordRepository.deleteRecord.calls.count()).toBe(2);
     });
 
     it('retries failed delete requests', async () => {
-      deepInsertService.deepInsert.and.returnValue(Promise.resolve({
-        associatedRecords: [],
-        record: {
-          reference: {
-            entityType: 'account',
-            id: '<account-id>',
-          },
-        },
-      }));
-      await dataManager.createData('account',
-        {
-          name: 'Sample Account',
-        });
       recordRepository.deleteRecord.and.throwError('Failed to delete');
 
       dataManager.cleanup();
 
-      expect(recordRepository.deleteRecord.calls.count()).toBe(3);
+      expect(recordRepository.deleteRecord.calls.count()).toBe(6);
     });
   });
 });
