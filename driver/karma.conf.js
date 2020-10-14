@@ -16,5 +16,17 @@ module.exports = function (config) {
         mime: {
             'text/x-typescript': ['ts', 'tsx']
         },
+        karmaTypescriptConfig: {
+            reports:
+            {
+                html: {
+                    "subdirectory": "html"
+                },
+                lcovonly: {
+                    "subdirectory": "lcov",
+                    "filename": "lcov.info",
+                }
+            }
+        }
     });
 };
