@@ -64,6 +64,7 @@ export default class DataManager {
       let retry = 0;
       while (retry < 3) {
         try {
+          // eslint-disable-next-line no-await-in-loop
           reference = await this.recordRepo.deleteRecord(record);
           break;
         } catch (err) {
