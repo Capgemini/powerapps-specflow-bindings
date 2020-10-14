@@ -1,5 +1,5 @@
 import Repository from './repository';
-import { Record } from '../data/Record';
+import { Record } from '../data/record';
 import { AssociateRequest } from '../requests/index';
 
 /**
