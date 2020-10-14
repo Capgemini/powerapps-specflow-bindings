@@ -184,7 +184,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-    <Copy SourceFiles="..\..\src\Capgemini.PowerApps.SpecFlowBindings\bin\lib\specflow.driver.js" DestinationFolder="$(OutputPath)" />
+    <Copy SourceFiles="..\..\src\Capgemini.PowerApps.SpecFlowBindings\bin\lib\driver.js" DestinationFolder="$(OutputPath)" />
   </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
