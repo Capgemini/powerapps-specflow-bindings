@@ -1,18 +1,23 @@
 module.exports = function (config) {
     config.set({
-        frameworks: ["jasmine", "karma-typescript"],
+        frameworks: ['jasmine', 'karma-typescript'],
         files: [
-            "src/**/*.ts",
-            "test/**/*.ts"
+            'src/**/*.ts',
+            'test/**/*.ts'
         ],
         mime: {
             'text/x-typescript': ['ts', 'tsx']
         },
         preprocessors: {
-            "**/*.ts": "karma-typescript"
+            '**/*.ts': 'karma-typescript'
         },
-        reporters: ["progress", "karma-typescript"],
-        browsers: ["Chrome"],
+        junitReporter: {
+            outputDir: 'test_results/reports',
+            suite: 'powerapps-specflow-bindings',
+            useBrowserName: true,
+        },
+        reporters: ['progress', 'karma-typescript', 'junit'],
+        browsers: ['Chrome'],
         mime: {
             'text/x-typescript': ['ts', 'tsx']
         },
@@ -20,11 +25,18 @@ module.exports = function (config) {
             reports:
             {
                 html: {
-                    "subdirectory": "html"
+                    directory: 'test_results/coverage',
+                    subdirectory: 'html'
                 },
                 lcovonly: {
-                    "subdirectory": "lcov",
-                    "filename": "lcov.info",
+                    directory: 'test_results/coverage',
+                    subdirectory: 'lcov',
+                    filename: 'lcov.info',
+                },
+                cobertura: {
+                    directory: 'test_results/coverage',
+                    subdirectory: 'cobertura',
+                    filename: 'cobertura.xml',
                 }
             }
         }

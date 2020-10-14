@@ -43,7 +43,7 @@ jobs:
           projectKey: 'Capgemini_powerapps-specflow-bindings'
           projectName: 'powerapps-specflow-bindings'
           projectVersion: '$(GitVersion.SemVer)'
-          extraProperties: 'sonar.javascript.lcov.reportPaths=driver/tests/reports/coverage/lcov.info'
+          extraProperties: 'sonar.javascript.lcov.reportPaths=driver/test_results/coverage/lcov/lcov.info'
       - task: VSBuild@1
         displayName: Build solution
         inputs:
@@ -55,19 +55,18 @@ jobs:
         inputs:
           command: custom
           verbose: false
-          customCommand: run test
+          customCommand: run test:ci
           publishRegistry: useFeed
           workingDir: driver
       - task: PublishTestResults@2
         displayName: Publish unit test results
         inputs:
-          testResultsFiles: driver\**\TESTS-*.xml
+          testResultsFiles: driver\test_results\reports\TESTS-*.xml
       - task: PublishCodeCoverageResults@1
         displayName: Publish unit code coverage results
         inputs:
           codeCoverageTool: Cobertura
-          summaryFileLocation: driver/tests/reports/coverage/cobertura.xml
-          reportDirectory: driver/tests/reports/coverage/html 
+          summaryFileLocation: driver/test_results/coverage/cobertura.xml
       - task: VSTest@2
         displayName: Run UI tests
         inputs:

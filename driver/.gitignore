@@ -6,7 +6,8 @@ node_modules/
 /tests/
 
 # Test output
-/coverage/
+test_results/
 
 # IDE settings
 /.vscode/
+
