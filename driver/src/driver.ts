@@ -1,6 +1,7 @@
 import { DataManager } from './data';
 import DeepInsertService from './data/deepInsertService';
 import { TestRecord } from './data/testRecord';
+import { MetadataRepository } from './repositories';
 import RecordRepository from './repositories/recordRepository';
 
 /**
@@ -23,6 +24,7 @@ export default class Driver {
       this.dataManager = new DataManager(
         recordRepository,
         new DeepInsertService(
+          new MetadataRepository(Xrm.WebApi.online),
           recordRepository,
         ),
       );

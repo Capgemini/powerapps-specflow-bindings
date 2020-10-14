@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import Repository from './repository';
 
 /**
@@ -21,7 +22,7 @@ export default class MetadataRepository extends Repository {
      * @returns {Promise<string>} An entity set for the entity.
      * @memberof MetadataRepository
      */
-  public static async getEntitySetForEntity(logicalName: string): Promise<string> {
+  public async getEntitySetForEntity(logicalName: string): Promise<string> {
     const response = await fetch(
       'api/data/v9.1/'
       + `${MetadataRepository.EntityMetadataSet}?$filter=LogicalName eq '${logicalName}'&$select=EntitySetName`,
@@ -39,7 +40,7 @@ export default class MetadataRepository extends Repository {
      * @returns {Promise<string>} A promise which contains the logical name of the related entity.
      * @memberof MetadataRepository
      */
-  public static async getEntityForLookupProperty(logicalName: string, navigationProperty: string)
+  public async getEntityForLookupProperty(logicalName: string, navigationProperty: string)
     : Promise<string> {
     const response = await fetch(
       'api/data/v9.1/'
@@ -57,7 +58,7 @@ export default class MetadataRepository extends Repository {
      * @returns {Promise<string>} A 1:N navigation property name
      * @memberof MetadataRepository
      */
-  public static async getLookupPropertyForCollectionProperty(navPropName: string): Promise<string> {
+  public async getLookupPropertyForCollectionProperty(navPropName: string): Promise<string> {
     const response = await fetch(
       'api/data/v9.1/'
       + `${MetadataRepository.OneToNMetadataSet}?$filter=ReferencedEntityNavigationPropertyName eq '${navPropName}'&$select=ReferencingEntityNavigationPropertyName`,
@@ -72,7 +73,7 @@ export default class MetadataRepository extends Repository {
      * @param {string} relationshipSchemaName The schema name of the relationship.
      * @returns {Xrm.Metadata.RelationshipMetadata} The relationship metadata object.
      */
-  public static async getRelationshipMetadata(relationshipSchemaName: string)
+  public async getRelationshipMetadata(relationshipSchemaName: string)
     : Promise<Xrm.Metadata.OneToNRelationshipMetadata | Xrm.Metadata.NToNRelationshipMetadata> {
     const response = await fetch(
       'api/data/v9.1/'
