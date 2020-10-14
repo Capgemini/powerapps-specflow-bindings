@@ -2,9 +2,9 @@
   "scripts": {
     "clean": "if exist dist rd dist /s /q",
     "lint": "npx eslint . --fix",
-    "build:dev": "webpack --config webpack.config.js",
+    "build": "webpack --config webpack.config.js",
     "test": "karma start karma.conf.js",
-    "test:ci": "karma start karma.conf.js --single-run --log-level debug"
+    "test:ci": "karma start karma.conf.js --single-run"
   },
   "files": [
     "dist"
@@ -29,8 +29,7 @@
     "ts-loader": "^8.0.5",
     "typescript": "^4.0.3",
     "webpack": "^4.44.2",
-    "webpack-cli": "^4.0.0",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-cli": "^4.0.0"
   },
   "dependencies": {}
 }
