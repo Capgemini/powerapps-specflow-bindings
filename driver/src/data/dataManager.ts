@@ -65,6 +65,7 @@ export default class DataManager {
       while (retry < 3) {
         try {
           reference = this.recordRepo.deleteRecord(record);
+          break;
         } catch (err) {
           retry += 1;
         }
