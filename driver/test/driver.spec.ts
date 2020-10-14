@@ -1,4 +1,3 @@
-import 'jasmine';
 import DataManager from '../src/data/dataManager';
 import Driver from '../src/driver';
 
