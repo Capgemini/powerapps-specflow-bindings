@@ -64,7 +64,7 @@ export default class DataManager {
       let retry = 0;
       while (retry < 3) {
         try {
-          reference = this.recordRepo.deleteRecord(record);
+          reference = await this.recordRepo.deleteRecord(record);
           break;
         } catch (err) {
           retry += 1;
