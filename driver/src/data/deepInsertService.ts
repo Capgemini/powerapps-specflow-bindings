@@ -83,7 +83,7 @@ export default class DeepInsertService {
     };
   }
 
-  private static getAliasedLookups(record: Record | Record) {
+  private static getAliasedLookups(record: Record) {
     return Object.keys(record)
       .filter((key) => key.indexOf('@alias.bind') > -1)
       .reduce((prev, curr) => {
@@ -93,7 +93,7 @@ export default class DeepInsertService {
       }, {} as { [navigationProperty: string]: Record[] });
   }
 
-  private static getOneToManyRecords(record: Record | Record)
+  private static getOneToManyRecords(record: Record)
     : { [navigationProperty: string]: Record[] } {
     return Object.keys(record)
       .filter((key) => Array.isArray(record[key]))
@@ -104,7 +104,7 @@ export default class DeepInsertService {
       }, {} as { [navigationProperty: string]: Record[] });
   }
 
-  private static getManyToOneRecords(record: Record | Record)
+  private static getManyToOneRecords(record: Record)
     : { [navigationProperty: string]: Record } {
     return Object.keys(record)
       .filter((key) => typeof record[key] === 'object' && !Array.isArray(record[key]))
@@ -175,7 +175,7 @@ export default class DeepInsertService {
       return this.deepInsert(entity, oneToManyRecord, refsByAlias);
     }));
 
-    return res.reduce<{ reference: Xrm.LookupValue; alias?: string | undefined; }[]>(
+    return res.reduce<{ reference: Xrm.LookupValue; alias?: string; }[]>(
       (prev, curr) => prev.concat([curr.record, ...curr.associatedRecords]), [],
     );
   }
