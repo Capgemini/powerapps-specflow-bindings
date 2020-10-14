@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import { DataManager } from './data';
 import DeepInsertService from './data/deepInsertService';
 import { TestRecord } from './data/testRecord';
@@ -10,7 +11,7 @@ import RecordRepository from './repositories/recordRepository';
  * @export
  * @class Driver
  */
-export default class Driver {
+export class Driver {
   private readonly dataManager: DataManager;
 
   /**

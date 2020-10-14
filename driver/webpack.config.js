@@ -12,7 +12,7 @@ module.exports = {
                 use: 'ts-loader',
                 exclude: /node_modules/,
             },
-        ],
+        ]
     },
     resolve: {
         extensions: ['.ts', '.js'],
@@ -20,5 +20,7 @@ module.exports = {
     output: {
         filename: 'driver.js',
         path: path.resolve(__dirname, 'dist'),
+        libraryTarget: 'var',
+        library: 'PowerAppsSpecFlowBindings'
     },
 };

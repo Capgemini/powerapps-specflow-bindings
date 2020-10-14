@@ -1,5 +1,5 @@
 import DataManager from '../src/data/dataManager';
-import Driver from '../src/driver';
+import { Driver } from '../src/driver';
 
 describe('Driver', () => {
   let dataManager: jasmine.SpyObj<DataManager>;
@@ -16,10 +16,10 @@ describe('Driver', () => {
         '@logicalName': logicalName,
         name: 'Sample Account',
         primarycontactid:
-                {
-                  firstname: 'John',
-                  lastname: 'Smith',
-                },
+        {
+          firstname: 'John',
+          lastname: 'Smith',
+        },
       };
       const createDataCalls = dataManager.createData.calls.count();
 
