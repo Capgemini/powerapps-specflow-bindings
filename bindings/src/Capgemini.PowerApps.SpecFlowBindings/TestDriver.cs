@@ -12,8 +12,8 @@
     /// </summary>
     public class TestDriver : ITestDriver
     {
-        private const string DriverScriptPath = "specflow.driver.js";
-        private const string TestDriverReference = "top.testDriver";
+        private const string DriverScriptPath = "driver.js";
+        private const string TestDriverReference = "top.driver";
         private const string ErrorPrefix = "driver encountered an error";
 
         private readonly IJavaScriptExecutor javascriptExecutor;
@@ -81,7 +81,7 @@
         {
             this.javascriptExecutor.ExecuteScript(
                 $"{File.ReadAllText(this.FilePath)}\n" +
-                $"top.testDriver = new Capgemini.Dynamics.Testing.TestDriver();");
+                $"{TestDriverReference} = new PowerAppsSpecFlowBindings.Driver();");
         }
     }
 }

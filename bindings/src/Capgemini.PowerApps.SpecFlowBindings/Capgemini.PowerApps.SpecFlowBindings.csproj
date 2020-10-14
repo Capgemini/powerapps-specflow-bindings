@@ -212,7 +212,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <Exec Command="npm run build" WorkingDirectory="../../../driver" />
-    <Copy SourceFiles="../../../driver/dist/specflow.driver.js" DestinationFolder="bin/lib" />
+    <Copy SourceFiles="../../../driver/dist/driver.js" DestinationFolder="bin/lib" />
   </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
