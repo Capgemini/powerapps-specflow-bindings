@@ -36,10 +36,10 @@ describe('TestDriver', () => {
         {
           name: 'Sample Account',
           primarycontactid:
-                    {
-                      firstname: 'John',
-                      lastname: 'Smith',
-                    },
+          {
+            firstname: 'John',
+            lastname: 'Smith',
+          },
         });
 
       expect(dataManager.refs).toEqual([rec.reference, ...assocRecs.map((r) => r.reference)]);
@@ -86,10 +86,10 @@ describe('TestDriver', () => {
         {
           name: 'Sample Account',
           primarycontactid:
-                    {
-                      firstname: 'John',
-                      lastname: 'Smith',
-                    },
+          {
+            firstname: 'John',
+            lastname: 'Smith',
+          },
         });
 
       await dataManager.cleanup();
@@ -112,7 +112,6 @@ describe('TestDriver', () => {
           name: 'Sample Account',
         });
 
-      await dataManager.cleanup();
       await dataManager.cleanup();
 
       expect(recordRepository.deleteRecord.calls.count()).toBe(1);
