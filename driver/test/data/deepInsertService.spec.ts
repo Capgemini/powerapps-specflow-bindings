@@ -9,8 +9,8 @@ describe('DeepInsertService', () => {
   beforeEach(() => {
     recordRepo = jasmine.createSpyObj<RecordRepository>('RecordRepository',
       [
-        'createRecord',
         'deleteRecord',
+        'upsertRecord',
         'associateManyToManyRecords',
       ]);
     metadataRepo = jasmine.createSpyObj<MetadataRepository>('MetadataRepository',
@@ -28,7 +28,7 @@ describe('DeepInsertService', () => {
     it('creates each object in the object graph', async () => {
       metadataRepo.getLookupPropertyForCollectionProperty.and.resolveTo('customerid_account');
       metadataRepo.getRelationshipMetadata.and.resolveTo({ RelationshipType: 'OneToManyRelationship' } as Xrm.Metadata.OneToNRelationshipMetadata);
-      recordRepo.createRecord
+      recordRepo.upsertRecord
         .and.returnValues(
           Promise.resolve({ id: '<company-id>', entityType: 'account' }),
           Promise.resolve({ id: '<contact-id>', entityType: 'contact' }),
@@ -56,14 +56,14 @@ describe('DeepInsertService', () => {
 
       await deepInsertService.deepInsert('account', testRecord, {});
 
-      expect(recordRepo.createRecord.calls.count()).toBe(4);
+      expect(recordRepo.upsertRecord.calls.count()).toBe(4);
     });
 
     it('replaces nested objects with @odata.bind associations', async () => {
       const entitySetName = 'contacts';
       const contactId = '<contact-id>';
       metadataRepo.getEntitySetForEntity.and.resolveTo(entitySetName);
-      recordRepo.createRecord.and.returnValues(
+      recordRepo.upsertRecord.and.returnValues(
         Promise.resolve({ id: contactId, entityType: 'contact' }),
         Promise.resolve({ id: '<account-id>', entityType: 'account' }),
       );
@@ -79,7 +79,7 @@ describe('DeepInsertService', () => {
         },
         {});
 
-      expect(recordRepo.createRecord.calls.mostRecent().args[1]['primarycontactid@odata.bind'])
+      expect(recordRepo.upsertRecord.calls.mostRecent().args[1]['primarycontactid@odata.bind'])
         .toBe(`/${entitySetName}(${contactId})`);
     });
 
@@ -95,7 +95,7 @@ describe('DeepInsertService', () => {
           'primarycontactid@alias.bind': 'a contact',
         }, createdRecordsByAlias);
 
-      expect(recordRepo.createRecord.calls.mostRecent().args[1]['primarycontactid@odata.bind'])
+      expect(recordRepo.upsertRecord.calls.mostRecent().args[1]['primarycontactid@odata.bind'])
         .toBe(`/${entitySetName}(${contactId})`);
     });
 
@@ -114,7 +114,7 @@ describe('DeepInsertService', () => {
       metadataRepo.getEntitySetForEntity.and.resolveTo('accounts');
       metadataRepo.getRelationshipMetadata.and.resolveTo({ RelationshipType: 'OneToManyRelationship' } as Xrm.Metadata.OneToNRelationshipMetadata);
       metadataRepo.getLookupPropertyForCollectionProperty.and.resolveTo('customerid_account');
-      recordRepo.createRecord.and.resolveTo({
+      recordRepo.upsertRecord.and.resolveTo({
         entityType: 'account',
         id: 'accountid',
       });
@@ -130,7 +130,7 @@ describe('DeepInsertService', () => {
 
       await deepInsertService.deepInsert('account', testRecord, {});
 
-      expect(recordRepo.createRecord.calls.first().args[1].opportunity_customer_accounts)
+      expect(recordRepo.upsertRecord.calls.first().args[1].opportunity_customer_accounts)
         .toBeUndefined();
     });
 
@@ -147,7 +147,7 @@ describe('DeepInsertService', () => {
         .resolveTo({ RelationshipType: 'OneToManyRelationship' } as Xrm.Metadata.OneToNRelationshipMetadata);
       metadataRepo.getLookupPropertyForCollectionProperty.and
         .resolveTo(navigationProperty);
-      recordRepo.createRecord.and.resolveTo(createdRecord);
+      recordRepo.upsertRecord.and.resolveTo(createdRecord);
       const testRecord: Record = {
         name: 'Sample Account',
         opportunity_customer_accounts: [
@@ -159,7 +159,7 @@ describe('DeepInsertService', () => {
 
       await deepInsertService.deepInsert('account', testRecord, {});
 
-      expect(recordRepo.createRecord.calls.mostRecent().args[1][`${navigationProperty}@odata.bind`])
+      expect(recordRepo.upsertRecord.calls.mostRecent().args[1][`${navigationProperty}@odata.bind`])
         .toBe(`/${entitySet}(${createdRecord.id})`);
     });
 
@@ -172,7 +172,7 @@ describe('DeepInsertService', () => {
       metadataRepo.getEntitySetForEntity.and.resolveTo(rootEntitySet);
       metadataRepo.getRelationshipMetadata.and.resolveTo({ RelationshipType: 'ManyToManyRelationship' } as Xrm.Metadata.NToNRelationshipMetadata);
       metadataRepo.getLookupPropertyForCollectionProperty.and.resolveTo(manyToManyNavigationProp);
-      recordRepo.createRecord.and.returnValues(
+      recordRepo.upsertRecord.and.returnValues(
         Promise.resolve(rootReference),
         Promise.resolve(relatedReference),
       );
@@ -187,7 +187,7 @@ describe('DeepInsertService', () => {
     it("queries for nested object's entity set name", async () => {
       metadataRepo.getEntitySetForEntity.and
         .returnValues(Promise.resolve('contacts'), Promise.resolve('accounts'));
-      recordRepo.createRecord
+      recordRepo.upsertRecord
         .and.returnValues(
           Promise.resolve({ id: '<contact-id>', entityType: 'contact' }),
           Promise.resolve({ id: '<account-id>', entityType: 'account' }),
@@ -213,7 +213,7 @@ describe('DeepInsertService', () => {
         Promise.resolve({ id: '<account-id>', entityType: 'account' }),
         Promise.resolve(expectedEntityReference),
       ];
-      recordRepo.createRecord
+      recordRepo.upsertRecord
         .and.returnValues(...createResponses);
 
       const entityReference = await deepInsertService.deepInsert('account',

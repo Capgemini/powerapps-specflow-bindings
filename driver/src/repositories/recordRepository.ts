@@ -19,10 +19,6 @@ export default class RecordRepository extends Repository {
      * @memberof RecordRepository
      */
   public async createRecord(entityLogicalName: string, record: Record): Promise<Xrm.LookupValue> {
-    if (record['@key']) {
-      return this.upsertRecord(entityLogicalName, record);
-    }
-
     return this.webApi.createRecord(entityLogicalName, record);
   }
 
@@ -34,6 +30,10 @@ export default class RecordRepository extends Repository {
      * @memberof RecordRepository
      */
   public async upsertRecord(entityLogicalName: string, record: Record): Promise<Xrm.LookupValue> {
+    if (!record['@key']) {
+      return this.webApi.createRecord(entityLogicalName, record);
+    }
+
     const retrieveResponse = await this.webApi.retrieveMultipleRecords(
       entityLogicalName,
       `?$filter=${record['@key']} eq '${record[record['@key'] as string]}'&$select=${entityLogicalName}id`,

@@ -65,7 +65,7 @@ export default class DeepInsertService {
     const collRecordsByNavProp = DeepInsertService.getOneToManyRecords(recordToCreate);
     Object.keys(collRecordsByNavProp).forEach((collNavProp) => delete recordToCreate[collNavProp]);
 
-    const recordToCreateRef = await this.recordRepository.createRecord(logicalName, recordToCreate);
+    const recordToCreateRef = await this.recordRepository.upsertRecord(logicalName, recordToCreate);
 
     await Promise.all(Object.keys(collRecordsByNavProp).map(async (collNavProp) => {
       const result = await this.createCollectionRecords(
