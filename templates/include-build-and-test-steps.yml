@@ -68,7 +68,7 @@ jobs:
         displayName: Publish unit code coverage results
         inputs:
           codeCoverageTool: Cobertura
-          summaryFileLocation: driver/test_results/coverage/cobertura.xml
+          summaryFileLocation: driver/test_results/coverage/cobertura/cobertura.xml
       - task: VSTest@2
         displayName: Run UI tests
         inputs:
