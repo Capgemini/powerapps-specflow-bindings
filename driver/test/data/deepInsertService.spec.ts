@@ -11,6 +11,7 @@ describe('DeepInsertService', () => {
       [
         'createRecord',
         'deleteRecord',
+        'associateManyToManyRecords',
       ]);
     metadataRepo = jasmine.createSpyObj<MetadataRepository>('MetadataRepository',
       [
@@ -25,8 +26,8 @@ describe('DeepInsertService', () => {
 
   describe('.deepInsert(logicalName, record)', () => {
     it('creates each object in the object graph', async () => {
-      metadataRepo.getLookupPropertyForCollectionProperty.and.returnValue(Promise.resolve('customerid_account'));
-      metadataRepo.getRelationshipMetadata.and.returnValue(Promise.resolve({ RelationshipType: 'OneToManyRelationship' } as Xrm.Metadata.OneToNRelationshipMetadata));
+      metadataRepo.getLookupPropertyForCollectionProperty.and.resolveTo('customerid_account');
+      metadataRepo.getRelationshipMetadata.and.resolveTo({ RelationshipType: 'OneToManyRelationship' } as Xrm.Metadata.OneToNRelationshipMetadata);
       recordRepo.createRecord
         .and.returnValues(
           Promise.resolve({ id: '<company-id>', entityType: 'account' }),
@@ -61,7 +62,7 @@ describe('DeepInsertService', () => {
     it('replaces nested objects with @odata.bind associations', async () => {
       const entitySetName = 'contacts';
       const contactId = '<contact-id>';
-      metadataRepo.getEntitySetForEntity.and.returnValue(Promise.resolve(entitySetName));
+      metadataRepo.getEntitySetForEntity.and.resolveTo(entitySetName);
       recordRepo.createRecord.and.returnValues(
         Promise.resolve({ id: contactId, entityType: 'contact' }),
         Promise.resolve({ id: '<account-id>', entityType: 'account' }),
@@ -86,7 +87,7 @@ describe('DeepInsertService', () => {
       const entitySetName = 'contacts';
       const contactId = '<contact-id>';
       const createdRecordsByAlias: { [alias: string]: Xrm.LookupValue } = { 'a contact': { id: contactId, entityType: 'contact' } };
-      metadataRepo.getEntitySetForEntity.and.returnValue(Promise.resolve(entitySetName));
+      metadataRepo.getEntitySetForEntity.and.resolveTo(entitySetName);
 
       await deepInsertService.deepInsert('account',
         {
@@ -98,14 +99,25 @@ describe('DeepInsertService', () => {
         .toBe(`/${entitySetName}(${contactId})`);
     });
 
+    it('throws an error when @alias.bind alias is not found', async () => {
+      const deepInsert = {
+        name: 'Sample Account',
+        'primarycontactid@alias.bind': 'a contact',
+      };
+
+      const deepInsertPromise = deepInsertService.deepInsert('account', deepInsert, {});
+
+      expectAsync(deepInsertPromise).toBeRejectedWithError(Error, /.* record with the alias 'a contact' has not been created/);
+    });
+
     it('removes nested arrays from the record', async () => {
-      metadataRepo.getEntitySetForEntity.and.returnValue(Promise.resolve('accounts'));
-      metadataRepo.getRelationshipMetadata.and.returnValue(Promise.resolve({ RelationshipType: 'OneToManyRelationship' } as Xrm.Metadata.OneToNRelationshipMetadata));
-      metadataRepo.getLookupPropertyForCollectionProperty.and.returnValue(Promise.resolve('customerid_account'));
-      recordRepo.createRecord.and.returnValue(Promise.resolve({
+      metadataRepo.getEntitySetForEntity.and.resolveTo('accounts');
+      metadataRepo.getRelationshipMetadata.and.resolveTo({ RelationshipType: 'OneToManyRelationship' } as Xrm.Metadata.OneToNRelationshipMetadata);
+      metadataRepo.getLookupPropertyForCollectionProperty.and.resolveTo('customerid_account');
+      recordRepo.createRecord.and.resolveTo({
         entityType: 'account',
         id: 'accountid',
-      }));
+      });
 
       const testRecord: Record = {
         name: 'Sample Account',
@@ -130,12 +142,12 @@ describe('DeepInsertService', () => {
         id: 'accountid',
       };
       metadataRepo.getEntitySetForEntity.and
-        .returnValue(Promise.resolve(entitySet));
+        .resolveTo(entitySet);
       metadataRepo.getRelationshipMetadata.and
-        .returnValue(Promise.resolve({ RelationshipType: 'OneToManyRelationship' } as Xrm.Metadata.OneToNRelationshipMetadata));
+        .resolveTo({ RelationshipType: 'OneToManyRelationship' } as Xrm.Metadata.OneToNRelationshipMetadata);
       metadataRepo.getLookupPropertyForCollectionProperty.and
-        .returnValue(Promise.resolve(navigationProperty));
-      recordRepo.createRecord.and.returnValue(Promise.resolve(createdRecord));
+        .resolveTo(navigationProperty);
+      recordRepo.createRecord.and.resolveTo(createdRecord);
       const testRecord: Record = {
         name: 'Sample Account',
         opportunity_customer_accounts: [
@@ -149,6 +161,27 @@ describe('DeepInsertService', () => {
 
       expect(recordRepo.createRecord.calls.mostRecent().args[1][`${navigationProperty}@odata.bind`])
         .toBe(`/${entitySet}(${createdRecord.id})`);
+    });
+
+    it('creates and associates many-to-many records', async () => {
+      const manyToManyNavigationProp = 'many_to_many';
+      const relatedRecords = [{ name: 'Many to many record' }];
+      const rootEntitySet = 'accounts';
+      const rootReference: Xrm.LookupValue = { entityType: 'account', id: 'accountid' };
+      const relatedReference: Xrm.LookupValue = { entityType: 'contact', id: 'contactid' };
+      metadataRepo.getEntitySetForEntity.and.resolveTo(rootEntitySet);
+      metadataRepo.getRelationshipMetadata.and.resolveTo({ RelationshipType: 'ManyToManyRelationship' } as Xrm.Metadata.NToNRelationshipMetadata);
+      metadataRepo.getLookupPropertyForCollectionProperty.and.resolveTo(manyToManyNavigationProp);
+      recordRepo.createRecord.and.returnValues(
+        Promise.resolve(rootReference),
+        Promise.resolve(relatedReference),
+      );
+      const testRecord: Record = { name: 'Account', [manyToManyNavigationProp]: relatedRecords };
+
+      await deepInsertService.deepInsert('account', testRecord, {});
+
+      expect(recordRepo.associateManyToManyRecords)
+        .toHaveBeenCalledWith(rootReference, [relatedReference], manyToManyNavigationProp);
     });
 
     it("queries for nested object's entity set name", async () => {
