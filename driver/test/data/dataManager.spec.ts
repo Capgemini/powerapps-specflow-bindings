@@ -49,13 +49,15 @@ describe('TestDriver', () => {
 
   describe('.cleanup()', () => {
     const associatedRecord = { entityType: 'opportunity', id: '<opportunity-id>' };
+    const associatedRecordAlias = 'an associated opportunity';
     const rootRecord = { entityType: 'account', id: '<account-id>' };
+    const rootRecordAlias = 'an account';
 
     beforeEach(async () => {
       const mockDeepInsertResponse = Promise.resolve(
         {
-          associatedRecords: [{ reference: associatedRecord }],
-          record: { reference: rootRecord },
+          associatedRecords: [{ reference: associatedRecord, alias: associatedRecordAlias }],
+          record: { reference: rootRecord, alias: rootRecordAlias },
         },
       );
       deepInsertService.deepInsert.and.returnValue(mockDeepInsertResponse);
