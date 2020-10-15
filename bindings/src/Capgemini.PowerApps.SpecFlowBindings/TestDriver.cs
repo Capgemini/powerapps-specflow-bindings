@@ -15,6 +15,7 @@
         private const string DriverScriptPath = "driver.js";
         private const string TestDriverReference = "top.driver";
         private const string ErrorPrefix = "driver encountered an error";
+        private const string LibraryNamespace = "PowerAppsSpecFlowBindings";
 
         private readonly IJavaScriptExecutor javascriptExecutor;
 
@@ -81,7 +82,11 @@
         {
             this.javascriptExecutor.ExecuteScript(
                 $"{File.ReadAllText(this.FilePath)}\n" +
-                $"{TestDriverReference} = new PowerAppsSpecFlowBindings.Driver();");
+                $@"var recordRepository = new {LibraryNamespace}.RecordRepository(Xrm.WebApi.online);
+                   var metadataRepository = new {LibraryNamespace}.MetadataRepository(Xrm.WebApi.online);
+                   var deepInsertService = new {LibraryNamespace}.DeepInsertService(metadataRepository, recordRepository);
+                   var dataManager = new {LibraryNamespace}.DataManager(recordRepository, deepInsertService);
+                   {TestDriverReference} = new {LibraryNamespace}.Driver(dataManager);");
         }
     }
 }

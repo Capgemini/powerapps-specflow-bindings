@@ -1,5 +1,5 @@
 import DataManager from '../src/data/dataManager';
-import { Driver } from '../src/driver';
+import Driver from '../src/driver';
 
 describe('Driver', () => {
   let dataManager: jasmine.SpyObj<DataManager>;
@@ -39,7 +39,7 @@ describe('Driver', () => {
   });
 
   describe('.openTestRecord(alias)', () => {
-    it("throws an error the record hasn't been created", () => {
+    it('throws an error the record hasn\'t been created', () => {
       expect(() => driver.openTestRecord('this is not a valid alias')).toThrowError();
     });
 
@@ -55,6 +55,16 @@ describe('Driver', () => {
       driver.openTestRecord('someAlias');
 
       expect(openForm.calls.first().args[0].entityId).toBe('<account-id>');
+    });
+  });
+
+  describe('.getRecordReference(alias)', () => {
+    it('returns a reference to a record matching the provided alias', () => {
+      const alias = 'some alias';
+      const reference: Xrm.LookupValue = { id: 'id', entityType: 'entitytype' };
+      dataManager.refsByAlias[alias] = reference;
+
+      expect(driver.getRecordReference(alias)).toBe(reference);
     });
   });
 });

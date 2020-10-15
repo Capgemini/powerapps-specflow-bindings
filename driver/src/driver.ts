@@ -1,9 +1,5 @@
-/* eslint-disable import/prefer-default-export */
 import { DataManager } from './data';
-import DeepInsertService from './data/deepInsertService';
 import { TestRecord } from './data/testRecord';
-import { MetadataRepository } from './repositories';
-import RecordRepository from './repositories/recordRepository';
 
 /**
  * Interacts with the Web API and Client API to assist test setup and teardown.
@@ -11,7 +7,7 @@ import RecordRepository from './repositories/recordRepository';
  * @export
  * @class Driver
  */
-export class Driver {
+export default class Driver {
   private readonly dataManager: DataManager;
 
   /**
@@ -19,19 +15,8 @@ export class Driver {
      * @param {TestDataManager} [dataManager] A test data manager.
      * @memberof Driver
      */
-  constructor(dataManager?: DataManager) {
-    if (dataManager === undefined) {
-      const recordRepository = new RecordRepository(Xrm.WebApi.online);
-      this.dataManager = new DataManager(
-        recordRepository,
-        new DeepInsertService(
-          new MetadataRepository(Xrm.WebApi.online),
-          recordRepository,
-        ),
-      );
-    } else {
-      this.dataManager = dataManager as any;
-    }
+  constructor(dataManager: DataManager) {
+    this.dataManager = dataManager;
   }
 
   /**
