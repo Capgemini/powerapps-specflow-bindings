@@ -45,9 +45,9 @@ stages:
               action: 'create'
               target: '$(Build.SourceVersion)'
               tagSource: 'userSpecifiedTag'
-              tag: 'v$(GitVersion.SemVer)'
+              tag: 'v$(SemVer)'
               releaseNotesSource: 'inline'
               assets: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*'
               isPreRelease: true
-              changeLogCompareToRelease: 'lastFullRelease'
+              changeLogCompareToRelease: 'lastNonDraftRelease'
               changeLogType: commitBased
