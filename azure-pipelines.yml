@@ -17,6 +17,30 @@ stages:
     displayName: Build and test
     jobs:
     - template: templates/include-build-and-test-steps.yml
+  - stage: TestGitVersionStage
+    displayName: Temporary stage to test variable access
+    jobs:
+      - job: TestGitVersionJob
+        displayName: Temporary job to test variable access
+        steps: 
+          - task: gitversion/setup@0
+            displayName: Install GitVersion
+            inputs:
+              versionSpec: '5.x'
+          - task: gitversion/execute@0
+            displayName: Execute GitVersion
+            inputs:
+              useConfigFile: true
+              configFilePath: '$(Build.SourcesDirectory)\GitVersion.yml'
+  - stage: TestGitVersionVariableAccessStage
+    displayName: Temporary stage to test variable access
+    jobs:
+      - job: TestGitVersionVariableAccessJob
+        displayName: Temporary job to test variable access
+        steps: 
+          - task: CmdLine@2
+            inputs:
+              script: 'echo $(GitVersion.SemVer)'
   - stage: Publish
     displayName: Publish
     jobs:
