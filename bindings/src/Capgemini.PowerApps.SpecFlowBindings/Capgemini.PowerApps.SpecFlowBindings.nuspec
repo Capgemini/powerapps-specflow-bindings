@@ -18,7 +18,7 @@
   <files>
     <file src="content\**\*" target="content"/>
     <file src="build\**" target="build"/>
-    <file src="bin\lib\specflow.driver.js" target="build"/>
+    <file src="bin\lib\driver.js" target="build"/>
     <file src="icon.png" target="images" />
   </files>
 </package>

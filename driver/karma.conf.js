@@ -1,35 +1,44 @@
 module.exports = function (config) {
     config.set({
-        frameworks: ['jasmine'],
-        browsers: ['ChromeDebugging'],
+        frameworks: ['jasmine', 'karma-typescript'],
         files: [
-            './dist/*.js',
-            './tests/**/*.js',
-            './node_modules/jasmine-ajax/lib/mock-ajax.js'
+            'src/**/*.ts',
+            'test/**/*.ts'
         ],
+        mime: {
+            'text/x-typescript': ['ts', 'tsx']
+        },
         preprocessors: {
-            './dist/specflow.driver.js': ['coverage'],
-            '**/*.js': ['sourcemap']
+            '**/*.ts': 'karma-typescript'
         },
-        customLaunchers: {
-            ChromeDebugging: {
-                base: 'Chrome',
-                flags: ['--remote-debugging-port=9333']
-            }
-        },
-        reporters: ['progress', 'coverage', 'remap-coverage', 'junit'],
         junitReporter: {
-            outputDir: './tests/reports',
-            suite: 'power-apps-specflow-bindings',
+            outputDir: 'test_results/reports',
+            suite: 'powerapps-specflow-bindings',
             useBrowserName: true,
         },
-        coverageReporter: {
-            type: 'in-memory'
+        reporters: ['progress', 'karma-typescript', 'junit'],
+        browsers: ['Chrome'],
+        mime: {
+            'text/x-typescript': ['ts', 'tsx']
         },
-        remapCoverageReporter: {
-            html: './tests/reports/coverage/html',
-            cobertura: './tests/reports/coverage/cobertura.xml',
-            lcovonly: './tests/reports/coverage/lcov.info',
+        karmaTypescriptConfig: {
+            reports:
+            {
+                html: {
+                    directory: 'test_results/coverage',
+                    subdirectory: 'html'
+                },
+                lcovonly: {
+                    directory: 'test_results/coverage',
+                    subdirectory: 'lcov',
+                    filename: 'lcov.info',
+                },
+                cobertura: {
+                    directory: 'test_results/coverage',
+                    subdirectory: 'cobertura',
+                    filename: 'cobertura.xml',
+                }
+            }
         }
     });
 };

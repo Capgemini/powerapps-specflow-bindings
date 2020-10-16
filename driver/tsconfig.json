@@ -1,6 +1,16 @@
 {
-  "extends": "./tsconfig.prod.json",
   "compilerOptions": {
-    "inlineSources": true
-  }
+    "target": "ES2015",
+    "module": "ES2015",
+    "moduleResolution": "node",
+    "alwaysStrict": true,
+    "strict": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": [
+    "src",
+    "test"
+  ]
 }
