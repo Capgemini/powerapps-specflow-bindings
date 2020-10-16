@@ -1,6 +1,6 @@
 # Power Apps SpecFlow Bindings
 
-[![Build Status](https://capgeminiuk.visualstudio.com/GitHub%20Support/_apis/build/status/CI-Builds/NuGet%20Packages/Capgemini.PowerApps.SpecFlowBindings?branchName=master)](https://capgeminiuk.visualstudio.com/GitHub%20Support/_build/latest?definitionId=195&branchName=master)
+[![Build Status](https://capgeminiuk.visualstudio.com/GitHub%20Support/_apis/build/status/CI-Builds/NuGet%20Packages/Capgemini.PowerApps.SpecFlowBindings?branchName=master)](https://capgeminiuk.visualstudio.com/GitHub%20Support/_build/latest?definitionId=195&branchName=master) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Capgemini_powerapps-specflow-bindings&metric=alert_status)](https://sonarcloud.io/dashboard?id=Capgemini_powerapps-specflow-bindings) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Capgemini_powerapps-specflow-bindings&metric=coverage)](https://sonarcloud.io/dashboard?id=Capgemini_powerapps-specflow-bindings)
 
 A SpecFlow bindings library for Power Apps.
 
