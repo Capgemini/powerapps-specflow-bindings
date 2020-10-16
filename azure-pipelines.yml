@@ -37,7 +37,7 @@ stages:
     jobs:
       - job: TestGitVersionVariableAccessJob
         variables: 
-          SemVer: $[ stageDependencies.TestGitVersionStage.TestGitVersionJob.outputs['GitVersionSemVer'] ]
+          SemVer: $[ stageDependencies.TestGitVersionStage.TestGitVersionJob.outputs['SetGitVersionTask.GitVersionSemVer'] ]
         displayName: Temporary job to test variable access
         steps: 
           - task: CmdLine@2
