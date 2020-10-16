@@ -40,7 +40,7 @@ stages:
         steps: 
           - task: CmdLine@2
             inputs:
-              script: 'echo $(GitVersion.SemVer)'
+              script: 'echo $(GITVERSION_FullSemVer)'
   - stage: Publish
     displayName: Publish
     jobs:
