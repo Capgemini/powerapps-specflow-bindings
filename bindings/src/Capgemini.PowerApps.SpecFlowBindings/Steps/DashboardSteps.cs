@@ -15,6 +15,7 @@
         [When("I select the '(.*)' dashboard")]
         public static void WhenISelectTheDashboard(string dashboardName)
         {
+            // simulating a change
             XrmApp.Dashboard.SelectDashboard(dashboardName);
         }
     }
