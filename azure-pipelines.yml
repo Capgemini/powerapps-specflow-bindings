@@ -12,10 +12,6 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 stages:
-  - stage: BuildAndTest
-    displayName: Build and test
-    jobs:
-    - template: templates/include-build-and-test-steps.yml
   - stage: TestGitVersionStage
     displayName: Temporary stage to test variable access
     jobs:
@@ -33,48 +29,17 @@ stages:
             inputs:
               useConfigFile: true
               configFilePath: '$(Build.SourcesDirectory)\GitVersion.yml'
+          - pwsh: Write-Host "Setting output variable as $(GitVersion.SemVer)"
           - pwsh: Write-Host "##vso[task.setvariable variable=GitVersionSemVer;isOutput=true]$(GitVersion.SemVer)"
             name: SetGitVersionTask
   - stage: TestGitVersionVariableAccessStage
     displayName: Temporary stage to test variable access
-    variables: 
-          GitVersion.SemVer: $[dependencies.TestGitVersionStage.outputs['TestGitVersionJob.SetGitVersionTask.GitVersionSemVer']]
     jobs:
       - job: TestGitVersionVariableAccessJob
+        variables: 
+          GitVersion.SemVer: $[stageDependencies.TestGitVersionStage.outputs['TestGitVersionJob.SetGitVersionTask.GitVersionSemVer']]
         displayName: Temporary job to test variable access
         steps: 
           - task: CmdLine@2
             inputs:
               script: echo $(GitVersion.SemVer)
-  - stage: Publish
-    displayName: Publish
-    jobs:
-      - job: PublishJob
-        displayName: Publish 
-        steps:
-          - checkout: none
-          - download: current
-            displayName: Download NuGet package artifact
-            artifact: Capgemini.PowerApps.SpecFlowBindings
-          - task: NuGetCommand@2
-            displayName: Push to NuGet.org
-            inputs:
-              command: push
-              packagesToPush: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*.nupkg'
-              nuGetFeedType: external
-              publishFeedCredentials: Capgemini_UK
-          - task: GitHubRelease@1
-            displayName: Create GitHub releaes
-            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-            inputs:
-              gitHubConnection: 'GitHub (ewingjm)'
-              repositoryName: '$(Build.Repository.Name)'
-              action: 'create'
-              target: '$(Build.SourceVersion)'
-              tagSource: 'userSpecifiedTag'
-              tag: 'v$(GITVERSION_FullSemVer)'
-              releaseNotesSource: 'inline'
-              assets: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*'
-              isPreRelease: true
-              changeLogCompareToRelease: lastNonDraftRelease
-              changeLogType: commitBased
