@@ -27,6 +27,7 @@
         [When("I select the '([^']+)' command under the '([^']+)' flyout")]
         public static void WhenISelectTheCommandUnderTheFlyout(string commandName, string flyoutName)
         {
+            // minor change to test TIA
             XrmApp.CommandBar.ClickCommand(flyoutName, commandName);
         }
 
