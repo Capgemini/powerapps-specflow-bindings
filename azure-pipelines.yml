@@ -11,7 +11,6 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  GitVersion.SemVer: ''
 stages:
   - stage: BuildAndTest
     displayName: Build and test
@@ -22,6 +21,8 @@ stages:
     jobs:
       - job: TestGitVersionJob
         displayName: Temporary job to test variable access
+        variables:
+          GitVersion.SemVer: ''
         steps: 
           - task: gitversion/setup@0
             displayName: Install GitVersion
@@ -32,6 +33,8 @@ stages:
             inputs:
               useConfigFile: true
               configFilePath: '$(Build.SourcesDirectory)\GitVersion.yml'
+          - pwsh: Write-Host "##vso[task.setvariable variable=GitVersionSemVer;isOutput=true]$(GitVersion.SemVer)"
+            name: SetGitVersionTask
   - stage: TestGitVersionVariableAccessStage
     displayName: Temporary stage to test variable access
     jobs:
@@ -40,7 +43,7 @@ stages:
         steps: 
           - task: CmdLine@2
             inputs:
-              script: 'echo $(GITVERSION_FullSemVer)'
+              script: echo $[dependencies.TestGitVersionStage.outputs['TestGitVersionJob.SetGitVersionTask.GitVersion.GitVersionSemVer']
   - stage: Publish
     displayName: Publish
     jobs:
