@@ -22,6 +22,8 @@ stages:
     jobs:
       - job: PublishJob
         displayName: Publish 
+        variables: 
+          SemVer: $[ stageDependencies.BuildAndTest.BuildJob.outputs['OutputSemVerTask.SemVer'] ]
         steps:
           - checkout: none
           - download: current
@@ -43,9 +45,9 @@ stages:
               action: 'create'
               target: '$(Build.SourceVersion)'
               tagSource: 'userSpecifiedTag'
-              tag: 'v$(GitVersion.SemVer)'
+              tag: 'v$(SemVer)'
               releaseNotesSource: 'inline'
               assets: '$(Pipeline.Workspace)/Capgemini.PowerApps.SpecFlowBindings/*'
               isPreRelease: true
-              changeLogCompareToRelease: 'lastFullRelease'
+              changeLogCompareToRelease: 'lastNonDraftRelease'
               changeLogType: commitBased

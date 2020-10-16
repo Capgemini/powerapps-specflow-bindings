@@ -23,6 +23,8 @@ jobs:
           useConfigFile: true
           configFilePath: '$(Build.SourcesDirectory)\GitVersion.yml'
           updateAssemblyInfo: false
+      - pwsh: Write-Host "##vso[task.setvariable variable=SemVer;isOutput=true]$(GitVersion.SemVer)"
+        name: OutputSemVerTask
       - task: NuGetToolInstaller@1
         displayName: Install NuGet
       - task: NuGetCommand@2
