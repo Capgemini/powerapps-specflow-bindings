@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)specflow.driver.js">
-      <Link>specflow.driver.js</Link>
+    <None Include="$(MSBuildThisFileDirectory)driver.js">
+      <Link>driver.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Visible>false</Visible>
     </None>
