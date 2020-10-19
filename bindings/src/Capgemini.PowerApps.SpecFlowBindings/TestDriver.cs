@@ -56,7 +56,7 @@
         /// <inheritdoc/>
         public EntityReference GetTestRecordReference(string recordAlias)
         {
-            var obj = (Dictionary<string, object>)this.javascriptExecutor.ExecuteAsyncScript($"{TestDriverReference}.getRecordReference('{recordAlias}').then(arguments[arguments.length - 1]);");
+            var obj = (Dictionary<string, object>)this.javascriptExecutor.ExecuteScript($"{TestDriverReference}.getRecordReference('{recordAlias}');");
 
             return new EntityReference((string)obj["entityType"], Guid.Parse((string)obj["id"]));
         }

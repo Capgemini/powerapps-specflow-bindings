@@ -40,7 +40,7 @@ stages:
             displayName: Create GitHub releaes
             condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
             inputs:
-              gitHubConnection: 'Github Capgemini'
+              gitHubConnection: 'GitHub (ewingjm)'
               repositoryName: '$(Build.Repository.Name)'
               action: 'create'
               target: '$(Build.SourceVersion)'
