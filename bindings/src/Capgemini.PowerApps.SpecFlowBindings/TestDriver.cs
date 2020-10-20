@@ -38,25 +38,25 @@
         /// <inheritdoc cref="ITestDriver"/>
         public void LoadTestData(string data)
         {
-            this.ExecuteAsyncScriptWithExceptionOnReject($"loadTestData(`{data}`)");
+            this.ExecuteDriverFunctionAsync($"loadTestData(`{data}`)");
         }
 
         /// <inheritdoc cref="ITestDriver"/>
         public void DeleteTestData()
         {
-            this.ExecuteAsyncScriptWithExceptionOnReject("deleteTestData()");
+            this.ExecuteDriverFunctionAsync("deleteTestData()");
         }
 
         /// <inheritdoc cref="ITestDriver"/>
         public void OpenTestRecord(string recordAlias)
         {
-            this.ExecuteAsyncScriptWithExceptionOnReject($"openTestRecord('{recordAlias}')");
+            this.ExecuteDriverFunctionAsync($"openTestRecord('{recordAlias}')");
         }
 
         /// <inheritdoc/>
         public EntityReference GetTestRecordReference(string recordAlias)
         {
-            var obj = (Dictionary<string, object>)this.javascriptExecutor.ExecuteScript($"{TestDriverReference}.getRecordReference('{recordAlias}');");
+            var obj = (Dictionary<string, object>)this.ExecuteDriverFunction($"getRecordReference('{recordAlias}')");
 
             return new EntityReference((string)obj["entityType"], Guid.Parse((string)obj["id"]));
         }
@@ -66,7 +66,12 @@
             return $"{TestDriverReference}.{functionCall}.then(arguments[arguments.length - 1]).catch(e => {{ arguments[arguments.length - 1](`{ErrorPrefix}: ${{ e.message }}`); }});";
         }
 
-        private object ExecuteAsyncScriptWithExceptionOnReject(string functionCall)
+        private object ExecuteDriverFunction(string functionCall)
+        {
+            return this.javascriptExecutor.ExecuteScript($"return {TestDriverReference}.{functionCall};");
+        }
+
+        private object ExecuteDriverFunctionAsync(string functionCall)
         {
             var result = this.javascriptExecutor.ExecuteAsyncScript(GetExecuteScriptForAsyncFunction(functionCall));
 
