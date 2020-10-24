@@ -1,11 +1,11 @@
-url: POWERAPPS_SPECFLOW_BINDINGS_TEST_URL
+url: https://defra-trade-dev-plants-feature.crm4.dynamics.com/
 browserOptions:
   browserType: Chrome
-  headless: true
+  headless: false
   width: 1920
   height: 1080
   startMaximized: false
 users: 
-  - username: POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME
-    password: POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_PASSWORD
+  - username: mark.cunningham@defradev.onmicrosoft.com
+    password: 4700GRyzen
     alias: an admin

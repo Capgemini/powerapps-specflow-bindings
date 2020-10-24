@@ -32,6 +32,8 @@ Once the NuGet package is installed, follow the SpecFlow [documentation](https:/
 }
 ```
 
+Sometimes you may find the error driver.js cannot be copied, To resolve this run npm install.
+
 ### WebDrivers
 
 We do not have a dependency on any specific WebDrivers. You will need to ensure that the correct WebDrivers are available in your project based on the browser that you are targetting. For example - if your configuration file is targetting Chrome - you can install the Chrome WebDriver via NuGet - 
@@ -152,6 +154,36 @@ Step 2 Given I have created "a account"
   "primarycontactid@alias.bind": "sample contact" 
 }
 ```
+
+### Advanced Test Setup
+You can also tokenise your JSON file to support substitution for example
+
+The following built in functions are available
+
+| Token | Usage |
+| -- | -- |
+|#{RandomString[10]}#  | Creates a 10 character random sting.  |
+|#{RandomNumber[10]}# | Creates a 10 character random integer.  |
+|#{DateTime}#  | Passes todays date and time. Eg. 01/01/2000 09:00:00.  |
+
+Example Json
+
+```json
+{
+  "@logicalName": "account",
+  "@alias": "tokenised account",
+  "name": "{RandomString(10)}",
+  "age" : "{RandomInt(3)}"
+}
+
+Example Json After Replacement
+
+{
+  "@logicalName": "account",
+  "@alias": "tokenised account",
+  "name": "AGHRGFSYWP",
+  "age" : "32"
+}
 
 ## Contributing
 

@@ -1,6 +1,7 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Steps
 {
     using Capgemini.PowerApps.SpecFlowBindings;
+    using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using Microsoft.Dynamics365.UIAutomation.Browser;
     using TechTalk.SpecFlow;
 
@@ -29,7 +30,7 @@
         [Given(@"I have created '(.*)'")]
         public static void GivenIHaveCreated(string fileName)
         {
-            TestDriver.LoadTestData(TestDataRepository.GetTestData(fileName));
-        }
+            TestDriver.LoadTestData(TestDataRepository.GetTestData(fileName).ReplaceTemplatedTokens());
+        }     
     }
 }

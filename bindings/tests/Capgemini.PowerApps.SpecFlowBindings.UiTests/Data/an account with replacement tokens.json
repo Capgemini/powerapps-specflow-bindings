@@ -1,0 +1,6 @@
+{
+  "@logicalName": "account",
+  "@alias": "a sample account",
+  "name": "ACC-#{RandomString[5]}#-#{RandomNumber[5]}#",
+  "lastonholdtime" : "#{DateTime}#"
+}

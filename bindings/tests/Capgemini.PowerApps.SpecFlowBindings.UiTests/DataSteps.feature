@@ -8,3 +8,7 @@ Scenario: Create a contact with an alias then create an account referencing the 
 	And I have created 'an aliased contact'
 	And I have created 'an account with aliased contact'
 	And I have opened 'a sample account'
+
+Scenario: Create a contact with tokenised values
+	Given I am logged in to the 'Defra Trade' app as 'an admin'
+	And I have created 'an account with replacement tokens'

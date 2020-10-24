@@ -3,6 +3,7 @@
     using System;
     using System.Globalization;
     using System.Text.RegularExpressions;
+    using Capgemini.PowerApps.SpecFlowBindings.Transformations.Tokenisation;
 
     /// <summary>
     /// Extensions to the <see cref="string"/> class.
@@ -47,6 +48,21 @@
                     throw new NotImplementedException($"ReplaceTemplatedText does not support {templateSplit[0]}.");
                 }
             }
+
+            return input;
+        }
+
+        /// <summary>
+        /// Replaces all tokens in the json file with the available functions.
+        /// </summary>
+        /// <param name="input">String.</param>
+        /// <returns>String with the tokenised output.</returns>
+        public static string ReplaceTemplatedTokens(this string input)
+        {
+            TokenFactory.GetHandlers().ForEach(handler =>
+            {
+                input = handler.ReplaceTokens(input);
+            });
 
             return input;
         }
