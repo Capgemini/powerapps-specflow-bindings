@@ -1,6 +1,8 @@
-﻿namespace Capgemini.PowerApps.SpecFlowBindings.Transformations.Tokenisation.TokenHandlers
+﻿namespace Capgemini.PowerApps.SpecFlowBindings.Transformations.DataHandlers.TokenHandlers
 {
     using System;
+    using System.Globalization;
+    using System.Linq;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -16,17 +18,16 @@
         public abstract Regex GetRegex();
 
         /// <summary>
-        /// Flag to state where the Handler accepts integer value, For example StringScramber(10) allows for 10 characters to be passed.
+        /// Determines whether class supports random.
         /// </summary>
-        /// <returns>boolean.</returns>
-        public abstract bool MatchContainsNumber();
+        /// <returns>Boolean.</returns>
+        public abstract bool GeneratesRandom();
 
         /// <summary>
-        /// Algorthim to generate the random.
+        /// Specifies the allowed character list.
         /// </summary>
-        /// <param name="m">The regex match.</param>
-        /// <returns>Returns the Type.</returns>
-        public abstract string Generate(Match m);
+        /// <returns>Returns string.</returns>
+        public abstract string AllowedCharacters();
 
         /// <summary>
         /// Returns the replaced text.
@@ -37,7 +38,7 @@
         {
             if (input == null)
             {
-                throw new ArgumentException($"{nameof(input)} Cannot be null.");
+                throw new ArgumentNullException($"{nameof(input)} Cannot be null.");
             }
 
             var regex = this.GetRegex();
@@ -45,11 +46,28 @@
             MatchCollection matches = regex.Matches(input);
             foreach (Match match in matches)
             {
-                var x = Generate(match);
-                input = input.Replace(match.Value.ToString(), x.ToString());
+                var amount = 0;
+                if (this.GeneratesRandom())
+                {
+                    amount = Convert.ToInt32(new Regex(@"\d+").Match(match.Value.ToString()).Value, CultureInfo.InvariantCulture);
+                }
+
+                var generatedValue = this.Generate(amount);
+                input = input.Replace(match.Value.ToString(), generatedValue.ToString());
             }
 
             return input;
+        }
+
+        /// <summary>
+        /// Generate.
+        /// </summary>
+        /// <param name="amount">The length of the random.</param>
+        /// <returns>Random String.</returns>
+        public virtual string Generate(int amount)
+        {
+            Random r = new Random();
+            return new string(Enumerable.Repeat(this.AllowedCharacters(), amount).Select(s => s[r.Next(s.Length)]).ToArray());
         }
     }
 }

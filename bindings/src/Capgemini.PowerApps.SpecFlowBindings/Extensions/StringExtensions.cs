@@ -3,7 +3,7 @@
     using System;
     using System.Globalization;
     using System.Text.RegularExpressions;
-    using Capgemini.PowerApps.SpecFlowBindings.Transformations.Tokenisation;
+    using Capgemini.PowerApps.SpecFlowBindings.DaraHandlers.Tokenisation;
 
     /// <summary>
     /// Extensions to the <see cref="string"/> class.

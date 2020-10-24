@@ -1,4 +1,4 @@
-﻿namespace Capgemini.PowerApps.SpecFlowBindings.Transformations.Tokenisation.TokenHandlers
+﻿namespace Capgemini.PowerApps.SpecFlowBindings.Transformations.DataHandlers.TokenHandlers
 {
     using System;
     using System.Globalization;
@@ -10,13 +10,31 @@
     public class DateTimeTokenReplacer : BaseTokenHandler
     {
         /// <summary>
-        /// Returns the random int.
+        /// Specifies the allowed character list.
         /// </summary>
-        /// <param name="m">Regex Match from file.</param>
-        /// <returns>Int.</returns>
-        public override string Generate(Match m)
+        /// <returns>Returns string.</returns>
+        public override string AllowedCharacters()
+        {
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// Generate.
+        /// </summary>
+        /// <param name="amount">The length of the random.</param>
+        /// <returns>Random String.</returns>
+        public override string Generate(int amount)
         {
             return DateTime.Now.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Determines if random is supported.
+        /// </summary>
+        /// <returns>Bool</returns>
+        public override bool GeneratesRandom()
+        {
+            return false;
         }
 
         /// <summary>
@@ -26,15 +44,6 @@
         public override Regex GetRegex()
         {
             return new Regex(@"#{DateTime}#");
-        }
-
-        /// <summary>
-        /// Does the class support lengths.
-        /// </summary>
-        /// <returns>Boolean.</returns>
-        public override bool MatchContainsNumber()
-        {
-            return false;
         }
     }
 }

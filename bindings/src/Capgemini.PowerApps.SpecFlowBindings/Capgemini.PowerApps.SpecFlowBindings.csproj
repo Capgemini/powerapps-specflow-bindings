@@ -186,11 +186,11 @@
     <Compile Include="FileDataRepository.cs" />
     <Compile Include="TestDriver.cs" />
     <Compile Include="Transformations\EasyReproTransformations.cs" />
-    <Compile Include="Transformations\Tokenisation\TokenHandlers\BaseTokenHandler.cs" />
-    <Compile Include="Transformations\Tokenisation\TokenFactory.cs" />
-    <Compile Include="Transformations\Tokenisation\TokenHandlers\DateTimeTokenReplacer.cs" />
-    <Compile Include="Transformations\Tokenisation\TokenHandlers\IntegerTokenReplacer.cs" />
-    <Compile Include="Transformations\Tokenisation\TokenHandlers\StringTokenReplacer.cs" />
+    <Compile Include="DataHandlers\Tokenisation\TokenHandlers\BaseTokenHandler.cs" />
+    <Compile Include="DataHandlers\Tokenisation\TokenFactory.cs" />
+    <Compile Include="DataHandlers\Tokenisation\TokenHandlers\DateTimeTokenReplacer.cs" />
+    <Compile Include="DataHandlers\Tokenisation\TokenHandlers\IntegerTokenReplacer.cs" />
+    <Compile Include="DataHandlers\Tokenisation\TokenHandlers\StringTokenReplacer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="build\Capgemini.PowerApps.SpecFlowBindings.targets" />

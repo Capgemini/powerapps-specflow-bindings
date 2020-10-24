@@ -1,8 +1,5 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Transformations.DataHandlers.TokenHandlers
 {
-    using System;
-    using System.Globalization;
-    using System.Linq;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -10,33 +7,6 @@
     /// </summary>
     public class IntegerTokenReplacer : BaseTokenHandler
     {
-        /// <summary>
-        /// Returns the random int.
-        /// </summary>
-        /// <param name="m">Regex Match from file.</param>
-        /// <returns>Int</returns>
-        public override string Generate(Match input)
-        {
-            if (input == null)
-            {
-                throw new ArgumentNullException($"{nameof(input)} Cannot be null.");
-            }
-
-            var allowedChars = "0123456789";
-
-            if (this.MatchContainsNumber())
-            {
-                Random random = new Random();
-                var amount = new Regex(@"\d+").Match(input.Value.ToString());
-                var randomString = new string(Enumerable.Repeat(allowedChars, Convert.ToInt32(amount.Value, CultureInfo.CurrentCulture))
-                            .Select(s => s[random.Next(s.Length)]).ToArray());
-
-                return randomString;
-            }
-
-            return string.Empty;
-        }
-
         /// <summary>
         /// Gets the regex.
         /// </summary>
@@ -47,12 +17,22 @@
         }
 
         /// <summary>
-        /// Does the class support lengths.
+        /// Generate.
         /// </summary>
-        /// <returns>Boolean.</returns>
-        public override bool MatchContainsNumber()
+        /// <param name="amount">The length of the random.</param>
+        /// <returns>Random String.</returns>
+        public override bool GeneratesRandom()
         {
             return true;
+        }
+
+        /// <summary>
+        /// Specifies the allowed character list.
+        /// </summary>
+        /// <returns>Returns string.</returns>
+        public override string AllowedCharacters()
+        {
+            return "123456789";
         }
     }
 }
