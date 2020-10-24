@@ -45,7 +45,7 @@
             MatchCollection matches = regex.Matches(input);
             foreach (Match match in matches)
             {
-                var x = this.Generate(match);
+                var x = Generate(match);
                 input = input.Replace(match.Value.ToString(), x.ToString());
             }
 
