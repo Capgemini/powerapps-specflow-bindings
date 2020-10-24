@@ -1,7 +1,7 @@
-﻿namespace Capgemini.PowerApps.SpecFlowBindings.Transformations.Tokenisation
+﻿namespace Capgemini.PowerApps.SpecFlowBindings.DaraHandlers.Tokenisation
 {
     using System.Collections.Generic;
-    using Capgemini.PowerApps.SpecFlowBindings.Transformations.Tokenisation.TokenHandlers;
+    using Capgemini.PowerApps.SpecFlowBindings.Transformations.DataHandlers.TokenHandlers;
 
     /// <summary>
     /// Factory to return all the token handlers.

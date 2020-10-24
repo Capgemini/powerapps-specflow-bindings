@@ -1,4 +1,4 @@
-﻿namespace Capgemini.PowerApps.SpecFlowBindings.Transformations.Tokenisation.TokenHandlers
+﻿namespace Capgemini.PowerApps.SpecFlowBindings.Transformations.DataHandlers.TokenHandlers
 {
     using System;
     using System.Globalization;
@@ -15,11 +15,11 @@
         /// </summary>
         /// <param name="m">Regex Match from file.</param>
         /// <returns>Int</returns>
-        public override string Generate(Match m)
+        public override string Generate(Match input)
         {
-            if (m == null)
+            if (input == null)
             {
-                throw new ArgumentException($"{nameof(m)} Cannot be null.");
+                throw new ArgumentNullException($"{nameof(input)} Cannot be null.");
             }
 
             var allowedChars = "0123456789";
@@ -27,7 +27,7 @@
             if (this.MatchContainsNumber())
             {
                 Random random = new Random();
-                var amount = new Regex(@"\d+").Match(m.Value.ToString());
+                var amount = new Regex(@"\d+").Match(input.Value.ToString());
                 var randomString = new string(Enumerable.Repeat(allowedChars, Convert.ToInt32(amount.Value, CultureInfo.CurrentCulture))
                             .Select(s => s[random.Next(s.Length)]).ToArray());
 
