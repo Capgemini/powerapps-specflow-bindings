@@ -10,5 +10,5 @@ Scenario: Create a contact with an alias then create an account referencing the 
 	And I have opened 'a sample account'
 
 Scenario: Create a contact with tokenised values
-	Given I am logged in to the 'Defra Trade' app as 'an admin'
+	Given I am logged in to the 'Sales Team Member' app as 'an admin'
 	And I have created 'an account with replacement tokens'
