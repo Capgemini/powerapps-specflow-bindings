@@ -172,8 +172,8 @@ Example Json
 {
   "@logicalName": "account",
   "@alias": "tokenised account",
-  "name": "{RandomString(10)}",
-  "age" : "{RandomInt(3)}"
+  "name": "{RandomString[10]}",
+  "age" : "{RandomNumber[2]}"
 }
 
 Example Json After Replacement
@@ -182,7 +182,7 @@ Example Json After Replacement
   "@logicalName": "account",
   "@alias": "tokenised account",
   "name": "AGHRGFSYWP",
-  "age" : "32"
+  "age" : "66"
 }
 
 ## Contributing
