@@ -1,11 +1,10 @@
-﻿using OpenQA.Selenium.Internal;
-using System;
-using System.Globalization;
-using System.Linq;
-using System.Text.RegularExpressions;
-
-namespace Capgemini.PowerApps.SpecFlowBindings.Transformations.Tokenisation.TokenHandlers
+﻿namespace Capgemini.PowerApps.SpecFlowBindings.Transformations.Tokenisation.TokenHandlers
 {
+    using System;
+    using System.Globalization;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+
     /// <summary>
     /// Handles string replacement.
     /// </summary>

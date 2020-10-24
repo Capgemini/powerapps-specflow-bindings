@@ -1,5 +1,6 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Transformations.Tokenisation.TokenHandlers
 {
+    using System;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -23,7 +24,7 @@
         /// <summary>
         /// Algorthim to generate the random.
         /// </summary>
-        /// <param name="m">The regex match</param>
+        /// <param name="m">The regex match.</param>
         /// <returns>Returns the Type.</returns>
         public abstract string Generate(Match m);
 
@@ -34,6 +35,11 @@
         /// <returns>String of tokenised text.</returns>
         public string ReplaceTokens(string input)
         {
+            if (input == null)
+            {
+                throw new ArgumentException($"{nameof(input)} Cannot be null.");
+            }
+
             var regex = this.GetRegex();
 
             MatchCollection matches = regex.Matches(input);

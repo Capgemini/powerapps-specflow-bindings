@@ -31,6 +31,6 @@
         public static void GivenIHaveCreated(string fileName)
         {
             TestDriver.LoadTestData(TestDataRepository.GetTestData(fileName).ReplaceTemplatedTokens());
-        }     
+        }
     }
 }
