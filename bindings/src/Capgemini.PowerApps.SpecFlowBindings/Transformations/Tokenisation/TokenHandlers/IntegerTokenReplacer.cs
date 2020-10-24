@@ -17,6 +17,11 @@
         /// <returns>Int</returns>
         public override string Generate(Match m)
         {
+            if (m == null)
+            {
+                throw new ArgumentException($"{nameof(m)} Cannot be null.");
+            }
+
             var allowedChars = "0123456789";
 
             if (this.MatchContainsNumber())

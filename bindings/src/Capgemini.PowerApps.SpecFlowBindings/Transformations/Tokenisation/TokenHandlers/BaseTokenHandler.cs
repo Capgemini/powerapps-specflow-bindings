@@ -4,7 +4,7 @@
     using System.Text.RegularExpressions;
 
     /// <summary>
-    /// Base Handler for all types
+    /// Base Handler for all types.
     /// </summary>
     /// <typeparam name="T">T Return type</typeparam>
     public abstract class BaseTokenHandler

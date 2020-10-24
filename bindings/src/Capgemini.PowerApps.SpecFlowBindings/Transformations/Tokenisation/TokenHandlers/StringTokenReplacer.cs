@@ -34,6 +34,11 @@
         /// <returns>Boolean.</returns>
         public override string Generate(Match m)
         {
+            if (m == null)
+            {
+                throw new ArgumentException($"{nameof(m)} Cannot be null.");
+            }
+
             var allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
             if (this.MatchContainsNumber())
