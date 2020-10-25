@@ -160,6 +160,8 @@ The below JSON will generate a contact with a random name, credit limit, email a
 }
 ```
 
+When using faker syntax, you must also annotate number or date fields using `@faker.number`, `@faker.date` or `@faker.dateonly` to ensure that the JSON is formatted correctly.
+
 ## Contributing
 
 Please refer to the [Contributing](./CONTRIBUTING.md) guide.
