@@ -144,6 +144,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="DataSteps.feature" />
+    <None Include="Data\data decorated with faker moustache syntax.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Data\an account with aliased contact.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -8,11 +8,14 @@ The aim of this project is to make Power Apps test automation easier, faster and
 
 ## Table of Contents
 
-1. [Installation](#Installation)
-1. [Usage](#Usage)
-1. [Contributing](#Contributing)
-1. [Credits](#Credits)
-1. [Licence](#Licence)
+- [Installation](#Installation)
+- [Usage](#Usage)
+  - [Configuration](#Configuration)
+  - [Writing feature files](#Writing-feature-files)
+  - [Writing step bindings](#Writing-step-bindings)
+  - [Test setup](#Test-setup)
+- [Contributing](#Contributing)
+- [Licence](#Licence)
 
 ## Installation
 
@@ -94,7 +97,7 @@ public class MyCustomSteps : PowerAppsStepDefiner
 
 ### Test setup
 
-We are avoiding performing test setup via the UI. This speeds up test execution and makes the tests more robust (as UI automation is more fragile than using supported APIs). _Given_ steps should therefore be carried out using the [Client API](client-api), [WebAPI](web-api) or [Organization Service](org-service).
+We avoid performing test setup via the UI. This speeds up test execution and makes the tests more robust (as UI automation is more fragile than using supported APIs). _Given_ steps should therefore be carried out using the [Client API](client-api), [WebAPI](web-api) or [Organization Service](org-service).
 
 You can create test data by using the following _Given_ step -
 
@@ -102,9 +105,7 @@ You can create test data by using the following _Given_ step -
 Given I have created "a record"
 ```
 
-It will look for a JSON file in the _data_ folder. You must ensure that these files are copying to the build output directory. You do not need to include the .json extension when writing the step (the example above would look for _'a record.json'_).
-
-The JSON is the same as expected by WebAPI when creating records via a [deep insert](https://docs.microsoft.com/en-us/dynamics365/customer-engagement/developer/webapi/create-entity-web-api#create-related-entities-in-one-operation). The example below will create the following -
+This will look for a JSON file named _a record.json_ in the _data_ folder (you must ensure that these files are copying to the build output directory). The JSON is the same as expected by WebAPI when creating records via a [deep insert](https://docs.microsoft.com/en-us/dynamics365/customer-engagement/developer/webapi/create-entity-web-api#create-related-entities-in-one-operation). The example below will create the following -
 
 - An account
 - An primary contact related to the account
@@ -130,20 +131,9 @@ The JSON is the same as expected by WebAPI when creating records via a [deep ins
 ```
 
 The `@logicalName` property is required for the root record.
-`@alias` property can optionally be added to any record and allows the record to be referenced in certain bindings including the json for subsequent data creation steps per the example below:
 
-Step 1 Given I have created "a contact"
+The `@alias` property can optionally be added to any record and allows the record to be referenced in certain bindings. The _Given I have created_ binding itself supports relating records using `@alias.bind` syntax.
 
-```json
-{
-  "@logicalName": "contact",
-  "@alias": "sample contact",
-  "firstname": "John",
-  "lastname": "Smith"
-}
-
-```
-Step 2 Given I have created "a account"
 ```json
 {
   "@logicalName": "account",
@@ -153,9 +143,28 @@ Step 2 Given I have created "a account"
 }
 ```
 
+We also support the use of 
+[faker.js](https://github.com/marak/Faker.js) moustache template syntax for generating dynamic test data at run-time. Please refer to the faker documentation for all of the functionality that is available. 
+
+The below JSON will generate a contact with a random name, credit limit, email address, and date of birth in the past 90 years:
+
+```json
+{
+  "@logicalName": "contact",
+  "@alias": "a dynamically generated contact",
+  "lastname": "{{name.firstName}}",
+  "firstname": "{{name.lastName}}",
+  "creditlimit@faker.number": "{{finance.amount}}",
+  "emailaddress1": "{{internet.email}}",
+  "birthdate@faker.date":  "{{date.past(90)}}"
+}
+```
+
+When using faker syntax, you must also annotate number or date fields using `@faker.number`, `@faker.date` or `@faker.dateonly` to ensure that the JSON is formatted correctly.
+
 ## Contributing
 
-Ensure that your changes are thoroughly tested before creating a pull request. If applicable, update the UI test project within the tests folder to ensure coverage for your changes.
+Please refer to the [Contributing](./CONTRIBUTING.md) guide.
 
 ## Licence
 

@@ -107,7 +107,12 @@ export default class DeepInsertService {
   private static getManyToOneRecords(record: Record)
     : { [navigationProperty: string]: Record } {
     return Object.keys(record)
-      .filter((key) => typeof record[key] === 'object' && !Array.isArray(record[key]))
+      .filter(
+        (key) => typeof record[key] === 'object'
+        && !Array.isArray(record[key])
+        && record[key] !== null
+        && !(record[key] instanceof Date),
+      )
       .reduce((prev, curr) => {
         // eslint-disable-next-line no-param-reassign
         prev[curr] = record[curr] as Record;

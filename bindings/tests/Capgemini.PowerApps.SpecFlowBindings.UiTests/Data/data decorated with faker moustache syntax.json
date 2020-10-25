@@ -1,0 +1,9 @@
+{
+  "@logicalName": "contact",
+  "@alias": "the faked record",
+  "lastname": "{{name.firstName}}",
+  "firstname": "{{name.lastName}}",
+  "creditlimit@faker.number": "{{finance.amount}}",
+  "emailaddress1": "{{internet.email}}",
+  "birthdate@faker.date":  "{{date.past(90)}}"
+}

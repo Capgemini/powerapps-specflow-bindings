@@ -1,5 +1,6 @@
 import { RecordRepository } from '../repositories';
 import DeepInsertService from './deepInsertService';
+import Preprocessor from './preprocessor';
 import { Record } from './record';
 
 /**
@@ -17,17 +18,24 @@ export default class DataManager {
 
   private readonly deepInsertSvc: DeepInsertService;
 
+  private readonly preprocessors?: Preprocessor[];
+
   /**
      * Creates an instance of DataManager.
      * @param {RecordRepository} recordRepository A record repository.
      * @param {DeepInsertService} deepInsertService A deep insert parser.
      * @memberof DataManager
      */
-  constructor(recordRepository: RecordRepository, deepInsertService: DeepInsertService) {
+  constructor(
+    recordRepository: RecordRepository,
+    deepInsertService: DeepInsertService,
+    preprocessors?: Preprocessor[],
+  ) {
     this.refs = [];
     this.refsByAlias = {};
     this.recordRepo = recordRepository;
     this.deepInsertSvc = deepInsertService;
+    this.preprocessors = preprocessors;
   }
 
   /**
@@ -38,9 +46,13 @@ export default class DataManager {
      * @memberof DataManager
      */
   public async createData(logicalName: string, record: Record): Promise<Xrm.LookupValue> {
-    const res = await this.deepInsertSvc.deepInsert(logicalName, record, this.refsByAlias);
-    const newRecords = [res.record, ...res.associatedRecords];
+    const res = await this.deepInsertSvc.deepInsert(
+      logicalName,
+      this.preprocess(record),
+      this.refsByAlias,
+    );
 
+    const newRecords = [res.record, ...res.associatedRecords];
     this.refs.push(...newRecords.map((r) => r.reference));
     newRecords
       .filter((r) => r.alias !== undefined)
@@ -76,5 +88,12 @@ export default class DataManager {
     this.refs.splice(0, this.refs.length);
     Object.keys(this.refsByAlias).forEach((alias) => delete this.refsByAlias[alias]);
     return Promise.all(deletePromises);
+  }
+
+  private preprocess(data: Record): Record {
+    return this.preprocessors?.reduce<Record>(
+      (record, preprocesser) => preprocesser.preprocess(record) ?? record,
+      data,
+    ) ?? data;
   }
 }
