@@ -1,5 +1,5 @@
 import * as faker from 'faker';
-import Preprocessor from './preprocesser';
+import Preprocessor from './preprocessor';
 import { Record } from './record';
 
 export default class FakerPreprocessor extends Preprocessor {
@@ -48,7 +48,7 @@ export default class FakerPreprocessor extends Preprocessor {
   }
 
   private static parseNumber(val: string, property: string) {
-    const num = +(val as string);
+    const num = +val;
     if (Number.isNaN(num)) {
       throw new Error(`@faker.number syntax failed to convert ${property} with value ${val} to a number.`);
     }

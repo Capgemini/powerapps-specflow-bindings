@@ -1,6 +1,6 @@
 import { RecordRepository } from '../repositories';
 import DeepInsertService from './deepInsertService';
-import Preprocessor from './preprocesser';
+import Preprocessor from './preprocessor';
 import { Record } from './record';
 
 /**
