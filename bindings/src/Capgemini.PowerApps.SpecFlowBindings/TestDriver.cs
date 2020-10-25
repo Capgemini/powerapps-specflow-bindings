@@ -90,7 +90,7 @@
                 $@"var recordRepository = new {LibraryNamespace}.RecordRepository(Xrm.WebApi.online);
                    var metadataRepository = new {LibraryNamespace}.MetadataRepository(Xrm.WebApi.online);
                    var deepInsertService = new {LibraryNamespace}.DeepInsertService(metadataRepository, recordRepository);
-                   var dataManager = new {LibraryNamespace}.DataManager(recordRepository, deepInsertService);
+                   var dataManager = new {LibraryNamespace}.DataManager(recordRepository, deepInsertService, [new {LibraryNamespace}.FakerPreprocessor()]);
                    {TestDriverReference} = new {LibraryNamespace}.Driver(dataManager);");
         }
     }
