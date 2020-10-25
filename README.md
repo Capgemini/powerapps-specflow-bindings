@@ -144,7 +144,7 @@ The `@alias` property can optionally be added to any record and allows the recor
 ```
 
 We also support the use of 
-[faker.js](https://github.com/marak/Faker.js) moustache template syntax for generically test data dynamically at run-time. Please refer to the faker documentation for all of the functionality that is available. 
+[faker.js](https://github.com/marak/Faker.js) moustache template syntax for generating dynamic test data at run-time. Please refer to the faker documentation for all of the functionality that is available. 
 
 The below JSON will generate a contact with a random name, credit limit, email address, and date of birth in the past 90 years:
 
