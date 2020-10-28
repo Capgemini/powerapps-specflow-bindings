@@ -10,3 +10,10 @@ Scenario: User switches lookup views
 	And I select 'primarycontactid' lookup
 	#KNOWN BUG (TestCategory - Bug - Fail) https://github.com/microsoft/EasyRepro/blob/aadad319f713e169ce080524f533f20d86b23c97/Microsoft.Dynamics365.UIAutomation.Sample/UCI/Read/OpenContact.cs
 	And I select the 'All Contacts' view in the lookup
+
+Scenario: User selects a related record
+	Given I am logged in to the 'Sales Team Member' app as 'an admin'	
+	And I have created 'an aliased contact'
+	And I have created 'an account with aliased contact'
+	And I have opened 'a sample account'
+	When I select a related 'primarycontactid' lookup field
