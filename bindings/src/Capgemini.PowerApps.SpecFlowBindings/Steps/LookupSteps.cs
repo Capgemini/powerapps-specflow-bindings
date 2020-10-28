@@ -126,5 +126,15 @@
                 recordNames.Rows.Should().Contain(r => r[0] == item, because: "every given records should be present in the flyout");
             }
         }
+
+        /// <summary>
+        /// Opens the related record by clicking on the link.
+        /// </summary>
+        /// <param name="lookupName">The name of the lookup.</param>
+        [When(@"I select a related '(.*)' lookup field")]
+        public static void WhenISelectARelatedLookupInTheForm(string lookupName)
+        {
+            Driver.WaitUntilAvailable(By.XPath(AppElements.Xpath[AppReference.Entity.LookupFieldExistingValue].Replace("[NAME]", lookupName))).Click();
+        }
     }
 }
