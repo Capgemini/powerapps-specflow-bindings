@@ -13,18 +13,18 @@ describe('FakerPreprocessor', () => {
   describe('.preprocess(data)', () => {
     it('calls faker.fake on data', async () => {
       const data = { foo: 'bar' };
-      fakeSpy.and.returnValue('{ "foo": "baz" }');
+      fakeSpy.and.returnValue('baz');
 
       fakerPreprocessor.preprocess(data);
 
-      expect(fakeSpy).toHaveBeenCalledWith(JSON.stringify(data));
+      expect(fakeSpy).toHaveBeenCalledWith('bar');
     });
 
     it('replaces @faker.number properties with number equivalent', () => {
       const data = {
         'foo@faker.number': '{{random.number}}',
       };
-      fakeSpy.and.returnValue('{ "foo@faker.number": "10.50" }');
+      fakeSpy.and.returnValue('10.50');
 
       const result = fakerPreprocessor.preprocess(data);
 
@@ -36,7 +36,7 @@ describe('FakerPreprocessor', () => {
       const data = {
         'foo@faker.number': '{{random.word}}',
       };
-      fakeSpy.and.returnValue('{ "foo@faker.number": "baz" }');
+      fakeSpy.and.returnValue('baz');
 
       expect(() => fakerPreprocessor.preprocess(data)).toThrowError();
     });
@@ -46,7 +46,7 @@ describe('FakerPreprocessor', () => {
         'foo@faker.date': '{{date.recent}}',
       };
       const date = new Date();
-      fakeSpy.and.returnValue(`{ "foo@faker.date": "${date}" }`);
+      fakeSpy.and.returnValue(`${date}`);
 
       const result = fakerPreprocessor.preprocess(data);
 
@@ -59,7 +59,7 @@ describe('FakerPreprocessor', () => {
         'foo@faker.datetime': '{{date.recent}}',
       };
       const date = new Date();
-      fakeSpy.and.returnValue(`{ "foo@faker.datetime": "${date}" }`);
+      fakeSpy.and.returnValue(`${date}`);
 
       const result = fakerPreprocessor.preprocess(data);
 
@@ -72,7 +72,7 @@ describe('FakerPreprocessor', () => {
         'foo@faker.date': 'this isn\'t a valid date',
         'bar@faker.datetime': 'this isn\'t a valid datetime',
       };
-      fakeSpy.and.returnValue('{ "foo@faker.date": "this isn\'t a valid date", "bar@faker.datetime": "this isn\'t a valid datetime" }');
+      fakeSpy.and.returnValues('this isn\'t a valid date', 'this isn\'t a valid datetime');
 
       expect(() => fakerPreprocessor.preprocess(data)).toThrowError();
     });
@@ -81,7 +81,7 @@ describe('FakerPreprocessor', () => {
       const data = {
         lookup: { 'foo@faker.number': '{{random.number}}' },
       };
-      fakeSpy.and.returnValue('{ "lookup": { "foo@faker.number": "10.50" } }');
+      fakeSpy.and.returnValue('10.50');
 
       const result = fakerPreprocessor.preprocess(data);
       const lookup = result.lookup as any;
@@ -94,7 +94,7 @@ describe('FakerPreprocessor', () => {
       const data = {
         relationship: [{ 'foo@faker.number': '{{random.number}}' }],
       };
-      fakeSpy.and.returnValue('{ "relationship": [ { "foo@faker.number": "10.50" } ] }');
+      fakeSpy.and.returnValue('10.50');
 
       const result = fakerPreprocessor.preprocess(data);
       const relatedRecord = (result.relationship as any[])[0];
