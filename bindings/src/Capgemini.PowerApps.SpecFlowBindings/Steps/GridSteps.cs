@@ -34,10 +34,11 @@
         /// Sorts by a column in the grid.
         /// </summary>
         /// <param name="column">The column to sort by.</param>
-        [When(@"I sort by '(.*)' in the grid")]
-        public static void WhenISortByInTheGrid(string column)
+        /// <param name="sortOption">The sort option.</param>
+        [When(@"I sort the '(.*)' column in the grid using the '(.*)' option")]
+        public static void WhenISortByInTheGrid(string column, string sortOption)
         {
-            XrmApp.Grid.Sort(column);
+            XrmApp.Grid.Sort(column, sortOption);
         }
 
         /// <summary>
