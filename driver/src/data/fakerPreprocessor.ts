@@ -8,11 +8,29 @@ export default class FakerPreprocessor extends Preprocessor {
     return FakerPreprocessor.parse(FakerPreprocessor.fake(data));
   }
 
-  private static fake(data: Record) : string {
-    return faker.fake(JSON.stringify(data));
+  private static fake(data: Record): string {
+    const fakedData = data;
+
+    Object.keys(data).forEach((key) => {
+      const value = fakedData[key];
+
+      if (value === null) {
+        return;
+      }
+
+      if (Array.isArray(value) && value !== null) {
+        fakedData[key] = value.map((arrayItem) => JSON.parse(this.fake(arrayItem as Record)));
+      } else if (typeof value === 'object' && value !== null) {
+        fakedData[key] = JSON.parse(this.fake(value as Record));
+      } else if (typeof value === 'string') {
+        fakedData[key] = faker.fake(value);
+      }
+    });
+
+    return JSON.stringify(fakedData);
   }
 
-  private static parse(data: string) : Record {
+  private static parse(data: string): Record {
     const cleansedData = JSON.parse(data);
 
     Object.keys(cleansedData).forEach((property) => {

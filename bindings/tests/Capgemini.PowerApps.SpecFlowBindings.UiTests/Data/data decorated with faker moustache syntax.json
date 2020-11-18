@@ -5,5 +5,9 @@
   "firstname": "{{name.lastName}}",
   "creditlimit@faker.number": "{{finance.amount}}",
   "emailaddress1": "{{internet.email}}",
-  "birthdate@faker.date":  "{{date.past(90)}}"
+  "birthdate@faker.date": "{{date.past(90)}}",
+  "owningteam": {
+    "@alias": "a nested faked record",
+    "name": "{{name.jobArea}}"
+  }
 }
