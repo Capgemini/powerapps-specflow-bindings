@@ -68,13 +68,13 @@
       <HintPath>..\..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.26\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Dynamics365.UIAutomation.Api, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dynamics365.UIAutomation.Api.9.1.0.17139\lib\net46\Microsoft.Dynamics365.UIAutomation.Api.dll</HintPath>
+      <HintPath>..\..\packages\Dynamics365.UIAutomation.Api.9.1.0.23435\lib\net46\Microsoft.Dynamics365.UIAutomation.Api.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Dynamics365.UIAutomation.Api.UCI, Version=1.0.19282.1210, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dynamics365.UIAutomation.Api.9.1.0.17139\lib\net46\Microsoft.Dynamics365.UIAutomation.Api.UCI.dll</HintPath>
+      <HintPath>..\..\packages\Dynamics365.UIAutomation.Api.9.1.0.23435\lib\net46\Microsoft.Dynamics365.UIAutomation.Api.UCI.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Dynamics365.UIAutomation.Browser, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dynamics365.UIAutomation.Api.9.1.0.17139\lib\net46\Microsoft.Dynamics365.UIAutomation.Browser.dll</HintPath>
+      <HintPath>..\..\packages\Dynamics365.UIAutomation.Api.9.1.0.23435\lib\net46\Microsoft.Dynamics365.UIAutomation.Browser.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.26\lib\net462\Microsoft.Xrm.Sdk.dll</HintPath>
