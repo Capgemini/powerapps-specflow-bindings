@@ -1,6 +1,7 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Steps
 {
     using Microsoft.Dynamics365.UIAutomation.Browser;
+    using OpenQA.Selenium;
     using TechTalk.SpecFlow;
 
     /// <summary>
@@ -25,6 +26,16 @@
                 user.Password.ToSecureString());
 
             XrmApp.Navigation.OpenApp(appName);
+
+            CloseTeachingBubbles();
+        }
+
+        private static void CloseTeachingBubbles()
+        {
+            foreach (var closeButton in Driver.FindElements(By.ClassName("ms-TeachingBubble-closebutton")))
+            {
+                closeButton.Click();
+            }
         }
     }
 }
