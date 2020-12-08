@@ -168,6 +168,7 @@
         {
             var reference = TestDriver.GetTestRecordReference(alias);
 
+            // Temporary until XrmApp.Entity.SubGrid.GetSubGridItems(subGridName) returns the correct ID for each item.
             var index = (long)Driver.ExecuteScript(
                 $"return Xrm.Page.getControl(\"{subGridName}\").getGrid().getRows().get().findIndex(row => row.data.entity.attributes.get().findIndex(a => a.getName() === \"{lookup}\" && a.getValue() && a.getValue()[0].id === \"{reference.Id.ToString("B").ToUpper(CultureInfo.CurrentCulture)}\") > -1)");
 
@@ -200,33 +201,13 @@
         /// <param name="subGridName">The name of the subgrid.</param>
         /// <param name="fieldValue">The expected value of the field.</param>
         /// <param name="fieldName">The name of the field.</param>
-        [Then(@"the '(.*)' subgrid contains a record with '(.*)' in the '(.*)' (?:text|numeric|currency) field")]
+        [Then(@"the '(.*)' subgrid contains a record with '(.*)' in the '(.*)' (?:text|numeric|currency|lookup|datetime|optionset) field")]
         public static void ThenTheSubgridContainsRecordsWithInTheField(string subGridName, string fieldValue, string fieldName)
         {
-            // Bug in GetSubGridItems returns the same attribute values for every record. Using deprecated Xrm.Page for now
-            // List<GridItem> subGridItems = XrmApp.Entity.SubGrid.GetSubGridItems(subGridName);
-            // subGridItems.Any(item => item.GetAttribute<string>(fieldName) == fieldValue)
-            //   .Should().BeTrue(because: "a matching record should be present in the subgrid);
-            var index = (long)Driver.ExecuteScript(
-                $"return Xrm.Page.getControl(\"{subGridName}\").getGrid().getRows().get().findIndex(row => row.data.entity.attributes.get().findIndex(a => a.getName() === \"{fieldName}\" && a.getValue() == \"{fieldValue}\") > -1)");
-
-            index.Should().BeGreaterOrEqualTo(0, because: "a matching record should be present in the subgrid");
-        }
-
-        /// <summary>
-        /// Asserts that the subgrid contains a record with a lookup matching the criteria.
-        /// </summary>
-        /// <param name="subGridName">The name of the subgrid.</param>
-        /// <param name="fieldValue">The expected value of the field.</param>
-        /// <param name="fieldName">The name of the field.</param>
-        [Then(@"the '(.*)' subgrid contains a record with '(.*)' in the '(.*)' lookup field")]
-        public static void ThenTheSubgridContainsARecordWithInTheLookupField(string subGridName, string fieldValue, string fieldName)
-        {
-            // Bug in GetSubGridItems returns the same attribute values for every record. Using deprecated Xrm.Page for now
-            var index = (long)Driver.ExecuteScript(
-                $"return Xrm.Page.getControl(\"{subGridName}\").getGrid().getRows().get().findIndex(row => row.data.entity.attributes.get().findIndex(a => a.getName() === \"{fieldName}\" && a.getValue() && a.getValue()[0].name === \"{fieldValue}\") > -1)");
-
-            index.Should().BeGreaterOrEqualTo(0, because: "a matching record should be present in the subgrid");
+            XrmApp.Entity.SubGrid
+                .GetSubGridItems(subGridName)
+                .Should()
+                .Contain(item => item.GetAttribute<string>(fieldName) == fieldValue, because: "a matching record should be present in the subgrid");
         }
 
         /// <summary>
@@ -310,18 +291,7 @@
         [When(@"I click the '([^']+)' command under the '([^']+)' flyout on the '([^']+)' subgrid")]
         public static void WhenIClickTheCommandUnderTheFlyoutOnTheSubgrid(string commandName, string flyoutName, string subGridName)
         {
-            /* Temporary until https://github.com/microsoft/EasyRepro/pull/918 is approved, then it can just be:
-                    XrmApp.Entity.SubGrid.ClickCommand(subGridName, flyoutName, commandName);
-             */
-
-            WhenIClickTheFlyoutOnTheSubgrid(flyoutName, subGridName);
-
-            Driver
-                .WaitUntilVisible(
-                    By.CssSelector($"div[data-id*=\"flyoutRootNode\"] button[aria-label=\"{commandName}\"]"),
-                    new TimeSpan(0, 0, 1),
-                    $"Could not find the {commandName} command on the flyout of the subgrid.")
-                .Click(false);
+            XrmApp.Entity.SubGrid.ClickCommand(subGridName, flyoutName, commandName);
         }
 
         /// <summary>
