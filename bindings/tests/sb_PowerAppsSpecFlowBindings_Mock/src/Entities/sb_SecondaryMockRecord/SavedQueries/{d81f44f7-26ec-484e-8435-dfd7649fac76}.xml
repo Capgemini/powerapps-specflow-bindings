@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>0</isdefault>
+    <savedqueryid>{d81f44f7-26ec-484e-8435-dfd7649fac76}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="sb_name" select="1" icon="1" preview="1">
+        <row name="result" id="sb_secondarymockrecordid">
+          <cell name="sb_name" width="300" />
+          <cell name="sb_text" width="100" />
+          <cell name="sb_number" width="100" />
+          <cell name="sb_yesno" width="100" />
+          <cell name="sb_choice" width="100" />
+          <cell name="sb_choices" width="100" />
+          <cell name="sb_dateandtime" width="100" />
+          <cell name="sb_dateonly" width="100" />
+          <cell name="sb_parent" width="100" />
+          <cell name="sb_customer" width="100" />
+          <cell name="sb_currency" width="100" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="sb_secondarymockrecord">
+          <attribute name="sb_secondarymockrecordid" />
+          <attribute name="sb_name" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="1" />
+          </filter>
+          <attribute name="sb_text" />
+          <attribute name="sb_number" />
+          <attribute name="sb_yesno" />
+          <attribute name="sb_choice" />
+          <attribute name="sb_choices" />
+          <attribute name="sb_dateandtime" />
+          <attribute name="sb_dateonly" />
+          <attribute name="sb_parent" />
+          <attribute name="sb_customer" />
+          <attribute name="sb_currency" />
+          <order attribute="sb_name" descending="false" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Inactive Secondary Mock Records" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

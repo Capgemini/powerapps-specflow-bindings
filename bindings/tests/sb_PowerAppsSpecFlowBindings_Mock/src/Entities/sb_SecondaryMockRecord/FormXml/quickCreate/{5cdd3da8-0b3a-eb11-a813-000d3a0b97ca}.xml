@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{5cdd3da8-0b3a-eb11-a813-000d3a0b97ca}</formid>
+    <IntroducedVersion>1.0.0.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab id="F931FFE2-B873-473F-8F95-9502F0AA3F5E" name="tab_1" showlabel="false" labelid="{fb762b85-60a2-421f-8f09-676e75599cd7}">
+          <labels>
+            <label description="Tab" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="34%">
+              <sections>
+                <section id="0C655D4E-C6E3-424E-9AF5-71E72D30D12E" name="tab_1_column_1_section_1" columns="1" showlabel="false" showbar="false" IsUserDefined="0" labelwidth="130" labelid="{a4a04b0f-5426-483a-bbac-db44cb18bad9}">
+                  <labels>
+                    <label description="Section" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{048e8b63-7f97-49b2-b0b4-a6717be8b2d8}" locklevel="0" labelid="{bd361f85-ec92-4ec6-baa6-615115afb0e7}">
+                        <labels>
+                          <label description="Text" languagecode="1033" />
+                        </labels>
+                        <control id="sb_text" classid="{4273EDBD-AC1D-40D3-9FB2-095C621B552D}" datafieldname="sb_text" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{6124d104-ab6b-43b4-8bd0-d92b53825dc0}" locklevel="0" labelid="{b3c1e1b9-9793-4dc2-8e93-e92d98d6d3cb}">
+                        <labels>
+                          <label description="Number" languagecode="1033" />
+                        </labels>
+                        <control id="sb_number" classid="{C6D124CA-7EDA-4A60-AEA9-7FB8D318B68F}" datafieldname="sb_number" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{044410f4-bf6d-47c1-a440-d6da21bb7c7b}" locklevel="0" labelid="{413d9247-29e1-4bbb-85c7-10b6f1ea5e5c}">
+                        <labels>
+                          <label description="Yes/No" languagecode="1033" />
+                        </labels>
+                        <control id="sb_yesno" classid="{67FAC785-CD58-4F9F-ABB3-4B7DDC6ED5ED}" datafieldname="sb_yesno" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{6d9d7b85-c12e-4982-aba5-ed96ad15ae41}" locklevel="0" labelid="{5dc2cd57-77c3-4068-b0ed-1b6bd944a43e}">
+                        <labels>
+                          <label description="Choice" languagecode="1033" />
+                        </labels>
+                        <control id="sb_choice" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="sb_choice" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{4864fa5b-0acf-458b-9c80-d9cf760e37c1}" locklevel="0" labelid="{381a3ffa-916d-4aaf-a47c-e9d10c33e423}">
+                        <labels>
+                          <label description="Choices" languagecode="1033" />
+                        </labels>
+                        <control id="sb_choices" classid="{4AA28AB7-9C13-4F57-A73D-AD894D048B5F}" datafieldname="sb_choices" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{37efce56-d55a-40ce-9667-65330e0fe5eb}" locklevel="0" labelid="{e8923af1-0960-4080-bbc0-1134c6fbaeec}">
+                        <labels>
+                          <label description="Date and Time" languagecode="1033" />
+                        </labels>
+                        <control id="sb_dateandtime" classid="{5B773807-9FB2-42DB-97C3-7A91EFF8ADFF}" datafieldname="sb_dateandtime" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{51cf292d-52ff-4a49-a90e-98e20f24c001}" locklevel="0" labelid="{5310520d-10f5-499a-86d8-05e0bb5b72c3}">
+                        <labels>
+                          <label description="Date Only" languagecode="1033" />
+                        </labels>
+                        <control id="sb_dateonly" classid="{5B773807-9FB2-42DB-97C3-7A91EFF8ADFF}" datafieldname="sb_dateonly" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{6bf0c1fc-8a0c-471a-8bb1-86c10a34dec6}" locklevel="0" labelid="{15320f08-e09f-4171-be12-a8c76fb0b6b0}">
+                        <labels>
+                          <label description="Parent" languagecode="1033" />
+                        </labels>
+                        <control id="sb_parent" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="sb_parent" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{9751a270-200a-4709-9bbf-9a577beb947e}" locklevel="0">
+                        <labels>
+                          <label description="Customer" languagecode="1033" />
+                        </labels>
+                        <control id="sb_customer" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="sb_customer" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{244c4eb1-50b1-4b6c-9ec0-45f5ac1a3c60}" locklevel="0" labelid="{17f8dc0b-8ecd-47bb-bcd1-5a753eff4173}">
+                        <labels>
+                          <label description="Currency" languagecode="1033" />
+                        </labels>
+                        <control id="sb_currency" classid="{533B9E00-756B-4312-95A0-DC888637AC78}" datafieldname="sb_currency" disabled="false" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+            <column width="33%">
+              <sections>
+                <section id="02DECBA0-3AE2-484D-A19F-C5353AF4F4F2" name="tab_1_column_2_section_1" columns="1" showlabel="false" showbar="false" IsUserDefined="0" labelwidth="130" labelid="{036c07ff-f119-4f0c-8c45-e4e7ada7ce3b}">
+                  <labels>
+                    <label description="Section" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="266FE48D-4D04-4E9A-8C5A-7DEF9A2F059B" labelid="{64f0942b-34b6-4ff3-bf4c-a43d8fa0c11f}">
+                        <labels>
+                          <label description="" languagecode="1033" />
+                        </labels>
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+            <column width="33%">
+              <sections>
+                <section id="46FD66EA-B686-41D9-AAE0-C565BD78EC1F" name="tab_1_column_3_section_1" columns="1" showlabel="false" showbar="false" IsUserDefined="0" labelwidth="130" labelid="{667ac4f9-0d3c-43b9-802b-16c4def0e524}">
+                  <labels>
+                    <label description="Section" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="07C04A4E-A482-45CC-BAB7-7FCA3CD02938" labelid="{150c8d95-e7ff-416e-9bf9-ecb9bb4f7454}">
+                        <labels>
+                          <label description="" languagecode="1033" />
+                        </labels>
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+      <DisplayConditions Order="0" FallbackForm="true">
+        <Role Id="{627090ff-40a3-4053-8790-584edc5be201}" />
+        <Role Id="{119f245c-3cc8-4b62-b31c-d1a046ced15d}" />
+      </DisplayConditions>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description=" quick create form" languagecode="1033" />
+    </LocalizedNames>
+  </systemform>
+</forms>

@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Workflow WorkflowId="{35d6a39a-c720-4d5f-8f11-4497dff2f9e3}" Name="Primary Business Process Flow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <XamlFileName>/Workflows/PrimaryBusinessProcessFlow-35D6A39A-C720-4D5F-8F11-4497DFF2F9E3.xaml</XamlFileName>
+  <Type>1</Type>
+  <Subprocess>0</Subprocess>
+  <Category>4</Category>
+  <Mode>0</Mode>
+  <Scope>4</Scope>
+  <OnDemand>0</OnDemand>
+  <TriggerOnCreate>1</TriggerOnCreate>
+  <TriggerOnDelete>0</TriggerOnDelete>
+  <AsyncAutodelete>0</AsyncAutodelete>
+  <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
+  <StateCode>1</StateCode>
+  <StatusCode>2</StatusCode>
+  <processorder>100</processorder>
+  <RunAs>1</RunAs>
+  <UniqueName>sb_primarybusinessprocessflow</UniqueName>
+  <IsTransacted>1</IsTransacted>
+  <IntroducedVersion>1.0.0.0</IntroducedVersion>
+  <IsCustomizable>1</IsCustomizable>
+  <BusinessProcessType>0</BusinessProcessType>
+  <IsCustomProcessingStepAllowedForOtherPublishers>1</IsCustomProcessingStepAllowedForOtherPublishers>
+  <ProcessTriggerScope>1</ProcessTriggerScope>
+  <PrimaryEntity>sb_MockRecord</PrimaryEntity>
+  <LocalizedNames>
+    <LocalizedName languagecode="1033" description="Primary Business Process Flow" />
+  </LocalizedNames>
+  <labels>
+    <steplabels id="{06d93511-58e7-4a7a-8409-4d031f79abfb}">
+      <label languagecode="1033" description="First Stage" />
+    </steplabels>
+    <steplabels id="{cc1c3692-63c5-4678-bc0f-9ba6016956bd}">
+      <label languagecode="1033" description="Enter Text" />
+    </steplabels>
+    <steplabels id="{b2f060e3-495b-4b7c-9467-21684003869a}">
+      <label languagecode="1033" description="Enter Number" />
+    </steplabels>
+    <steplabels id="{61716626-d015-447b-84e9-fe3e33d0a505}">
+      <label languagecode="1033" description="Enter Yes/No" />
+    </steplabels>
+    <steplabels id="{7476d3a0-7f7d-461f-94fd-4ea954ae9145}">
+      <label languagecode="1033" description="Enter Choice" />
+    </steplabels>
+    <steplabels id="{e587fa44-62e6-4a02-af25-090e834f72ce}">
+      <label languagecode="1033" description="Enter Date and Time" />
+    </steplabels>
+    <steplabels id="{e2945393-1e8b-4cf5-a8a1-8571ed070f26}">
+      <label languagecode="1033" description="Enter Date Only" />
+    </steplabels>
+    <steplabels id="{8a3f6ed6-2454-4b92-9ea9-e51fd212d386}">
+      <label languagecode="1033" description="Enter Lookup" />
+    </steplabels>
+    <steplabels id="{12496463-f476-478f-8f3a-d89f7eda36bb}">
+      <label languagecode="1033" description="Enter Customer" />
+    </steplabels>
+    <steplabels id="{59281b96-96bb-4291-a91f-4fe441e2a42e}">
+      <label languagecode="1033" description="Enter Currency" />
+    </steplabels>
+    <steplabels id="{dac460c2-2d00-4e86-9678-95a44cfbc11c}">
+      <label languagecode="1033" description="Second Stage" />
+    </steplabels>
+    <steplabels id="{c4772f53-013a-4203-9f46-184ec24be6a5}">
+      <label languagecode="1033" description="Enter Name" />
+    </steplabels>
+  </labels>
+</Workflow>
