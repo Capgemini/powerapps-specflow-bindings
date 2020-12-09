@@ -13,3 +13,8 @@ Scenario: User can execute a command on the command bar
 	When I open the 'Accounts' sub area of the 'Customers' group
 	When I select the 'New' command
 	Then I am presented with a 'Account' form for the 'account' entity
+	Then I can not see the 'Missing' command
+
+	##NOT COVERED
+	  #[When("I select the '([^']+)' command under the '([^']+)' flyout")]  
+      
