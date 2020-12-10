@@ -1,7 +1,6 @@
 {
-  "@logicalName": "lead",
+  "@logicalName": "sb_mockrecord",
   "@alias": "the record",
-  "subject": "Automated Test Topic",
-  "lastname": "User",
-  "firstname": "Test"
+  "sb_name": "A record with a business process flow",
+  "sb_yesno": true
 }

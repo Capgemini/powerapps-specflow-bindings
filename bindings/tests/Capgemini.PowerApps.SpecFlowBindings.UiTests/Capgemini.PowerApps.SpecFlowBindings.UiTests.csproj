@@ -66,19 +66,11 @@
     <None Include="CodeCoverage.runsettings">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Data\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+
     <None Include="DataSteps.feature" />
-    <None Include="Data\data decorated with faker moustache syntax.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\an account with aliased contact.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\an aliased contact.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\a record with a timeline on the main form.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="GridSteps.feature" />
     <None Include="LookupSteps.feature" />
     <None Include="CommandBarSteps.feature" />
@@ -91,9 +83,6 @@
     <None Include="LoginSteps.feature" />
     <None Include="GlobalSearchSteps.feature" />
     <None Include="BusinessProcessFlowSteps.feature" />
-    <None Include="Data\a record with a business process flow.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="power-apps-bindings.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
