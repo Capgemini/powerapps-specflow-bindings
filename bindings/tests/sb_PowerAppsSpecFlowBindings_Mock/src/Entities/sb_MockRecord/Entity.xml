@@ -673,8 +673,8 @@
           <IsLocalizable>0</IsLocalizable>
           <MinValue>-922337203685477</MinValue>
           <MaxValue>922337203685477</MaxValue>
-          <Accuracy>0</Accuracy>
-          <AccuracySource>2</AccuracySource>
+          <Accuracy>2</Accuracy>
+          <AccuracySource>0</AccuracySource>
           <displaynames>
             <displayname description="Currency" languagecode="1033" />
           </displaynames>
