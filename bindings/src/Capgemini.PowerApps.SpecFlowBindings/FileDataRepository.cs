@@ -14,7 +14,7 @@
         /// <inheritdoc cref="ITestDataRepository"/>
         public string GetTestData(string identifier)
         {
-            return File.ReadAllText(Path.Combine(RootDirectory, FileDirectory, Path.HasExtension(identifier) ? identifier : $"{identifier}.json"));
+            return File.ReadAllText(Path.Combine(RootDirectory, FileDirectory, Path.GetExtension(identifier) == ".json" ? identifier : $"{identifier}.json"));
         }
     }
 }

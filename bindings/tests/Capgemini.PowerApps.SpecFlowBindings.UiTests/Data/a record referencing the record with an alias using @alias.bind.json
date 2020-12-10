@@ -1,0 +1,6 @@
+{
+  "@logicalName": "sb_secondarymockrecord",
+  "@alias": "the referencing record",
+  "sb_name": "The referencing record",
+  "sb_Parent@alias.bind": "the referenced record"
+}

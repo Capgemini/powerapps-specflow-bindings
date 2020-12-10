@@ -1,6 +1,0 @@
-{
-  "@logicalName": "account",
-  "@alias": "a sample account",
-  "name": "Sample Account",
-  "primarycontactid@alias.bind": "a sample contact"
-}

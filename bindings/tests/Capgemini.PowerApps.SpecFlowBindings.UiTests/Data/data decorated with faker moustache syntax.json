@@ -1,13 +1,14 @@
 {
-  "@logicalName": "contact",
+  "@logicalName": "sb_mockrecord",
   "@alias": "the faked record",
-  "lastname": "{{name.firstName}}",
-  "firstname": "{{name.lastName}}",
-  "creditlimit@faker.number": "{{finance.amount}}",
-  "emailaddress1": "{{internet.email}}",
-  "birthdate@faker.date": "{{date.past(90)}}",
-  "owningteam": {
+  "sb_name": "{{random.word}}",
+  "sb_text": "{{random.words}}",
+  "sb_number@faker.number": "{{random.number}}",
+  "sb_currency@faker.number": "{{finance.amount}}",
+  "sb_dateonly@faker.date": "{{date.past}}",
+  "sb_dateandtime@faker.datetime": "{{date.future}}",
+  "sb_Lookup": {
     "@alias": "a nested faked record",
-    "name": "{{name.jobArea}}"
+    "sb_name": "{{random.word}}"
   }
 }
