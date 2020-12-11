@@ -447,6 +447,19 @@
         {
             switch (fieldType)
             {
+                case "multioptionset":
+                    XrmApp.Entity.SetMultiSelectOptionSetValue(
+                        Driver,
+                        new MultiValueOptionSet()
+                        {
+                            Name = fieldName,
+                            Values = fieldValue
+                                        .Split(',')
+                                        .Select(v => v.Trim())
+                                        .ToArray(),
+                        },
+                        true);
+                    break;
                 case "optionset":
                     XrmApp.Entity.SetValue(new OptionSet()
                     {
