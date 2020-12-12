@@ -3,17 +3,40 @@
 	As a developer
 	I want to use pre-existing lookup bindings
 
-Scenario: User switches lookup views
-	Given I am logged in to the 'Sales Team Member' app as 'an admin'
-	When I open the sub area 'Accounts' under the 'Customers' area
+Background:
+	Given I am logged in to the 'Mock App' app as 'an admin'
+	When I open the sub area 'Mock Records' under the 'Primary Group' area
 	And I select the 'New' command
-	And I select 'primarycontactid' lookup
-	#KNOWN BUG (TestCategory - Bug - Fail) https://github.com/microsoft/EasyRepro/blob/aadad319f713e169ce080524f533f20d86b23c97/Microsoft.Dynamics365.UIAutomation.Sample/UCI/Read/OpenContact.cs
-	And I select the 'All Contacts' view in the lookup
 
-Scenario: User selects a related record
-	Given I am logged in to the 'Sales Team Member' app as 'an admin'	
-	And I have created 'an aliased contact'
-	And I have created 'an account with aliased contact'
-	And I have opened 'a sample account'
-	When I select a related 'primarycontactid' lookup field
+Scenario: Click new button in lookup
+	When I search for 'Some text' in the 'sb_lookup' lookup
+	And I click the new button in the lookup
+
+Scenario: Open a record at a given position in a lookup
+	Given I have created 'a secondary mock record'
+	When I search for 'A secondary mock record' in the 'sb_lookup' lookup
+	And I open the record at position '0' in the lookup
+
+Scenario: Perform a search in a lookup
+	When I search for 'Some text' in the 'sb_lookup' lookup
+
+Scenario: Switch view in a lookup
+	When I search for 'Some text' in the 'sb_lookup' lookup
+	And I switch to the 'Inactive Secondary Mock Records' view in the lookup
+
+Scenario: Select a related entity in a lookup
+	When I search for '*' in the 'sb_customer' lookup
+	And I select the related 'contact' entity in the lookup
+
+Scenario: Assert lookup search results only contain records the given names
+	Given I have created 'a secondary mock record'
+	When I search for 'A secondary mock record' in the 'sb_lookup' lookup
+	Then I can see only the following records in the 'sb_lookup' lookup
+		| Name                    |
+		| A secondary mock record |
+
+Scenario: Open a record set in a lookup
+	Given I have created 'data decorated with faker moustache syntax'
+	And I have opened 'the faked record'
+	When I select a related 'sb_lookup' lookup field
+	Then I am presented with a 'Information' form for the 'sb_secondarymockrecord' entity
