@@ -3,15 +3,19 @@
 	As a developer
 	I want to use pre-existing global search bindings
 
-Scenario: User performs a global search For Accounts
-	Given I am logged in to the 'Sales Team Member' app as 'an admin'
-	When I search globally using the filter 'Power'
-	When I apply a search filter using the filter 'Account'
-	When I open a record from global search on the entity 'account' in the position of '0'
-	Then I am presented with a 'Account' form for the 'account' entity
+Background:
+	Given I am logged in to the 'Mock App' app as 'an admin'
+	And I have created 'a record configured for global search'
+	And I the 'Mock Record' entity is enabled for categorized search
 
-	##NOT COVERED
-    ##  [When("I apply a search filter using the filter '(.*)' with the filter value of '(.*)' group")]
-    ##  [When("I change the search type using the filter '(.*)'")]
-     
-     
+Scenario: Perform a global search
+	When I search globally using the filter 'Record'
+
+Scenario: Apply a search filter
+	When I search globally using the filter 'Record'
+	And I apply a search filter using the filter 'Mock Record'
+
+Scenario: Open a record from global search results
+	When I search globally using the filter 'A record configured for global search'
+	When I open a record from global search on the entity 'sb_mockrecord' in the position of '0'
+	Then I am presented with a 'Information' form for the 'sb_mockrecord' entity
