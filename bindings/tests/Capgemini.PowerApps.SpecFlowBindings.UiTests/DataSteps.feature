@@ -1,5 +1,5 @@
 ﻿Feature: Data Steps
-	In order to automate data creation interaction
+	In order to automate data creation
 	As a developer
 	I want to use pre-existing data creation steps
 

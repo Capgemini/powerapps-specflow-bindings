@@ -62,6 +62,7 @@ Scenario Outline: Clear field values
 	And I clear the '<column>' <type> field
 	Then I can see a value of '<clearedValue>' in the '<column>' <type> field
 
+#TODO: sb_lookup, sb_customer
 Scenarios:
 		| column         | type      | value          | clearedValue |
 		| sb_text        | text      | Some text      |              |

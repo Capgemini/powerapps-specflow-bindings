@@ -1,7 +1,7 @@
-﻿Feature: CommandBar Steps
-	In order to automate commandbar interaction
+﻿Feature: Command Bar Steps
+	In order to automate command bar interaction
 	As a developer
-	I want to use pre-existing commandbar bindings
+	I want to use pre-existing command bar bindings
 
 Background:
 	Given I am logged in to the 'Mock App' app as 'an admin'

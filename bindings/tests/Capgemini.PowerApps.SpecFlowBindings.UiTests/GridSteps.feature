@@ -1,7 +1,7 @@
 ﻿Feature: Grid Steps
-	In order to automate Lookup interaction
+	In order to automate grid interaction
 	As a developer
-	I want to use pre-existing lookup bindings
+	I want to use pre-existing grid bindings
 
 Background:
 	Given I am logged in to the 'Mock App' app as 'an admin'
