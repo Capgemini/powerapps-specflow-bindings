@@ -1,0 +1,10 @@
+{
+  "@logicalName": "sb_mockrecord",
+  "@alias": "the record",
+  "sb_name": "A record with a subgrid and related records",
+  "sb_MockRecord_Parent_SecondaryMockRecord": [
+    {
+      "sb_name": "A related record"
+    }
+  ]
+}
