@@ -3,18 +3,20 @@
 	As a developer
 	I want to use pre-existing navigation bindings
 
-Scenario: I want to navigate to global search
-	Given I am logged in to the 'Sales Team Member' app as 'an admin'
+Background:
+	Given I am logged in to the 'Mock App' app as 'an admin'
+
+Scenario: Open global search
 	When I open global search
 
-Scenario: I want to utilise the quick create shortcut
-	Given I am logged in to the 'Sales Team Member' app as 'an admin'
-	When I open a quick create for the 'account' entity
+Scenario: Open entity quick create
+	When I open a quick create for the 'Secondary Mock Record' entity
 
-Scenario: I want to sign in and open a subarea
-	Given I am logged in to the 'Sales Team Member' app as 'an admin'
-	When I open the 'Accounts' sub area of the 'Customers' group
+Scenario: Open a subarea
+	When I open the 'Mock Records' sub area of the 'Primary Group' group
 
-Scenario: I want to sign in and open an area
-	Given I am logged in to the 'Customer Service Hub' app as 'an admin'
-	When I open the 'Scheduling' area
+Scenario: Open an area
+	When I open the 'Secondary Area' area
+
+Scenario: Sign out
+	When I sign out
