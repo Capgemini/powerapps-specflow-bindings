@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build"
-  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PowerAppsTargetsPath>$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\PowerApps</PowerAppsTargetsPath>
+    <PowerAppsTargetsPath>$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\PowerApps</PowerAppsTargetsPath>  
   </PropertyGroup>
-
+  
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
   <Import Project="$(PowerAppsTargetsPath)\Microsoft.PowerApps.VisualStudio.Solution.props" Condition="Exists('$(PowerAppsTargetsPath)\Microsoft.PowerApps.VisualStudio.Solution.props')"/>
 
   <PropertyGroup>
-    <ProjectGuid>dbe5c840-34f4-4473-9b56-ccbc605d2fd4</ProjectGuid>
+    <ProjectGuid>854e57e1-86f3-4e78-9d5e-ae836992dc6a</ProjectGuid>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <!--Remove TargetFramework when this is available in 16.1-->
     <TargetFramework>net462</TargetFramework>
@@ -21,12 +20,11 @@
   <PropertyGroup>
     <SolutionPackageType>Managed</SolutionPackageType>
   </PropertyGroup>
-
-
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.PowerApps.MSBuild.Solution" Version="1.*"/>
   </ItemGroup>
-
+  
   <ItemGroup>
     <ExcludeDirectories Include="$(MSBuildThisFileDirectory)\.gitignore"/>
     <ExcludeDirectories Include="$(MSBuildThisFileDirectory)\bin\**"/>
@@ -35,7 +33,7 @@
     <ExcludeDirectories Include="$(MSBuildThisFileDirectory)\*.cdsproj.user"/>
     <ExcludeDirectories Include="$(MSBuildThisFileDirectory)\*.sln"/>
   </ItemGroup>
-
+  
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)\**" Exclude="@(ExcludeDirectories)" />
     <Content Include="$(SolutionPackageZipFilePath)">

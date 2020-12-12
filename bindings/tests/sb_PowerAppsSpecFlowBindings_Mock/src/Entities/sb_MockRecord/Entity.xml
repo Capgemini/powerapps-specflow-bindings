@@ -714,8 +714,8 @@
           <IsLocalizable>0</IsLocalizable>
           <MinValue>-922337203685477</MinValue>
           <MaxValue>922337203685477</MaxValue>
-          <Accuracy>0</Accuracy>
-          <AccuracySource>2</AccuracySource>
+          <Accuracy>2</Accuracy>
+          <AccuracySource>0</AccuracySource>
           <CalculationOf>sb_Currency</CalculationOf>
           <displaynames>
             <displayname description="Currency (Base)" languagecode="1033" />
@@ -911,8 +911,8 @@
           <IsLocalizable>0</IsLocalizable>
           <MinValue>-922337203685477</MinValue>
           <MaxValue>922337203685477</MaxValue>
-          <Accuracy>0</Accuracy>
-          <AccuracySource>2</AccuracySource>
+          <Accuracy>2</Accuracy>
+          <AccuracySource>0</AccuracySource>
           <displaynames>
             <displayname description="Header Currency" languagecode="1033" />
           </displaynames>
@@ -952,8 +952,8 @@
           <IsLocalizable>0</IsLocalizable>
           <MinValue>-922337203685477</MinValue>
           <MaxValue>922337203685477</MaxValue>
-          <Accuracy>0</Accuracy>
-          <AccuracySource>2</AccuracySource>
+          <Accuracy>2</Accuracy>
+          <AccuracySource>0</AccuracySource>
           <CalculationOf>sb_HeaderCurrency</CalculationOf>
           <displaynames>
             <displayname description="Header Currency (Base)" languagecode="1033" />

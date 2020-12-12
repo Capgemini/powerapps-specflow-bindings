@@ -5,7 +5,7 @@
     <IntroducedVersion>1.0</IntroducedVersion>
     <FormPresentation>1</FormPresentation>
     <FormActivationState>1</FormActivationState>
-    <form>
+    <form headerdensity="HighWithControls">
       <tabs>
         <tab verticallayout="true" id="{29c1022e-f64b-4968-9a29-1de3c61fad73}" IsUserDefined="1">
           <labels>
@@ -22,13 +22,13 @@
                     <row>
                       <cell id="{22c18148-466c-422b-8f84-d4424c232bd6}">
                         <labels>
-                          <label description="" languagecode="1033" />
+                          <label description="Name" languagecode="1033" />
                         </labels>
                         <control id="sb_name" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="sb_name" />
                       </cell>
                     </row>
                     <row>
-                      <cell id="{73e3d8d3-6af8-43c0-bd53-1178af591bc2}" locklevel="0">
+                      <cell id="{af95fecf-9201-4e89-b13a-66a32b041b62}" locklevel="0">
                         <labels>
                           <label description="Parent" languagecode="1033" />
                         </labels>
@@ -36,9 +36,81 @@
                       </cell>
                     </row>
                     <row>
+                      <cell id="{67d0c218-a875-42f1-ba55-4de94ef650f7}" locklevel="0">
+                        <labels>
+                          <label description="Text" languagecode="1033" />
+                        </labels>
+                        <control id="sb_text" classid="{4273EDBD-AC1D-40D3-9FB2-095C621B552D}" datafieldname="sb_text" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{e6ed56db-e4b3-4db6-b2b8-580e94fabd5b}" locklevel="0">
+                        <labels>
+                          <label description="Number" languagecode="1033" />
+                        </labels>
+                        <control id="sb_number" classid="{C6D124CA-7EDA-4A60-AEA9-7FB8D318B68F}" datafieldname="sb_number" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{6f477ed3-98be-4d23-b89c-e68d10b8a207}" locklevel="0">
+                        <labels>
+                          <label description="Yes/No" languagecode="1033" />
+                        </labels>
+                        <control id="sb_yesno" classid="{67FAC785-CD58-4F9F-ABB3-4B7DDC6ED5ED}" datafieldname="sb_yesno" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{eafdd004-8664-4ce6-9e25-5e9c64d5648b}" locklevel="0">
+                        <labels>
+                          <label description="Date and Time" languagecode="1033" />
+                        </labels>
+                        <control id="sb_dateandtime" classid="{5B773807-9FB2-42DB-97C3-7A91EFF8ADFF}" datafieldname="sb_dateandtime" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{4b533aef-8d68-4440-85e0-72d04365dc7e}" locklevel="0">
+                        <labels>
+                          <label description="Date Only" languagecode="1033" />
+                        </labels>
+                        <control id="sb_dateonly" classid="{5B773807-9FB2-42DB-97C3-7A91EFF8ADFF}" datafieldname="sb_dateonly" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{55f104e1-4573-4a26-9ca8-591a84a17fdc}" locklevel="0">
+                        <labels>
+                          <label description="Choice" languagecode="1033" />
+                        </labels>
+                        <control id="sb_choice" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="sb_choice" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{781661dd-627d-45f7-996a-37c9c7211712}" locklevel="0">
+                        <labels>
+                          <label description="Choices" languagecode="1033" />
+                        </labels>
+                        <control id="sb_choices" classid="{4AA28AB7-9C13-4F57-A73D-AD894D048B5F}" datafieldname="sb_choices" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{f0272b81-dc50-4cae-8a86-e059995d0b55}" locklevel="0">
+                        <labels>
+                          <label description="Currency" languagecode="1033" />
+                        </labels>
+                        <control id="sb_currency" classid="{533B9E00-756B-4312-95A0-DC888637AC78}" datafieldname="sb_currency" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{bddbac08-306e-4dd9-be3c-a758787dc40d}" locklevel="0">
+                        <labels>
+                          <label description="Customer" languagecode="1033" />
+                        </labels>
+                        <control id="sb_customer" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="sb_customer" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
                       <cell id="{87555336-e14c-4cf8-b361-d7e6811b6242}">
                         <labels>
-                          <label description="" languagecode="1033" />
+                          <label description="Owner" languagecode="1033" />
                         </labels>
                         <control id="ownerid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ownerid" />
                       </cell>
@@ -50,6 +122,51 @@
           </columns>
         </tab>
       </tabs>
+      <header id="{f92d22c3-bcd2-46f0-8981-a3eb7c5a9622}" celllabelposition="Top" columns="111" labelwidth="115" celllabelalignment="Left">
+        <rows>
+          <row>
+            <cell id="{2303f404-2a6e-4ddf-bd85-6109133d16f3}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{12b9e27d-752f-4d66-96f8-1ad4165792a6}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{afa3d387-a5ef-494a-be1b-4b924276f985}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+          </row>
+        </rows>
+      </header>
+      <footer id="{61492776-6b59-4d0c-ad9b-1f54b81c058d}" celllabelposition="Top" columns="111" labelwidth="115" celllabelalignment="Left">
+        <rows>
+          <row>
+            <cell id="{0e2a7ac1-3033-4eb6-a0c7-f407e6337a0c}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{6f3acee7-b0b3-4395-89a9-3140c26e0614}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{07117c7f-eaae-422e-948d-38bc0d725c04}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+          </row>
+        </rows>
+      </footer>
+      <DisplayConditions Order="0" FallbackForm="true">
+        <Everyone />
+      </DisplayConditions>
     </form>
     <IsCustomizable>1</IsCustomizable>
     <CanBeDeleted>1</CanBeDeleted>

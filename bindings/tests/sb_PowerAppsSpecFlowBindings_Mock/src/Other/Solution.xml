@@ -6,7 +6,7 @@
       <LocalizedName description="Power Apps SpecFlow Bindings - Mock" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.0.0.1</Version>
+    <Version>1.0.0.2</Version>
     <Managed>2</Managed>
     <Publisher>
       <UniqueName>powerappsspecflowbindings</UniqueName>
@@ -87,6 +87,7 @@
       <RootComponent type="29" id="{d21a6986-eb11-429c-b4b1-bb747eeb0991}" behavior="0" />
       <RootComponent type="60" id="{50687e45-f839-eb11-a813-000d3a0b97ca}" behavior="0" />
       <RootComponent type="60" id="{5cdd3da8-0b3a-eb11-a813-000d3a0b97ca}" behavior="0" />
+      <RootComponent type="60" id="{64f94a07-433f-4a64-a290-16238d710ab3}" behavior="0" />
       <RootComponent type="60" id="{6e43bd18-f839-eb11-a813-000d3a0b97ca}" behavior="0" />
       <RootComponent type="60" id="{974e0b5b-0d50-40fd-b607-61bb0812dda0}" behavior="0" />
       <RootComponent type="60" id="{e75d54f4-033a-eb11-a813-000d3a0b97ca}" behavior="0" />
