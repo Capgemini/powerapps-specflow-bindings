@@ -9,3 +9,9 @@ Scenario: User performs a global search For Accounts
 	When I apply a search filter using the filter 'Account'
 	When I open a record from global search on the entity 'account' in the position of '0'
 	Then I am presented with a 'Account' form for the 'account' entity
+
+	##NOT COVERED
+    ##  [When("I apply a search filter using the filter '(.*)' with the filter value of '(.*)' group")]
+    ##  [When("I change the search type using the filter '(.*)'")]
+     
+     
