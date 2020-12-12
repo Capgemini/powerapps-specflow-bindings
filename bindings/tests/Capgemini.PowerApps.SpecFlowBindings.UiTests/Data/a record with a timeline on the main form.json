@@ -1,5 +1,5 @@
 {
-  "@logicalName": "account",
+  "@logicalName": "sb_mockrecord",
   "@alias": "the record",
-  "name": "Test Account"
+  "sb_name": "A record with a timeline on the main form"
 }
