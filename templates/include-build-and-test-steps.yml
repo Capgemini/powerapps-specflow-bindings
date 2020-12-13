@@ -12,6 +12,7 @@ jobs:
         value: 'Release'
     # build and tests executed in single job in order to allow SonarCloud to capture coverage
     displayName: Build and Test
+    timeoutInMinutes: 180 
     steps:
       - task: gitversion/setup@0
         displayName: Install GitVersion
