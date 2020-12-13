@@ -6,6 +6,16 @@
         <Button Alt="$LocLabels:sb.sb_mockrecord.ShowLookupDialog.Button.Alt" Command="sb.sb_mockrecord.ShowLookupDialog.Command" Id="sb.sb_mockrecord.ShowLookupDialog.Button" Image16by16="search" LabelText="$LocLabels:sb.sb_mockrecord.ShowLookupDialog.Button.LabelText" Sequence="15" TemplateAlias="o1" ToolTipTitle="$LocLabels:sb.sb_mockrecord.ShowLookupDialog.Button.ToolTipTitle" ToolTipDescription="$LocLabels:sb.sb_mockrecord.ShowLookupDialog.Button.ToolTipDescription" />
       </CommandUIDefinition>
     </CustomAction>
+    <CustomAction Id="sb.sb_mockrecord.ShowConfirmationDialog.Button.CustomAction" Location="Mscrm.Form.sb_mockrecord.MainTab.Actions.Controls._children" Sequence="16">
+      <CommandUIDefinition>
+        <Button Alt="$LocLabels:sb.sb_mockrecord.ShowConfirmationDialog.Button.Alt" Command="sb.sb_mockrecord.ShowConfirmationDialog.Command" Id="sb.sb_mockrecord.ShowConfirmationDialog.Button" Image16by16="search" LabelText="$LocLabels:sb.sb_mockrecord.ShowConfirmationDialog.Button.LabelText" Sequence="16" TemplateAlias="o1" ToolTipTitle="$LocLabels:sb.sb_mockrecord.ShowConfirmationDialog.Button.ToolTipTitle" ToolTipDescription="$LocLabels:sb.sb_mockrecord.ShowConfirmationDialog.Button.ToolTipDescription" />
+      </CommandUIDefinition>
+    </CustomAction>
+    <CustomAction Id="sb.sb_mockrecord.ShowErrorDialog.Button.CustomAction" Location="Mscrm.Form.sb_mockrecord.MainTab.Actions.Controls._children" Sequence="17">
+      <CommandUIDefinition>
+        <Button Alt="$LocLabels:sb.sb_mockrecord.ShowErrorDialog.Button.Alt" Command="sb.sb_mockrecord.ShowErrorDialog.Command" Id="sb.sb_mockrecord.ShowErrorDialog.Button" Image16by16="search" LabelText="$LocLabels:sb.sb_mockrecord.ShowErrorDialog.Button.LabelText" Sequence="17" TemplateAlias="o1" ToolTipTitle="$LocLabels:sb.sb_mockrecord.ShowErrorDialog.Button.ToolTipTitle" ToolTipDescription="$LocLabels:sb.sb_mockrecord.ShowErrorDialog.Button.ToolTipDescription" />
+      </CommandUIDefinition>
+    </CustomAction>
   </CustomActions>
   <Templates>
     <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
@@ -22,6 +32,20 @@
           <StringParameter Value="0f56be21-ac88-4347-b464-fd97bacfa84c" />
           <StringParameter Value="cbf2061b-2054-4bc9-80ab-bffdade82ceb,8bcb3608-d091-44d6-837e-733a09b9f30f" />
         </JavaScriptFunction>
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="sb.sb_mockrecord.ShowConfirmationDialog.Command">
+      <EnableRules />
+      <DisplayRules />
+      <Actions>
+        <JavaScriptFunction FunctionName="mockConfirmationDialog" Library="$webresource:sb_/js/sb_mockrecord.ribbon.js" />
+      </Actions>
+    </CommandDefinition>
+    <CommandDefinition Id="sb.sb_mockrecord.ShowErrorDialog.Command">
+      <EnableRules />
+      <DisplayRules />
+      <Actions>
+        <JavaScriptFunction FunctionName="mockErrorDialog" Library="$webresource:sb_/js/sb_mockrecord.ribbon.js" />
       </Actions>
     </CommandDefinition>
   </CommandDefinitions>
@@ -43,12 +67,52 @@
     </LocLabel>
     <LocLabel Id="sb.sb_mockrecord.ShowLookupDialog.Button.ToolTipDescription">
       <Titles>
-        <Title description="Show's a lookup dialog." languagecode="1033" />
+        <Title description="Shows a lookup dialog." languagecode="1033" />
       </Titles>
     </LocLabel>
     <LocLabel Id="sb.sb_mockrecord.ShowLookupDialog.Button.ToolTipTitle">
       <Titles>
         <Title description="Show Lookup Dialog" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="sb.sb_mockrecord.ShowConfirmationDialog.Button.Alt">
+      <Titles>
+        <Title description="Show Confirmation Dialog" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="sb.sb_mockrecord.ShowConfirmationDialog.Button.LabelText">
+      <Titles>
+        <Title description="Show Confirmation Dialog" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="sb.sb_mockrecord.ShowConfirmationDialog.Button.ToolTipDescription">
+      <Titles>
+        <Title description="Shows a confirmation dialog." languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="sb.sb_mockrecord.ShowConfirmationDialog.Button.ToolTipTitle">
+      <Titles>
+        <Title description="Show Confirmation Dialog" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="sb.sb_mockrecord.ShowErrorDialog.Button.Alt">
+      <Titles>
+        <Title description="Show Error Dialog" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="sb.sb_mockrecord.ShowErrorDialog.Button.LabelText">
+      <Titles>
+        <Title description="Show Error Dialog" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="sb.sb_mockrecord.ShowErrorDialog.Button.ToolTipDescription">
+      <Titles>
+        <Title description="Shows an error dialog." languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="sb.sb_mockrecord.ShowErrorDialog.Button.ToolTipTitle">
+      <Titles>
+        <Title description="Show Error Dialog" languagecode="1033" />
       </Titles>
     </LocLabel>
   </LocLabels>
