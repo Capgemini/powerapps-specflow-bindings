@@ -22,7 +22,6 @@ Scenario Outline: Enter values on a form
 	When I enter '<value>' into the '<column>' <type> field on the form
 	Then I can see a value of '<value>' in the '<column>' <type> field
 
-#TODO: sb_lookup, sb_customer
 Scenarios:
 		| column         | type           | value              |
 		| sb_text        | text           | Some text          |
@@ -34,11 +33,15 @@ Scenarios:
 		| sb_dateonly    | datetime       | 1/1/2021           |
 		| sb_currency    | currency       | £10.00             |
 
+Scenario: Enter lookup on a form
+	Given I have created 'a secondary mock record'
+	When I enter 'A secondary mock record' into the 'sb_lookup' lookup field on the form
+	Then I can see a value of 'A secondary mock record' in the 'sb_lookup' lookup field
+
 Scenario Outline: Enter values on a form header
 	When I enter '<value>' into the '<column>' <type> header field on the form
 	Then I can see a value of '<value>' in the '<column>' <type> field
 
-#TODO: sb_lookup, sb_customer
 Scenarios:
 		| column               | type      | value          |
 		| sb_headertext        | text      | Some text      |
@@ -48,6 +51,10 @@ Scenarios:
 		| sb_headerdateandtime | datetime  | 1/1/2021 13:00 |
 		| sb_headerdateonly    | datetime  | 1/1/2021       |
 		| sb_headercurrency    | currency  | £10.00         |
+
+Scenario: Enter lookup on a form header
+	Given I have created 'a secondary mock record'
+	When I enter 'A secondary mock record' into the 'sb_headerlookup' lookup header field on the form
 
 Scenario: Enter multiple values on a form
 	When I enter the following into the form
@@ -62,7 +69,6 @@ Scenario Outline: Clear field values
 	And I clear the '<column>' <type> field
 	Then I can see a value of '<clearedValue>' in the '<column>' <type> field
 
-#TODO: sb_lookup, sb_customer
 Scenarios:
 		| column         | type      | value          | clearedValue |
 		| sb_text        | text      | Some text      |              |
@@ -71,6 +77,12 @@ Scenarios:
 		| sb_dateandtime | datetime  | 1/1/2021 13:00 |              |
 		| sb_dateonly    | datetime  | 1/1/2021       |              |
 		| sb_currency    | currency  | £10.00         |              |
+
+Scenario: Clear lookup value
+	Given I have created 'a secondary mock record'
+	When I enter 'A secondary mock record' into the 'sb_lookup' lookup field on the form
+	And I clear the 'sb_lookup' lookup field
+	Then I can see a value of '' in the 'sb_lookup' lookup field
 
 Scenario: Delete a record
 	Given I have created 'a secondary mock record'
