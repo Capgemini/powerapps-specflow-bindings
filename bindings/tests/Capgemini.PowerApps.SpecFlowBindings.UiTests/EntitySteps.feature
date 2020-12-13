@@ -114,8 +114,6 @@ Scenario: Assert a field is optional
 Scenario: Assert a field is required
 	Then the 'sb_name' field is mandatory
 
-#Need to add a synchonous workflow into the mock solution
-#Scenario: Assert business process error message
 Scenario Outline: Assert fom notification message
 	Then I can see a form notification stating 'A mock <type> form notification'
 
@@ -154,9 +152,6 @@ Scenario: Assert fields editable
 		| sb_dateonly    |
 		| sb_currency    |
 
-#Need to add locked fields
-#Scenario: Assert field not editable
-#Scenario: Assert fields not editable
 Scenario: Assert option set options
 	Then I can see the following options in the 'sb_choice' option set field
 		| Option   |
@@ -172,3 +167,9 @@ Scenario: Assert field not visible
 
 Scenario: Assert record status
 	Then the status of the record is active
+#TODO:
+#Need to add a synchonous workflow into the mock solution
+#Scenario: Assert business process error message
+#Need to add locked fields
+#Scenario: Assert field not editable
+#Scenario: Assert fields not editable
