@@ -245,12 +245,10 @@
         [Then(@"I can not see the '(.*)' command on the '(.*)' subgrid")]
         public static void ThenICanNotSeeTheCommandOnTheSubgrid(string commandName, string subGridName)
         {
-            Driver
-                .Invoking(d => d.WaitUntilVisible(
+            Driver.WaitUntilVisible(
                     By.CssSelector($"div#dataSetRoot_{subGridName} button[aria-label=\"{commandName}\"]"),
-                    new TimeSpan(0, 0, 5)))
-                .Should()
-                .Throw<Exception>();
+                    new TimeSpan(0, 0, 5))
+                .Should().BeNull();
         }
 
         /// <summary>
