@@ -15,10 +15,15 @@
     <AppModuleComponent type="29" id="{d21a6986-eb11-429c-b4b1-bb747eeb0991}" />
     <AppModuleComponent type="60" id="{50687e45-f839-eb11-a813-000d3a0b97ca}" />
     <AppModuleComponent type="60" id="{6e43bd18-f839-eb11-a813-000d3a0b97ca}" />
+    <AppModuleComponent type="1" schemaName="appointment" />
+    <AppModuleComponent type="1" schemaName="email" />
     <AppModuleComponent type="1" schemaName="sb_mockrecord" />
+    <AppModuleComponent type="1" schemaName="annotation" />
+    <AppModuleComponent type="1" schemaName="phonecall" />
     <AppModuleComponent type="1" schemaName="sb_primarybusinessprocessflow" />
     <AppModuleComponent type="1" schemaName="sb_secondarybusinessprocessflow" />
     <AppModuleComponent type="1" schemaName="sb_secondarymockrecord" />
+    <AppModuleComponent type="1" schemaName="task" />
   </AppModuleComponents>
   <AppModuleRoleMaps>
     <Role id="{119f245c-3cc8-4b62-b31c-d1a046ced15d}" />

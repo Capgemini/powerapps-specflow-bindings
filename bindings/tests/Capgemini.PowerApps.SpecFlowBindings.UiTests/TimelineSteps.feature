@@ -17,8 +17,9 @@ Scenario: Add note to timeline
 Scenario: Add phone call to timeline
 	When I add a phone call to the timeline with the subject 'A subject', the description 'A description', the duration '1', and the number '07123456789'
 
-Scenario: Add post to timeline
-	When I post 'A post' to the timeline
+#Requires D365 CE app in target instance
+#Scenario: Add post to timeline
+#	When I post 'A post' to the timeline
 
 Scenario: Add task to timeline
 	When I add a task to the timeline with the subject 'A subject', the description 'A description' and the duration '1'
