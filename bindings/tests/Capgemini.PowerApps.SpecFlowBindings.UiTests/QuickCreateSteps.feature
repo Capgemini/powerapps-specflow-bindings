@@ -11,7 +11,6 @@ Scenario Outline: Enter values on a quick create
 	When I enter '<value>' into the '<column>' <type> field on the quick create
 	Then I can see a value of '<value>' in the '<column>' <type> field on the quick create
 
-#TODO: sb_parent, sb_customer
 Scenarios:
 		| column         | type           | value              |
 		| sb_text        | text           | Some text          |
@@ -22,6 +21,11 @@ Scenarios:
 		| sb_dateandtime | datetime       | 1/1/2021 13:00     |
 		| sb_dateonly    | datetime       | 1/1/2021           |
 		| sb_currency    | currency       | £10.00             |
+
+Scenario: Enter lookup on a quick create
+	Given I have created 'a record with an alias'
+	When I enter 'The referenced record' into the 'sb_parent' lookup field on the quick create
+	Then I can see a value of 'The referenced record' in the 'sb_parent' lookup field on the quick create
 
 Scenario: Enter multiple values on a quick create
 	When I enter the following into the quick create
@@ -39,7 +43,6 @@ Scenario Outline: Clear values on a quick create
 	And I clear the '<column>' <type> field on the quick create
 	Then I can see a value of '<clearedValue>' in the '<column>' <type> field on the quick create
 
-#TODO: sb_parent, sb_customer
 Scenarios:
 		| column         | type      | value          | clearedValue |
 		| sb_text        | text      | Some text      |              |
@@ -48,6 +51,12 @@ Scenarios:
 		| sb_dateandtime | datetime  | 1/1/2021 13:00 |              |
 		| sb_dateonly    | datetime  | 1/1/2021       |              |
 		| sb_currency    | currency  | £10.00         |              |
+
+Scenario: Clear lookup on a quick create
+	Given I have created 'a record with an alias'
+	When I enter 'The referenced record' into the 'sb_parent' lookup field on the quick create
+	And I clear the 'sb_parent' lookup field on the quick create
+	Then I can see a value of '' in the 'sb_parent' lookup field on the quick create
 
 Scenario: Save a quick create
 	When I save the quick create
