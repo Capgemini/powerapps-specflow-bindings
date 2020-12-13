@@ -84,6 +84,7 @@
       <RootComponent type="1" schemaName="sb_secondarymockrecord" behavior="0" />
       <RootComponent type="9" schemaName="sb_choice" behavior="0" />
       <RootComponent type="29" id="{35d6a39a-c720-4d5f-8f11-4497dff2f9e3}" behavior="0" />
+      <RootComponent type="29" id="{a35908fe-0fcd-4eb7-826c-405286de4d9d}" behavior="0" />
       <RootComponent type="29" id="{d21a6986-eb11-429c-b4b1-bb747eeb0991}" behavior="0" />
       <RootComponent type="60" id="{50687e45-f839-eb11-a813-000d3a0b97ca}" behavior="0" />
       <RootComponent type="60" id="{5cdd3da8-0b3a-eb11-a813-000d3a0b97ca}" behavior="0" />

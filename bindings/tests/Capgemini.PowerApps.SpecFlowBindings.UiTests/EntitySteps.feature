@@ -167,9 +167,17 @@ Scenario: Assert field not visible
 
 Scenario: Assert record status
 	Then the status of the record is active
-#TODO:
-#Need to add a synchonous workflow into the mock solution
-#Scenario: Assert business process error message
-#Need to add locked fields
-#Scenario: Assert field not editable
-#Scenario: Assert fields not editable
+
+Scenario: Assert business process error message
+	When I enter 'Some text' into the 'sb_name' text field on the form
+	And I enter 'true' into the 'sb_triggerbusinessprocesserror' boolean field on the form
+	And I save the record
+	Then I can see a business process error stating 'Mock business process error'
+
+Scenario: Assert field not editable
+	Then I can not edit the 'createdonbehalfby' field
+
+Scenario: Assert fields not editable
+	Then I can not edit the following fields
+		| Field             |
+		| createdonbehalfby |

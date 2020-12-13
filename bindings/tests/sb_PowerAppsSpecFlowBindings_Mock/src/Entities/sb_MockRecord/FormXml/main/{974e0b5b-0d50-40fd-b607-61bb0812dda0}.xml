@@ -108,6 +108,30 @@
                       </cell>
                     </row>
                     <row>
+                      <cell id="{e0cf27c4-5206-4a9b-8c31-a834302767c4}" locklevel="0">
+                        <labels>
+                          <label description="Trigger Business Process Error" languagecode="1033" />
+                        </labels>
+                        <control id="sb_triggerbusinessprocesserror" classid="{67FAC785-CD58-4F9F-ABB3-4B7DDC6ED5ED}" datafieldname="sb_triggerbusinessprocesserror" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{26476faa-e7b4-4ad5-b3b5-383a51b403c1}" locklevel="0">
+                        <labels>
+                          <label description="Status" languagecode="1033" />
+                        </labels>
+                        <control id="statecode" classid="{3EF39988-22BB-4F0B-BBBE-64B5A3748AEE}" datafieldname="statecode" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{c4072f8c-c5f0-47b9-a34a-8b58669a9536}" locklevel="0">
+                        <labels>
+                          <label description="Created By (Delegate)" languagecode="1033" />
+                        </labels>
+                        <control id="createdonbehalfby" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="createdonbehalfby" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
                       <cell id="{91b13336-9ee5-4bae-9748-fbcc361f96fe}" visible="false">
                         <labels>
                           <label description="Owner" languagecode="1033" />
