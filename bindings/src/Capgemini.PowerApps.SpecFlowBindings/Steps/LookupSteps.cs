@@ -55,21 +55,7 @@
             input.Click();
             input.SendKeys(searchCriteria);
             input.SendKeys(Keys.Enter);
-        }
 
-        /// <summary>
-        ///  Changes the view in the lookup field away from the default view.
-        /// </summary>
-        /// <param name="viewName">The name of the view to switch to.</param>
-        [When(@"I select the '(.*)' view in the lookup")]
-        public static void WhenISwitchLookupView(string viewName)
-        {
-            // TODO: When bug is resolved revert back to XrmApp.Lookup.SwitchView(viewName); : https://github.com/microsoft/EasyRepro/issues/948.
-
-            // XrmApp.Lookup.SwitchView(viewName);
-            Driver.WaitUntilAvailable(By.XPath(AppElements.Xpath[AppReference.Lookup.ChangeViewButton])).Click(true);
-            Driver.WaitUntilAvailable(By.XPath("//li[contains(@role,'treeitem') and contains(@class,'bu')]"));
-            Driver.WaitUntilAvailable(By.CssSelector($"li[aria-label='{viewName}']")).Click();
             Driver.WaitForTransaction();
         }
 

@@ -260,7 +260,7 @@
         {
             Driver.WaitUntilVisible(
                 By.CssSelector($"div[data-id*=\"flyoutRootNode\"] button[aria-label='{commandName}']"),
-                new TimeSpan(0, 0, 1),
+                new TimeSpan(0, 0, 10),
                 $"Could not find the {commandName} command on the flyout of the subgrid.");
         }
 

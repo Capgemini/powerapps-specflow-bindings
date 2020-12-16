@@ -20,7 +20,6 @@ Scenario: Add phone call to timeline
 #Requires D365 CE app in target instance
 #Scenario: Add post to timeline
 #	When I post 'A post' to the timeline
-
 Scenario: Add task to timeline
 	When I add a task to the timeline with the subject 'A subject', the description 'A description' and the duration '1'
 
@@ -29,4 +28,3 @@ Scenario: Add email to timeline
 		| Type | Name       |
 		| To   | John Smith |
 		| CC   | Jane Doe   |
-		| BCC  | Joe Bloggs |

@@ -26,7 +26,7 @@ Scenario: Switch view in a lookup
 
 Scenario: Select a related entity in a lookup
 	When I search for '*' in the 'sb_customer' lookup
-	And I select the related 'contact' entity in the lookup
+	And I select the related 'Contacts' entity in the lookup
 
 Scenario: Assert lookup search results only contain records the given names
 	Given I have created 'a secondary mock record'

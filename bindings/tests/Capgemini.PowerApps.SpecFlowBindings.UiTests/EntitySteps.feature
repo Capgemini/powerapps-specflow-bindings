@@ -26,7 +26,7 @@ Scenarios:
 		| column         | type           | value              |
 		| sb_text        | text           | Some text          |
 		| sb_number      | numeric        | 10                 |
-		| sb_yesno       | boolean        | false              |
+		| sb_yesno       | boolean        | true               |
 		| sb_choice      | optionset      | Option A           |
 		| sb_choices     | multioptionset | Option A, Option B |
 		| sb_dateandtime | datetime       | 1/1/2021 13:00     |
@@ -40,7 +40,6 @@ Scenario: Enter lookup on a form
 
 Scenario Outline: Enter values on a form header
 	When I enter '<value>' into the '<column>' <type> header field on the form
-	Then I can see a value of '<value>' in the '<column>' <type> field
 
 Scenarios:
 		| column               | type      | value          |
@@ -61,8 +60,6 @@ Scenario: Enter multiple values on a form
 		| Value     | Field           | Type    | Location     |
 		| Some text | sb_text         | text    | field        |
 		| 10        | sb_headernumber | numeric | header field |
-	Then I can see a value of 'Some text' in the 'sb_text' text field
-	And I can see a value of '10' in the 'sb_headernumber' numeric field
 
 Scenario Outline: Clear field values
 	When I enter '<value>' into the '<column>' <type> field on the form
@@ -70,13 +67,14 @@ Scenario Outline: Clear field values
 	Then I can see a value of '<clearedValue>' in the '<column>' <type> field
 
 Scenarios:
-		| column         | type      | value          | clearedValue |
-		| sb_text        | text      | Some text      |              |
-		| sb_number      | numeric   | 10             |              |
-		| sb_choice      | optionset | Option A       | --Select--   |
-		| sb_dateandtime | datetime  | 1/1/2021 13:00 |              |
-		| sb_dateonly    | datetime  | 1/1/2021       |              |
-		| sb_currency    | currency  | £10.00         |              |
+		| column         | type           | value              | clearedValue |
+		| sb_text        | text           | Some text          |              |
+		| sb_number      | numeric        | 10                 |              |
+		| sb_choice      | optionset      | Option A           | --Select--   |
+		| sb_choices     | multioptionset | Option A, Option B |              |
+		| sb_dateandtime | datetime       | 1/1/2021 13:00     |              |
+		| sb_dateonly    | datetime       | 1/1/2021           |              |
+		| sb_currency    | currency       | £10.00             |              |
 
 Scenario: Clear lookup value
 	Given I have created 'a secondary mock record'
@@ -113,7 +111,6 @@ Scenario: Assign to a user or team
 	And I have created 'a secondary mock record'
 	And I have opened 'the secondary mock record'
 	When I assign the record to a team named 'A team'
-	Then I can see a value of 'A team' in the 'ownerid' lookup field
 
 Scenario: Switch process
 	Given I have created 'a record with a business process flow'
@@ -127,13 +124,13 @@ Scenario: Assert a field is required
 	Then the 'sb_name' field is mandatory
 
 Scenario Outline: Assert fom notification message
-	Then I can see a form notification stating 'A mock <type> form notification'
+	Then I can see <type> form notification stating '<text>'
 
 Scenarios:
-		| type    |
-		| info    |
-		| warning |
-		| error   |
+		| type      | text                             |
+		| an info   | A mock info form notification    |
+		| a warning | A mock warning form notification |
+		| an error  | A mock error form notification   |
 
 Scenario: Assert header title
 	Then I can see a value of 'New Mock Record' as the header title

@@ -86,7 +86,7 @@
         /// </summary>
         /// <param name="expectedValue">The expected value.</param>
         /// <param name="field">The field name.</param>
-        [Then("I can see a value of '(.*)' in the '(.*)' (?:currency|numeric|text|boolean|datetime) field on the business process flow")]
+        [Then("I can see a value of '(.*)' in the '(.*)' (?:currency|numeric|text) field on the business process flow")]
         public static void ThenICanSeeAValueOfInTheFieldOnTheBusinessProcessFlow(string expectedValue, string field)
         {
             XrmApp.Entity.GetValue(field).Should().Be(expectedValue);
@@ -120,9 +120,9 @@
         /// <param name="expectedValue">The expected value.</param>
         /// <param name="field">The field name.</param>
         [Then("I can see a value of '(true|false)' in the '(.*)' boolean field on the business process flow")]
-        public static void ThenICanSeeAValueOfInTheBooleanFieldOnTheBusinessProcessFlow(bool expectedValue, string field)
+        public static void ThenICanSeeAValueOfInTheBooleanFieldOnTheBusinessProcessFlow(bool expectedValue, BooleanItem field)
         {
-            bool.Parse(XrmApp.BusinessProcessFlow.GetValue(field)).Should().Be(expectedValue);
+            XrmApp.BusinessProcessFlow.GetValue(field).Should().Be(expectedValue);
         }
 
         /// <summary>

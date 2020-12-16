@@ -6,6 +6,7 @@
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using FluentAssertions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
+    using Microsoft.Dynamics365.UIAutomation.Api.UCI.DTO;
     using Microsoft.Dynamics365.UIAutomation.Browser;
     using OpenQA.Selenium;
     using TechTalk.SpecFlow;
@@ -99,11 +100,21 @@
         }
 
         /// <summary>
-        /// Clears the value for the optionset field.
+        /// Clears the value for the option set field.
         /// </summary>
         /// <param name="field">The field.</param>
         [When(@"I clear the '(.*)' optionset field")]
         public static void WhenIClearTheOptionSetField(OptionSet field)
+        {
+            XrmApp.Entity.ClearValue(field);
+        }
+
+        /// <summary>
+        /// Clears the value for the multi-select option set field.
+        /// </summary>
+        /// <param name="field">The field.</param>
+        [When(@"I clear the '(.*)' multioptionset field")]
+        public static void WhenIClearTheOptionSetField(MultiValueOptionSet field)
         {
             XrmApp.Entity.ClearValue(field);
         }
@@ -231,13 +242,24 @@
         }
 
         /// <summary>
+        /// Asserts that a value is shown in a multi-select option set field.
+        /// </summary>
+        /// <param name="expectedValue">The expected value.</param>
+        /// <param name="field">The field name.</param>
+        [Then("I can see a value of '(.*)' in the '(.*)' multioptionset field")]
+        public static void ThenICanSeeAValueOfInTheOptionSetField(string[] expectedValue, MultiValueOptionSet field)
+        {
+            XrmApp.Entity.GetValue(field).Values.Should().Equal(expectedValue);
+        }
+
+        /// <summary>
         /// Asserts that a value is shown in a lookup field.
         /// </summary>
         /// <param name="expectedValue">The expected value.</param>
         /// <param name="field">The field name.</param>
         /// <param name="fieldLocation">Where the field is located.</param>
         [Then("I can see a value of '(.*)' in the '(.*)' lookup (field|header field)")]
-        public static void ThenICanSeeAValueOfInTheOptionSetField(string expectedValue, LookupItem field, string fieldLocation)
+        public static void ThenICanSeeAValueOfInTheLookupField(string expectedValue, LookupItem field, string fieldLocation)
         {
             string actualValue = fieldLocation == "field" ? XrmApp.Entity.GetValue(field) : XrmApp.Entity.GetHeaderValue(field);
             actualValue.Should().Be(expectedValue);
@@ -278,8 +300,8 @@
         /// <param name="expectedValue">The expected value.</param>
         /// <param name="field">The field name.</param>
         /// <param name="fieldLocation">Where the field is located.</param>
-        [Then(@"I can see a value of '((?:0?[1-9]|[12][0-9]|3[01])[\/\-](?:0?[1-9]|1[012])[\/\-]\d{4}(?: \d{1,2}[:-]\d{2}(?:[:-]\d{2,3})*)?)' in the '(.*)' datetime (field|header field)")]
-        public static void ThenICanSeeAValueOfInTheDateTimeField(DateTime expectedValue, DateTimeControl field, string fieldLocation)
+        [Then(@"I can see a value of '(.*)' in the '(.*)' datetime (field|header field)")]
+        public static void ThenICanSeeAValueOfInTheDateTimeField(DateTime? expectedValue, DateTimeControl field, string fieldLocation)
         {
             var actualValue = fieldLocation == "field" ? XrmApp.Entity.GetValue(field) : XrmApp.Entity.GetHeaderValue(field);
             actualValue.Should().Be(expectedValue);
@@ -308,13 +330,33 @@
         }
 
         /// <summary>
-        /// Asserts that a form notification can be seen with the given message.
+        /// Asserts that an info form notification can be seen with the given message.
         /// </summary>
         /// <param name="message">The message of the notification.</param>
-        [Then(@"I can see a form notification stating '(.*)'")]
-        public static void ThenICanSeeAFormNotificationStating(string message)
+        [Then(@"I can see an info form notification stating '(.*)'")]
+        public static void ThenICanSeeAnInfoFormNotificationStating(string message)
         {
-            XrmApp.Entity.GetFormNotifications().Should().Contain(message);
+            XrmApp.Entity.GetFormNotifications().Should().Contain(formNotification => formNotification.Type == FormNotificationType.Information && formNotification.Message == message);
+        }
+
+        /// <summary>
+        /// Asserts that a warning form notification can be seen with the given message.
+        /// </summary>
+        /// <param name="message">The message of the notification.</param>
+        [Then(@"I can see a warning form notification stating '(.*)'")]
+        public static void ThenICanSeeAWarningFormNotificationStating(string message)
+        {
+            XrmApp.Entity.GetFormNotifications().Should().Contain(formNotification => formNotification.Type == FormNotificationType.Warning && formNotification.Message == message);
+        }
+
+        /// <summary>
+        /// Asserts that an error form notification can be seen with the given message.
+        /// </summary>
+        /// <param name="message">The message of the notification.</param>
+        [Then(@"I can see an error form notification stating '(.*)'")]
+        public static void ThenICanSeeAnErrorFormNotificationStating(string message)
+        {
+            XrmApp.Entity.GetFormNotifications().Should().Contain(formNotification => formNotification.Type == FormNotificationType.Error && formNotification.Message == message);
         }
 
         /// <summary>
@@ -448,8 +490,7 @@
             switch (fieldType)
             {
                 case "multioptionset":
-                    XrmApp.Entity.SetMultiSelectOptionSetValue(
-                        Driver,
+                    XrmApp.Entity.SetValue(
                         new MultiValueOptionSet()
                         {
                             Name = fieldName,
@@ -500,19 +541,6 @@
         {
             switch (fieldType)
             {
-                case "multioptionset":
-                    XrmApp.Entity.SetMultiSelectOptionSetValue(
-                        Driver,
-                        new MultiValueOptionSet()
-                        {
-                            Name = fieldName,
-                            Values = fieldValue
-                                        .Split(',')
-                                        .Select(v => v.Trim())
-                                        .ToArray(),
-                        },
-                        true);
-                    break;
                 case "optionset":
                     XrmApp.Entity.SetHeaderValue(new OptionSet()
                     {
