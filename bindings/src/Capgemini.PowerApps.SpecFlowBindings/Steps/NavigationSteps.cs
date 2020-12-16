@@ -1,6 +1,7 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Steps
 {
     using FluentAssertions;
+    using Microsoft.Dynamics365.UIAutomation.Browser;
     using OpenQA.Selenium;
     using TechTalk.SpecFlow;
 
@@ -77,7 +78,7 @@
         [Then(@"I see the '(.*)' area")]
         public static void ThenICanSeeTheArea(string area)
         {
-            var element = Driver.FindElement(By.Id("areaSwitcherContainer"));
+            var element = Driver.WaitUntilAvailable(By.Id("areaSwitcherContainer"));
             element.Text.Should().Contain(area);
         }
 
@@ -88,7 +89,7 @@
         [Then(@"I see the '(.*)' subarea")]
         public static void ThenICanSeeTheSubArea(string subArea)
         {
-            var element = Driver.FindElement(By.XPath($@"//img[@title='{subArea}']"));
+            var element = Driver.WaitUntilAvailable(By.XPath($@"//img[@title='{subArea}']"));
             element.Text.Should().NotBeNull();
         }
 
@@ -99,7 +100,7 @@
         [Then(@"I see the '(.*)' group")]
         public static void ThenICanSeeTheGroup(string groupName)
         {
-            var element = Driver.FindElement(By.XPath($@"//span[@data-id='sitemap-sitemapAreaGroup-{groupName.Replace(" ",string.Empty)}']"));
+            var element = Driver.WaitUntilAvailable(By.XPath($@"//span[@data-id='sitemap-sitemapAreaGroup-{groupName.Replace(" ",string.Empty)}']"));
             element.Text.Should().Contain(groupName);
         }
     }
