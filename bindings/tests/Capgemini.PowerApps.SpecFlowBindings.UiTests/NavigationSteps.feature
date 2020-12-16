@@ -20,3 +20,13 @@ Scenario: Open an area
 
 Scenario: Sign out
 	When I sign out
+
+Scenario: View a area
+	Then I see the 'Primary Area' area
+	
+Scenario: View a group
+	Then I see the 'Primary Group' group	
+
+Scenario: View a subarea
+	Then I see the 'Mock Records' subarea
+	
