@@ -21,12 +21,12 @@ Scenario: Open an area
 Scenario: Sign out
 	When I sign out
 
-Scenario: View a area
+Scenario: Assert an area is visible
 	Then I see the 'Primary Area' area
 	
-Scenario: View a group
+Scenario: Assert a group is visible
 	Then I see the 'Primary Group' group	
 
-Scenario: View a subarea
+Scenario: Assert a subarea is visible
 	Then I see the 'Mock Records' subarea
 	
