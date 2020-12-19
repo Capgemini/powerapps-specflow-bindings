@@ -1,5 +1,8 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Steps
 {
+    using FluentAssertions;
+    using Microsoft.Dynamics365.UIAutomation.Browser;
+    using OpenQA.Selenium;
     using TechTalk.SpecFlow;
 
     /// <summary>
@@ -66,6 +69,39 @@
         public static void WhenISignOut()
         {
             XrmApp.Navigation.SignOut();
+        }
+
+        /// <summary>
+        /// Gets the area.
+        /// </summary>
+        /// <param name="area">The area name.</param>
+        [Then(@"I see the '(.*)' area")]
+        public static void ThenICanSeeTheArea(string area)
+        {
+            var element = Driver.WaitUntilAvailable(By.Id("areaSwitcherContainer"));
+            element.Text.Should().Contain(area);
+        }
+
+        /// <summary>
+        /// Gets the sub-area.
+        /// </summary>
+        /// <param name="subArea">The area name.</param>
+        [Then(@"I see the '(.*)' subarea")]
+        public static void ThenICanSeeTheSubArea(string subArea)
+        {
+            var element = Driver.WaitUntilAvailable(By.XPath($@"//img[@title='{subArea}']"));
+            element.Text.Should().NotBeNull();
+        }
+
+        /// <summary>
+        /// Gets the sub-area.
+        /// </summary>
+        /// <param name="groupName">The group.</param>
+        [Then(@"I see the '(.*)' group")]
+        public static void ThenICanSeeTheGroup(string groupName)
+        {
+            var element = Driver.WaitUntilAvailable(By.XPath($@"//span[@data-id='sitemap-sitemapAreaGroup-{groupName.Replace(" ",string.Empty)}']"));
+            element.Text.Should().Contain(groupName);
         }
     }
 }
