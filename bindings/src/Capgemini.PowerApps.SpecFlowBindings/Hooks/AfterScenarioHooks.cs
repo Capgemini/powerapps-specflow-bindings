@@ -32,7 +32,7 @@
             {
                 TestDriver.DeleteTestData();
             }
-            catch (WebDriverException ex)
+            catch (WebDriverException)
             {
                 // Ignore - tests might have failed before driver was initialised.
             }
