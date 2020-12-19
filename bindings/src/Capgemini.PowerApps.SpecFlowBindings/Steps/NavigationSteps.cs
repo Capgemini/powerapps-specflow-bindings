@@ -78,8 +78,10 @@
         [Then(@"I see the '(.*)' area")]
         public static void ThenICanSeeTheArea(string area)
         {
-            var element = Driver.WaitUntilAvailable(By.Id("areaSwitcherContainer"));
-            element.Text.Should().Contain(area);
+            Driver
+                .WaitUntilAvailable(By.Id("areaSwitcherContainer"))
+                .Text
+                .Should().Contain(area);
         }
 
         /// <summary>
@@ -89,8 +91,10 @@
         [Then(@"I see the '(.*)' subarea")]
         public static void ThenICanSeeTheSubArea(string subArea)
         {
-            var element = Driver.WaitUntilAvailable(By.XPath($@"//img[@title='{subArea}']"));
-            element.Text.Should().NotBeNull();
+            Driver
+                .WaitUntilAvailable(By.XPath($"//img[@title='{subArea}']"))
+                .Text
+                .Should().NotBeNull();
         }
 
         /// <summary>
@@ -100,8 +104,12 @@
         [Then(@"I see the '(.*)' group")]
         public static void ThenICanSeeTheGroup(string groupName)
         {
-            var element = Driver.WaitUntilAvailable(By.XPath($@"//span[@data-id='sitemap-sitemapAreaGroup-{groupName.Replace(" ",string.Empty)}']"));
-            element.Text.Should().Contain(groupName);
+            var groupNameWithoutWhitespace = groupName?.Replace(" ", string.Empty);
+
+            Driver
+                .WaitUntilAvailable(By.XPath($"//span[@data-id='sitemap-sitemapAreaGroup-{groupNameWithoutWhitespace}']"))
+                .Text
+                .Should().Contain(groupName);
         }
     }
 }
