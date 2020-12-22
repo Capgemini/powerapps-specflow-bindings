@@ -54,7 +54,7 @@ Scenarios:
 		| sb_number      | numeric        | 10                 |
 		| sb_yesno       | boolean        | Yes                |
 		| sb_choice      | optionset      | Option A           |
-		| sb_choices     | multioptionset | Option A, Option B |
+		| sb_choices     | multioptionset | Option A; Option B |
 		| sb_dateandtime | datetime       | 01/01/2021 13:00   |
 		| sb_dateonly    | datetime       | 31/01/2021         |
 		| sb_currency    | currency       | £10.00             |

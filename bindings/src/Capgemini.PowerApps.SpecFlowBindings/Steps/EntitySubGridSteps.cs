@@ -201,7 +201,7 @@
         /// <param name="subGridName">The name of the subgrid.</param>
         /// <param name="fieldValue">The expected value of the field.</param>
         /// <param name="fieldName">The name of the field.</param>
-        [Then(@"the '(.*)' subgrid contains a record with '(.*)' in the '(.*)' (?:text|numeric|currency|lookup|datetime|optionset) field")]
+        [Then(@"the '(.*)' subgrid contains a record with '(.*)' in the '(.*)' (?:text|numeric|currency|lookup|datetime|optionset|multioptionset|boolean) field")]
         public static void ThenTheSubgridContainsRecordsWithInTheField(string subGridName, string fieldValue, string fieldName)
         {
             XrmApp.Entity.SubGrid
