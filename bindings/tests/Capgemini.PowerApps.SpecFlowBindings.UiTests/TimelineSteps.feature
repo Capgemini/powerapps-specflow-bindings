@@ -24,7 +24,7 @@ Scenario: Add task to timeline
 	When I add a task to the timeline with the subject 'A subject', the description 'A description' and the duration '1'
 
 Scenario: Add email to timeline
+	Given I have created 'a contact'
 	When I add an email to the timeline with the subject 'A subject', the duration '1', and the following contacts
 		| Type | Name       |
 		| To   | John Smith |
-		| CC   | Jane Doe   |
