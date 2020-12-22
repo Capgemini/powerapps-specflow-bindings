@@ -2,6 +2,7 @@
 {
     using Microsoft.Xrm.Sdk;
     using Microsoft.Xrm.Tooling.Connector;
+    using System.ServiceModel;
     using TechTalk.SpecFlow;
 
     /// <summary>
@@ -14,8 +15,8 @@
         /// Enables categorized search for the given entity.
         /// </summary>
         /// <param name="entityLogicalName">The name of the entity.</param>
-        [Given("I the '(.*)' entity is enabled for categorized search")]
-        public static void WhenICloseTheStageOfTheBusinessProcessFlow(string entityLogicalName)
+        [Given("the '(.*)' entity is enabled for categorized search")]
+        public static void GivenTheEntityIsEnabledForCategorizedSearch(string entityLogicalName)
         {
             using (var serviceClient = GetServiceClient())
             {
@@ -23,7 +24,19 @@
                 request.Parameters["EntityGroupName"] = "Mobile Client Search";
                 request.Parameters["EntityGroupConfiguration"] = new QuickFindConfigurationCollection { new QuickFindConfiguration(entityLogicalName) };
 
-                serviceClient.Execute(request);
+                try
+                {
+                    serviceClient.Execute(request);
+                }
+                catch (FaultException<OrganizationServiceFault> ex)
+                {
+                    // Invalid search entity
+                    if (ex.Detail.ErrorCode == -2147089919)
+                    {
+                        // Already configured as a search entity
+                        return;
+                    }
+                }
             }
         }
 
