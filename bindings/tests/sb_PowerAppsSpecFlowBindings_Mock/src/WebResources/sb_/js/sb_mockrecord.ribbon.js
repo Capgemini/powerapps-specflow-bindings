@@ -17,3 +17,11 @@ function mockLookupDialog(defaultEntityType, additionalEntityTypes, allowMultiSe
 
     Xrm.Utility.lookupObjects(lookupOptions);
 }
+
+function mockErrorDialog() {
+    Xrm.Navigation.openErrorDialog({ message: 'A mock error message.' })
+}
+
+function mockConfirmationDialog() {
+    Xrm.Navigation.openConfirmDialog({ text: 'A mock confirmation message.' });
+}
