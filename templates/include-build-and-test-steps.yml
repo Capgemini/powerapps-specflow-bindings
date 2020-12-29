@@ -85,6 +85,8 @@ jobs:
             !**\*TestAdapter.dll
             !**\obj\**
           searchFolder: bindings\tests\Capgemini.PowerApps.SpecFlowBindings.UiTests
+          rerunFailedTests: true
+          rerunMaxAttempts: 2
         continueOnError: true
         env:
           POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME: $(User ADO Integration Username)
