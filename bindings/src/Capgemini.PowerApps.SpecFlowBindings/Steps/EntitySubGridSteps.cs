@@ -259,7 +259,7 @@
         public static void ThenICanSeeTheCommandOnTheFlyoutOfTheSubgrid(string commandName)
         {
             Driver.WaitUntilVisible(
-                By.CssSelector($"div[data-id*=\"flyoutRootNode\"] button[aria-label='{commandName}']"),
+                By.CssSelector($"#__flyoutRootNode button[aria-label$='{commandName}']"),
                 new TimeSpan(0, 0, 10),
                 $"Could not find the {commandName} command on the flyout of the subgrid.");
         }
@@ -273,7 +273,7 @@
         {
             Driver
                 .Invoking(d => d.WaitUntilVisible(
-                    By.CssSelector($"div[data-id*=\"flyoutRootNode\"] button[aria-label=\"{commandName}\"]"),
+                    By.CssSelector($"#__flyoutRootNode button[aria-label$=\"{commandName}\"]"),
                     new TimeSpan(0, 0, 1),
                     $"Could not find the {commandName} command on the flyout of the subgrid."))
                 .Should()
