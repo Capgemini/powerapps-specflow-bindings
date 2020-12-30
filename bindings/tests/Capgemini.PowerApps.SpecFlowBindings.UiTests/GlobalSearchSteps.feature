@@ -6,7 +6,7 @@
 Background:
 	Given I am logged in to the 'Mock App' app as 'an admin'
 	And I have created 'a record configured for global search'
-	And the 'Mock Record' entity is enabled for categorized search
+	And the 'sb_mockrecord' entity is enabled for categorized search
 
 Scenario: Perform a global search
 	When I search globally using the filter 'Record'
