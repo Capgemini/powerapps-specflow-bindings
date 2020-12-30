@@ -102,20 +102,16 @@ jobs:
         displayName: Detect security and licence issues
         inputs:
           cwd: '$(Build.SourcesDirectory)'
-      # Using custom because pack produces legacy symbols packages
-      - task: NuGetCommand@2
-        displayName: Pack NuGet package
+      - task: DotNetCoreCLI@2
         inputs:
-          command: custom
-          arguments: 'pack "./bindings\src\Capgemini.PowerApps.SpecFlowBindings\Capgemini.PowerApps.SpecFlowBindings.csproj" -Prop "Configuration=$(buildConfiguration)" -Version "$(GitVersion.NuGetVersionV2)" -OutputDirectory "$(Build.ArtifactStagingDirectory)/out" -Symbols -SymbolPackageFormat snupkg'
-      - task: PowerShell@2
-        displayName: Remove invalid symbols package files
-        inputs:
-          targetType: filePath
-          filePath: scripts/Remove-InvalidSymbolsPackageFiles.ps1
-          arguments: '-SymbolPackageDirectory "$(Build.ArtifactStagingDirectory)/out"'
-          errorActionPreference: stop
-          failOnStderr: true
+          command: pack
+          projects: bindings\src\Capgemini.PowerApps.SpecFlowBindings\Capgemini.PowerApps.SpecFlowBindings.csproj
+          modifyOutputPath: true 
+          versioningScheme: byEnvVar
+          versionEnvVar: GitVersion.NuGetVersionV2
+          includesymbols: false
+          buildProperties: Configuration=$(buildConfiguration)
+          packDirectory: $(Build.ArtifactStagingDirectory)/out
       - publish: $(Build.ArtifactStagingDirectory)/out
         displayName: Publish NuGet artifact
         artifact: Capgemini.PowerApps.SpecFlowBindings
