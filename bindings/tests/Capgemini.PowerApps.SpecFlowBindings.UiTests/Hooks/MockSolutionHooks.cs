@@ -36,19 +36,6 @@ namespace Capgemini.PowerApps.SpecFlowBindings.UiTests.Hooks
             }
         }
 
-        [BeforeTestRun]
-        public static void ConfigureMockRecordForCategorizedSearch()
-        {
-            using (var serviceClient = GetServiceClient())
-            {
-                var request = new OrganizationRequest("SaveEntityGroupConfiguration");
-                request.Parameters["EntityGroupName"] = "Mobile Client Search";
-                request.Parameters["EntityGroupConfiguration"] = new QuickFindConfigurationCollection { new QuickFindConfiguration("sb_mockrecord") };
-
-                serviceClient.Execute(request);
-            }
-        }
-
         /// <summary>
         /// Uninstalls the mock solution. 
         /// You may wish to comment out this binding if you're running the tests locally to save time.
@@ -56,25 +43,25 @@ namespace Capgemini.PowerApps.SpecFlowBindings.UiTests.Hooks
         [AfterTestRun]
         public static void RemoveMockSolution()
         {
-           using (var serviceClient = GetServiceClient())
-           {
-               var query = new QueryByAttribute("solution");
-               query.AddAttributeValue("uniquename", SolutionName);
-               query.ColumnSet = new ColumnSet(false);
+            using (var serviceClient = GetServiceClient())
+            {
+                var query = new QueryByAttribute("solution");
+                query.AddAttributeValue("uniquename", SolutionName);
+                query.ColumnSet = new ColumnSet(false);
 
-               var solutionId = serviceClient.RetrieveMultiple(query).Entities.Select(e => e.Id).FirstOrDefault();
-               if (solutionId == default)
-               {
-                   return;
-               }
+                var solutionId = serviceClient.RetrieveMultiple(query).Entities.Select(e => e.Id).FirstOrDefault();
+                if (solutionId == default)
+                {
+                    return;
+                }
 
-               serviceClient.Delete("solution", solutionId);
+                serviceClient.Delete("solution", solutionId);
 
-               if (serviceClient.LastCrmException != null)
-               {
-                   throw serviceClient.LastCrmException;
-               }
-           }
+                if (serviceClient.LastCrmException != null)
+                {
+                    throw serviceClient.LastCrmException;
+                }
+            }
         }
 
         private static CrmServiceClient GetServiceClient()
