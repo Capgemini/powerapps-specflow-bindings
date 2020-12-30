@@ -12,6 +12,7 @@
     <PackageId>Capgemini.PowerApps.SpecFlowBindings</PackageId>
     <PackageProjectUrl>https://github.com/Capgemini/powerapps-specflow-bindings</PackageProjectUrl>
     <PackageTags>powerapps specflow bindings automated-testing testing</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <DebugType>portable</DebugType>
   </PropertyGroup>
@@ -100,6 +101,7 @@
     </Content>
     <Content Include="content\**">
       <Pack>true</Pack>
+      <PackagePath>content</PackagePath>
     </Content>
     <None Include="Capgemini.PowerApps.SpecFlowBindings.ruleset" />
     <None Include="icon.png" Pack="true" PackagePath="\" />
