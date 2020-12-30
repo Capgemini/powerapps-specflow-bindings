@@ -3,7 +3,7 @@
     using System.IO;
     using System.Reflection;
     using Capgemini.PowerApps.SpecFlowBindings;
-    using NUnit.Framework;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using TechTalk.SpecFlow;
 
     /// <summary>
@@ -13,14 +13,16 @@
     public class AfterScenarioHooks : PowerAppsStepDefiner
     {
         private readonly ScenarioContext scenarioContext;
+        private readonly TestContext testContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AfterScenarioHooks"/> class.
         /// </summary>
         /// <param name="scenarioContext">The scenario context.</param>
-        public AfterScenarioHooks(ScenarioContext scenarioContext)
+        public AfterScenarioHooks(ScenarioContext scenarioContext, TestContext testContext)
         {
             this.scenarioContext = scenarioContext;
+            this.testContext = testContext;
         }
 
         /// <summary>
@@ -35,7 +37,7 @@
                 var screenshotsFolder = Path.Combine(rootFolder, "screenshots");
 
                 var fileName = string.Concat(this.scenarioContext.ScenarioInfo.Title.Split(Path.GetInvalidFileNameChars()));
-                TestContext.AddTestAttachment(Path.Combine(screenshotsFolder, $"{fileName}.jpg"), "Screenshot");
+                this.testContext.AddResultFile(Path.Combine(screenshotsFolder, $"{fileName}.jpg"));
             }
         }
     }

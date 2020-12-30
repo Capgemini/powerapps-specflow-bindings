@@ -1,3 +1,3 @@
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-[assembly: Parallelizable(ParallelScope.Fixtures)]
+[assembly: Parallelize(Workers = 4, Scope = ExecutionScope.ClassLevel)]
