@@ -192,7 +192,14 @@
         [When(@"I save the record")]
         public static void WhenISaveTheRecord()
         {
-            XrmApp.Entity.Save();
+            try
+            {
+                XrmApp.Entity.Save();
+            }
+            catch (InvalidOperationException)
+            {
+                // Ignore business process errors on save to allow assertions against these if required.
+            }
         }
 
         /// <summary>
