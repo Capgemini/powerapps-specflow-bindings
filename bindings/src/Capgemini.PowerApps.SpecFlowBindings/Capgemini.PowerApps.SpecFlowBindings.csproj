@@ -27,59 +27,30 @@
     <Copy SourceFiles="../../../driver/dist/driver.js" DestinationFolder="bin/lib" />
   </Target>
   <ItemGroup>
-    <PackageReference Include="BoDi" Version="1.4.1" />
-    <PackageReference Include="Cucumber.Messages" Version="6.0.1" />
     <PackageReference Include="Dynamics365.UIAutomation.Api" Version="9.1.0.27021" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
-    <PackageReference Include="Gherkin" Version="6.0.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.7.0" />
     <PackageReference Include="Microsoft.Build.Tasks.Git" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.1">
       <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.VersionCheckAnalyzer" Version="3.0.0">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeQuality.Analyzers" Version="3.0.0">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.2.26" />
-    <PackageReference Include="Microsoft.NetCore.Analyzers" Version="3.0.0">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NetFramework.Analyzers" Version="3.0.0">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.2.29" />
     <PackageReference Include="Microsoft.SourceLink.Common" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
-    <PackageReference Include="Otp.NET" Version="1.2.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Selenium.Support" Version="3.141.0" />
     <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
     <PackageReference Include="SpecFlow" Version="3.5.14" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="System.IO" Version="4.3.0" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
-    <PackageReference Include="System.Runtime" Version="4.3.0" />
-    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
-    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.0" />
-    <PackageReference Include="System.Security.Cryptography.Encoding" Version="4.3.0" />
-    <PackageReference Include="System.Security.Cryptography.Primitives" Version="4.3.0" />
-    <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.0" />
-    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.4.0" />
-    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
-    <PackageReference Include="Utf8Json" Version="1.3.7" />
-    <PackageReference Include="YamlDotNet" Version="8.1.2" />
+    <PackageReference Include="YamlDotNet" Version="9.1.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="build\**">
