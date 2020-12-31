@@ -26,12 +26,11 @@ jobs:
           updateAssemblyInfo: false
       - pwsh: Write-Host "##vso[task.setvariable variable=SemVer;isOutput=true]$(GitVersion.SemVer)"
         name: OutputSemVerTask
-      - task: NuGetToolInstaller@1
-        displayName: Install NuGet
-      - task: NuGetCommand@2
+      - task: DotNetCoreCLI@2
         displayName: Restore NuGet packages
         inputs:
-          restoreSolution: '$(solution)'
+          command: restore
+          projects: '**/*.csproj'
       - task: Npm@1
         displayName: Restore npm packages
         inputs:
@@ -103,9 +102,10 @@ jobs:
         inputs:
           cwd: '$(Build.SourcesDirectory)'
       - task: DotNetCoreCLI@2
+        displayName: Pack NuGet package
         inputs:
           command: pack
-          projects: bindings\src\Capgemini.PowerApps.SpecFlowBindings\Capgemini.PowerApps.SpecFlowBindings.csproj
+          packagesToPack: bindings/src/**/*.csproj
           modifyOutputPath: true 
           versioningScheme: byEnvVar
           versionEnvVar: GitVersion.NuGetVersionV2
