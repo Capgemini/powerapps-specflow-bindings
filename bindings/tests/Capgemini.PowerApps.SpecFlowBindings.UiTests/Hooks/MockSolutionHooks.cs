@@ -1,8 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
-using Microsoft.Xrm.Tooling.Connector;
+﻿using Microsoft.Xrm.Tooling.Connector;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using TechTalk.SpecFlow;
 
@@ -28,34 +25,6 @@ namespace Capgemini.PowerApps.SpecFlowBindings.UiTests.Hooks
             using (var serviceClient = GetServiceClient())
             {
                 serviceClient.ImportSolutionToCrm(SolutionPath, out var importId);
-
-                if (serviceClient.LastCrmException != null)
-                {
-                    throw serviceClient.LastCrmException;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Uninstalls the mock solution. 
-        /// You may wish to comment out this binding if you're running the tests locally to save time.
-        /// </summary>
-        [AfterTestRun]
-        public static void RemoveMockSolution()
-        {
-            using (var serviceClient = GetServiceClient())
-            {
-                var query = new QueryByAttribute("solution");
-                query.AddAttributeValue("uniquename", SolutionName);
-                query.ColumnSet = new ColumnSet(false);
-
-                var solutionId = serviceClient.RetrieveMultiple(query).Entities.Select(e => e.Id).FirstOrDefault();
-                if (solutionId == default)
-                {
-                    return;
-                }
-
-                serviceClient.Delete("solution", solutionId);
 
                 if (serviceClient.LastCrmException != null)
                 {
