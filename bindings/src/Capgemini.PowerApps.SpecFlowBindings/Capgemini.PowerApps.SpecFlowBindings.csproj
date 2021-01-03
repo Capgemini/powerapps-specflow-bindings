@@ -57,6 +57,10 @@
       <Pack>true</Pack>
       <PackagePath>build</PackagePath>
     </Content>
+    <Content Include="bin\lib\driver.js">
+      <Pack>true</Pack>
+      <PackagePath>build</PackagePath>
+    </Content>
     <Content Include="content\**">
       <Pack>true</Pack>
       <PackagePath>content</PackagePath>
