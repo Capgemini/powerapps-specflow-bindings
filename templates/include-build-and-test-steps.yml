@@ -12,6 +12,7 @@ jobs:
         value: 'Release'
     # build and tests executed in single job in order to allow SonarCloud to capture coverage
     displayName: Build and Test
+    timeoutInMinutes: 180 
     steps:
       - task: gitversion/setup@0
         displayName: Install GitVersion
@@ -25,12 +26,11 @@ jobs:
           updateAssemblyInfo: false
       - pwsh: Write-Host "##vso[task.setvariable variable=SemVer;isOutput=true]$(GitVersion.SemVer)"
         name: OutputSemVerTask
-      - task: NuGetToolInstaller@1
-        displayName: Install NuGet
-      - task: NuGetCommand@2
+      - task: DotNetCoreCLI@2
         displayName: Restore NuGet packages
         inputs:
-          restoreSolution: '$(solution)'
+          command: restore
+          projects: '**/*.csproj'
       - task: Npm@1
         displayName: Restore npm packages
         inputs:
@@ -47,7 +47,7 @@ jobs:
           projectVersion: '$(GitVersion.SemVer)'
           extraProperties: |
             sonar.javascript.lcov.reportPaths=driver/test_results/coverage/lcov/lcov.info
-            sonar.coverage.exclusions=**\*spec.ts
+            sonar.coverage.exclusions=**\*spec.ts, bindings/tests/**/*
             sonar.eslint.reportPaths=$(Build.SourcesDirectory)/driver/test_results/analysis/eslint.json
       - task: VSBuild@1
         displayName: Build solution
@@ -84,6 +84,8 @@ jobs:
             !**\*TestAdapter.dll
             !**\obj\**
           searchFolder: bindings\tests\Capgemini.PowerApps.SpecFlowBindings.UiTests
+          rerunFailedTests: true
+          rerunMaxAttempts: 2
         continueOnError: true
         env:
           POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME: $(User ADO Integration Username)
@@ -99,20 +101,17 @@ jobs:
         displayName: Detect security and licence issues
         inputs:
           cwd: '$(Build.SourcesDirectory)'
-      # Using custom because pack produces legacy symbols packages
-      - task: NuGetCommand@2
+      - task: DotNetCoreCLI@2
         displayName: Pack NuGet package
         inputs:
-          command: custom
-          arguments: 'pack "./bindings\src\Capgemini.PowerApps.SpecFlowBindings\Capgemini.PowerApps.SpecFlowBindings.csproj" -Prop "Configuration=$(buildConfiguration)" -Version "$(GitVersion.NuGetVersionV2)" -OutputDirectory "$(Build.ArtifactStagingDirectory)/out" -Symbols -SymbolPackageFormat snupkg'
-      - task: PowerShell@2
-        displayName: Remove invalid symbols package files
-        inputs:
-          targetType: filePath
-          filePath: scripts/Remove-InvalidSymbolsPackageFiles.ps1
-          arguments: '-SymbolPackageDirectory "$(Build.ArtifactStagingDirectory)/out"'
-          errorActionPreference: stop
-          failOnStderr: true
+          command: pack
+          packagesToPack: bindings/src/**/*.csproj
+          modifyOutputPath: true 
+          versioningScheme: byEnvVar
+          versionEnvVar: GitVersion.NuGetVersionV2
+          includesymbols: false
+          buildProperties: Configuration=$(buildConfiguration)
+          packDirectory: $(Build.ArtifactStagingDirectory)/out
       - publish: $(Build.ArtifactStagingDirectory)/out
         displayName: Publish NuGet artifact
         artifact: Capgemini.PowerApps.SpecFlowBindings

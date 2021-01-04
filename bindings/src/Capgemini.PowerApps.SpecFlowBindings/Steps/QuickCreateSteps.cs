@@ -108,6 +108,17 @@
         }
 
         /// <summary>
+        /// Asserts that a value is shown in a text, currency or numeric field.
+        /// </summary>
+        /// <param name="expectedValue">The expected value.</param>
+        /// <param name="field">The field name.</param>
+        [Then("I can see a value of '(.*)' in the '(.*)' multioptionset field on the quick create")]
+        public static void ThenICanSeeAValueOfInTheMultiOptionsetFieldOnTheQuickCreate(string[] expectedValue, MultiValueOptionSet field)
+        {
+            XrmApp.QuickCreate.GetValue(field).Values.Should().Equal(expectedValue);
+        }
+
+        /// <summary>
         /// Asserts that a value is shown in an option set field.
         /// </summary>
         /// <param name="expectedValue">The expected value.</param>
@@ -136,6 +147,17 @@
         /// <param name="field">The field name.</param>
         [Then("I can see a value of '(true|false)' in the '(.*)' boolean field on the quick create")]
         public static void ThenICanSeeAValueOfInTheBooleanFieldOnTheQuickCreate(bool expectedValue, BooleanItem field)
+        {
+            XrmApp.QuickCreate.GetValue(field).Should().Be(expectedValue);
+        }
+
+        /// <summary>
+        /// Asserts that a value is shown in a datetime field.
+        /// </summary>
+        /// <param name="expectedValue">The expected value.</param>
+        /// <param name="field">The field name.</param>
+        [Then(@"I can see a value of '(.*)' in the '(.*)' datetime field on the quick create")]
+        public static void ThenICanSeeAValueOfInTheDateTimeField(DateTime? expectedValue, DateTimeControl field)
         {
             XrmApp.QuickCreate.GetValue(field).Should().Be(expectedValue);
         }
@@ -172,7 +194,7 @@
                     });
                     break;
                 case "datetime":
-                    XrmApp.QuickCreate.SetValue(fieldName, DateTime.Parse(fieldValue, CultureInfo.CreateSpecificCulture("en-GB")));
+                    XrmApp.QuickCreate.SetValue(fieldName, DateTime.Parse(fieldValue, CultureInfo.CurrentCulture));
                     break;
                 case "lookup":
                     XrmApp.QuickCreate.SetValue(new LookupItem()

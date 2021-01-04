@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{c6b374b2-7d8f-44e1-b2a5-641d2765d7ef}</formid>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab verticallayout="true" id="{0ab09dcb-1ca2-4a8f-a98f-4036ccb435a5}" name="StageStep3" locklevel="0" expanded="true" visible="false" labelid="{1b11b9fd-7c9c-4691-bab8-aa8bbb39b2bf}">
+          <labels>
+            <label description="First Stage" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showbar="false" columns="1" id="{721a453c-9568-44d5-0d8b-e7c5fcde55d6}" name="StageStep3_section1" labelid="{9f0c71eb-fbb5-43b5-a5e7-c8697df4c523}">
+                  <labels>
+                    <label description="First Stage" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{dd390ef3-1adb-4c6d-af3f-25540eab15c1}" showlabel="true" visible="true" labelid="{7b9bbe5a-14c8-4ce3-aecb-d0345540e6f2}">
+                        <labels>
+                          <label description="Enter Name" languagecode="1033" />
+                        </labels>
+                        <control id="bpf_sb_mockrecord_sb_secondarybusinessprocessflow:sb_name" classid="{4273edbd-ac1d-40d3-9fb2-095c621b552d}" datafieldname="sb_name" relationship="bpf_sb_mockrecord_sb_secondarybusinessprocessflow" isrequired="false" disabled="false" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Information" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="A form for this entity." languagecode="1033" />
+    </Descriptions>
+  </systemform>
+</forms>

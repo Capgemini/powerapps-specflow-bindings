@@ -201,7 +201,7 @@
         /// <param name="subGridName">The name of the subgrid.</param>
         /// <param name="fieldValue">The expected value of the field.</param>
         /// <param name="fieldName">The name of the field.</param>
-        [Then(@"the '(.*)' subgrid contains a record with '(.*)' in the '(.*)' (?:text|numeric|currency|lookup|datetime|optionset) field")]
+        [Then(@"the '(.*)' subgrid contains a record with '(.*)' in the '(.*)' (?:text|numeric|currency|lookup|datetime|optionset|multioptionset|boolean) field")]
         public static void ThenTheSubgridContainsRecordsWithInTheField(string subGridName, string fieldValue, string fieldName)
         {
             XrmApp.Entity.SubGrid
@@ -245,12 +245,10 @@
         [Then(@"I can not see the '(.*)' command on the '(.*)' subgrid")]
         public static void ThenICanNotSeeTheCommandOnTheSubgrid(string commandName, string subGridName)
         {
-            Driver
-                .Invoking(d => d.WaitUntilVisible(
+            Driver.WaitUntilVisible(
                     By.CssSelector($"div#dataSetRoot_{subGridName} button[aria-label=\"{commandName}\"]"),
-                    new TimeSpan(0, 0, 5)))
-                .Should()
-                .Throw<Exception>();
+                    new TimeSpan(0, 0, 5))
+                .Should().BeNull();
         }
 
         /// <summary>
@@ -261,8 +259,8 @@
         public static void ThenICanSeeTheCommandOnTheFlyoutOfTheSubgrid(string commandName)
         {
             Driver.WaitUntilVisible(
-                By.CssSelector($"div[data-id*=\"flyoutRootNode\"] button[aria-label='{commandName}']"),
-                new TimeSpan(0, 0, 1),
+                By.CssSelector($"#__flyoutRootNode button[aria-label$='{commandName}']"),
+                new TimeSpan(0, 0, 10),
                 $"Could not find the {commandName} command on the flyout of the subgrid.");
         }
 
@@ -275,7 +273,7 @@
         {
             Driver
                 .Invoking(d => d.WaitUntilVisible(
-                    By.CssSelector($"div[data-id*=\"flyoutRootNode\"] button[aria-label=\"{commandName}\"]"),
+                    By.CssSelector($"#__flyoutRootNode button[aria-label$=\"{commandName}\"]"),
                     new TimeSpan(0, 0, 1),
                     $"Could not find the {commandName} command on the flyout of the subgrid."))
                 .Should()

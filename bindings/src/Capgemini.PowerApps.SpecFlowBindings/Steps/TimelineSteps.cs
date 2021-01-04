@@ -110,11 +110,7 @@
             }
 
             XrmApp.Timeline.AddEmailContacts(
-                new MultiValueOptionSet
-                {
-                    Name = Elements.ElementId[reference],
-                    Values = contacts,
-                },
+                contacts.Select(c => new LookupItem { Name = Elements.ElementId[reference], Value = c }).ToArray(),
                 true);
         }
     }

@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RibbonDiffXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <CustomActions>
+    <CustomAction Id="sb.devhub.sb_secondarymockrecord.OpenFlyOut.Button.CustomAction" Location="Mscrm.SubGrid.sb_secondarymockrecord.MainTab.Actions.Controls._children" Sequence="5">
+      <CommandUIDefinition>
+        <FlyoutAnchor Alt="$LocLabels:devhub.sb_secondarymockrecord.OpenFlyOut.Button.Alt" Command="sb.sb_secondarymockrecord.Flyout.Command" Id="devhub.sb_secondarymockrecord.OpenFlyOut.Button" LabelText="$LocLabels:devhub.sb_secondarymockrecord.OpenFlyOut.Button.LabelText" Sequence="5" TemplateAlias="isv" ToolTipTitle="$LocLabels:devhub.sb_secondarymockrecord.OpenFlyOut.Button.ToolTipTitle" ToolTipDescription="$LocLabels:devhub.sb_secondarymockrecord.OpenFlyOut.Button.ToolTipDescription">
+          <Menu Id="devhub.sb_secondarymockrecord.OpenFlyOut.Button.Menu">
+            <MenuSection Id="devhub.sb_secondarymockrecord.Flyout.Section" Title="$LocLabels:devhub.sb_secondarymockrecord.Flyout.Section.Title" Sequence="5" DisplayMode="Menu16">
+              <Controls Id="devhub.sb_secondarymockrecord.Flyout.Section.Controls">
+                <Button Alt="$LocLabels:devhub.sb_secondarymockrecord.Flyout.Button.Alt" Command="sb.sb_secondarymockrecord.Flyout.Command" Id="devhub.sb_secondarymockrecord.Flyout.Button" LabelText="$LocLabels:devhub.sb_secondarymockrecord.Flyout.Button.LabelText" Sequence="10" ToolTipTitle="$LocLabels:devhub.sb_secondarymockrecord.Flyout.Button.ToolTipTitle" ToolTipDescription="$LocLabels:devhub.sb_secondarymockrecord.Flyout.Button.ToolTipDescription" />
+              </Controls>
+            </MenuSection>
+          </Menu>
+        </FlyoutAnchor>
+      </CommandUIDefinition>
+    </CustomAction>
+  </CustomActions>
+  <Templates>
+    <RibbonTemplates Id="Mscrm.Templates"></RibbonTemplates>
+  </Templates>
+  <CommandDefinitions>
+    <CommandDefinition Id="sb.sb_secondarymockrecord.Flyout.Command">
+      <EnableRules />
+      <DisplayRules />
+      <Actions />
+    </CommandDefinition>
+  </CommandDefinitions>
+  <RuleDefinitions>
+    <TabDisplayRules />
+    <DisplayRules />
+    <EnableRules />
+  </RuleDefinitions>
+  <LocLabels>
+    <LocLabel Id="devhub.sb_secondarymockrecord.Flyout.Button.Alt">
+      <Titles>
+        <Title description="Flyout Button" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="devhub.sb_secondarymockrecord.Flyout.Button.LabelText">
+      <Titles>
+        <Title description="Flyout Button" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="devhub.sb_secondarymockrecord.Flyout.Button.ToolTipDescription">
+      <Titles>
+        <Title description="A button in a flyout." languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="devhub.sb_secondarymockrecord.Flyout.Button.ToolTipTitle">
+      <Titles>
+        <Title description="Flyout Button" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="devhub.sb_secondarymockrecord.Flyout.Section.Title">
+      <Titles>
+        <Title description="Flyout Section" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="devhub.sb_secondarymockrecord.OpenFlyOut.Button.Alt">
+      <Titles>
+        <Title description="Open Flyout" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="devhub.sb_secondarymockrecord.OpenFlyOut.Button.LabelText">
+      <Titles>
+        <Title description="Open Flyout" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="devhub.sb_secondarymockrecord.OpenFlyOut.Button.ToolTipDescription">
+      <Titles>
+        <Title description="Opens a flyout" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+    <LocLabel Id="devhub.sb_secondarymockrecord.OpenFlyOut.Button.ToolTipTitle">
+      <Titles>
+        <Title description="Open Flyout" languagecode="1033" />
+      </Titles>
+    </LocLabel>
+  </LocLabels>
+</RibbonDiffXml>

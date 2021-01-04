@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{f5a00a01-01ad-42b4-a39a-aecb626c0fb9}</formid>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab verticallayout="true" id="{06d93511-58e7-4a7a-8409-4d031f79abfb}" name="StageStep3" locklevel="0" expanded="true" visible="false" labelid="{020036bc-c306-475b-b5fc-8fcd24991d56}">
+          <labels>
+            <label description="First Stage" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showbar="false" columns="1" id="{04eadd12-e3f3-bf5e-cdac-a78921ebb46d}" name="StageStep3_section1" labelid="{d45d6b4f-bba9-4b9b-90bc-d0b2757833e0}">
+                  <labels>
+                    <label description="First Stage" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{cc1c3692-63c5-4678-bc0f-9ba6016956bd}" showlabel="true" visible="true" labelid="{a18e7eca-0b5b-4700-a48d-adcbb31572fc}">
+                        <labels>
+                          <label description="Enter Text" languagecode="1033" />
+                        </labels>
+                        <control id="bpf_sb_mockrecord_sb_primarybusinessprocessflow:sb_text" classid="{4273edbd-ac1d-40d3-9fb2-095c621b552d}" datafieldname="sb_text" relationship="bpf_sb_mockrecord_sb_primarybusinessprocessflow" isrequired="false" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{b2f060e3-495b-4b7c-9467-21684003869a}" showlabel="true" visible="true" labelid="{0833c23d-4d87-46da-a230-12449a28bf2d}">
+                        <labels>
+                          <label description="Enter Number" languagecode="1033" />
+                        </labels>
+                        <control id="bpf_sb_mockrecord_sb_primarybusinessprocessflow:sb_number" classid="{c6d124ca-7eda-4a60-aea9-7fb8d318b68f}" datafieldname="sb_number" relationship="bpf_sb_mockrecord_sb_primarybusinessprocessflow" isrequired="false" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{61716626-d015-447b-84e9-fe3e33d0a505}" showlabel="true" visible="true" labelid="{c86fab7c-c429-4a2d-b48c-81da3175837a}">
+                        <labels>
+                          <label description="Enter Yes/No" languagecode="1033" />
+                        </labels>
+                        <control id="bpf_sb_mockrecord_sb_primarybusinessprocessflow:sb_yesno" classid="{67fac785-cd58-4f9f-abb3-4b7ddc6ed5ed}" datafieldname="sb_yesno" relationship="bpf_sb_mockrecord_sb_primarybusinessprocessflow" isrequired="true" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{7476d3a0-7f7d-461f-94fd-4ea954ae9145}" showlabel="true" visible="true" labelid="{79390a7f-d2a3-4f8c-a40a-b84e4fb49ee2}">
+                        <labels>
+                          <label description="Enter Choice" languagecode="1033" />
+                        </labels>
+                        <control id="bpf_sb_mockrecord_sb_primarybusinessprocessflow:sb_choice" classid="{3ef39988-22bb-4f0b-bbbe-64b5a3748aee}" datafieldname="sb_choice" relationship="bpf_sb_mockrecord_sb_primarybusinessprocessflow" isrequired="false" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{e587fa44-62e6-4a02-af25-090e834f72ce}" showlabel="true" visible="true" labelid="{4841c80f-7534-4fc5-bc56-98408bfd19ce}">
+                        <labels>
+                          <label description="Enter Date and Time" languagecode="1033" />
+                        </labels>
+                        <control id="bpf_sb_mockrecord_sb_primarybusinessprocessflow:sb_dateandtime" classid="{5b773807-9fb2-42db-97c3-7a91eff8adff}" datafieldname="sb_dateandtime" relationship="bpf_sb_mockrecord_sb_primarybusinessprocessflow" isrequired="false" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{e2945393-1e8b-4cf5-a8a1-8571ed070f26}" showlabel="true" visible="true" labelid="{42f2c478-94bd-4cc6-88ea-d0a7b6042a71}">
+                        <labels>
+                          <label description="Enter Date Only" languagecode="1033" />
+                        </labels>
+                        <control id="bpf_sb_mockrecord_sb_primarybusinessprocessflow:sb_dateonly" classid="{5b773807-9fb2-42db-97c3-7a91eff8adff}" datafieldname="sb_dateonly" relationship="bpf_sb_mockrecord_sb_primarybusinessprocessflow" isrequired="false" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{8a3f6ed6-2454-4b92-9ea9-e51fd212d386}" showlabel="true" visible="true" labelid="{ba62f330-6c5a-4493-aa52-4a8ca460e323}">
+                        <labels>
+                          <label description="Enter Lookup" languagecode="1033" />
+                        </labels>
+                        <control id="bpf_sb_mockrecord_sb_primarybusinessprocessflow:sb_lookup" classid="{270bd3db-d9af-4782-9025-509e298dec0a}" datafieldname="sb_lookup" relationship="bpf_sb_mockrecord_sb_primarybusinessprocessflow" isrequired="false" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{12496463-f476-478f-8f3a-d89f7eda36bb}" showlabel="true" visible="true" labelid="{75806459-1ef8-4721-b80c-9ab4130ab37a}">
+                        <labels>
+                          <label description="Enter Customer" languagecode="1033" />
+                        </labels>
+                        <control id="bpf_sb_mockrecord_sb_primarybusinessprocessflow:sb_customer" classid="{270bd3db-d9af-4782-9025-509e298dec0a}" datafieldname="sb_customer" relationship="bpf_sb_mockrecord_sb_primarybusinessprocessflow" isrequired="false" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{59281b96-96bb-4291-a91f-4fe441e2a42e}" showlabel="true" visible="true" labelid="{08d3ecf7-629e-41b0-9aa4-b6a2069cd273}">
+                        <labels>
+                          <label description="Enter Currency" languagecode="1033" />
+                        </labels>
+                        <control id="bpf_sb_mockrecord_sb_primarybusinessprocessflow:transactioncurrencyid" classid="{270bd3db-d9af-4782-9025-509e298dec0a}" datafieldname="transactioncurrencyid" relationship="bpf_sb_mockrecord_sb_primarybusinessprocessflow" isrequired="false" disabled="false" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+        <tab verticallayout="true" id="{dac460c2-2d00-4e86-9678-95a44cfbc11c}" name="StageStep23" locklevel="0" expanded="true" visible="false" labelid="{67c8d631-3da2-4c36-b2c7-30d6e1ffff18}">
+          <labels>
+            <label description="Second Stage" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showbar="false" columns="1" id="{72eb3d01-df21-d2ba-9d8d-bbef463573a4}" name="StageStep23_section1" labelid="{d450e63c-be43-4065-ab3d-d3d117b8ab2d}">
+                  <labels>
+                    <label description="Second Stage" languagecode="1033" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{c4772f53-013a-4203-9f46-184ec24be6a5}" showlabel="true" visible="true" labelid="{ec1e2c26-2e04-474c-8716-84482da75364}">
+                        <labels>
+                          <label description="Enter Name" languagecode="1033" />
+                        </labels>
+                        <control id="bpf_sb_mockrecord_sb_primarybusinessprocessflow:sb_name" classid="{4273edbd-ac1d-40d3-9fb2-095c621b552d}" datafieldname="sb_name" relationship="bpf_sb_mockrecord_sb_primarybusinessprocessflow" isrequired="false" disabled="false" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Information" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="A form for this entity." languagecode="1033" />
+    </Descriptions>
+  </systemform>
+</forms>

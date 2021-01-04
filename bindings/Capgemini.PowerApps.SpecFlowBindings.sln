@@ -11,11 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1BA90815-A570-44B9-96C8-1D087FF8A060}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Capgemini.PowerApps.SpecFlowBindings", "src\Capgemini.PowerApps.SpecFlowBindings\Capgemini.PowerApps.SpecFlowBindings.csproj", "{88DD21C5-5EE8-4023-847E-2A87E434AD22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Capgemini.PowerApps.SpecFlowBindings", "src\Capgemini.PowerApps.SpecFlowBindings\Capgemini.PowerApps.SpecFlowBindings.csproj", "{88DD21C5-5EE8-4023-847E-2A87E434AD22}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8F8FAAAA-5C66-4ECC-BC4A-1127C1E7FFC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Capgemini.PowerApps.SpecFlowBindings.UiTests", "tests\Capgemini.PowerApps.SpecFlowBindings.UiTests\Capgemini.PowerApps.SpecFlowBindings.UiTests.csproj", "{EFDA0239-5116-4DFA-90AA-644DD7509017}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Capgemini.PowerApps.SpecFlowBindings.UiTests", "tests\Capgemini.PowerApps.SpecFlowBindings.UiTests\Capgemini.PowerApps.SpecFlowBindings.UiTests.csproj", "{EFDA0239-5116-4DFA-90AA-644DD7509017}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

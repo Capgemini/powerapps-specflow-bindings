@@ -3,5 +3,5 @@
 	As a developer
 	I want to use pre-existing login bindings
 
-Scenario: User logs in as a specific role
-	Given I am logged in to the 'Sales Team Member' app as 'an admin'
+Scenario: Login to a given app as a given user
+	Given I am logged in to the 'Mock App' app as 'an admin'

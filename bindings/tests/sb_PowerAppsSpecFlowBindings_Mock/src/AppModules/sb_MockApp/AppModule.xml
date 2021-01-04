@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AppModule>
+  <UniqueName>sb_MockApp</UniqueName>
+  <IntroducedVersion>1.0.0.0</IntroducedVersion>
+  <WebResourceId>953b9fac-1e5e-e611-80d6-00155ded156f</WebResourceId>
+  <OptimizedFor></OptimizedFor>
+  <statecode>0</statecode>
+  <statuscode>1</statuscode>
+  <FormFactor>1</FormFactor>
+  <ClientType>4</ClientType>
+  <NavigationType>0</NavigationType>
+  <AppModuleComponents>
+    <AppModuleComponent type="62" schemaName="sb_MockApp" />
+    <AppModuleComponent type="29" id="{35d6a39a-c720-4d5f-8f11-4497dff2f9e3}" />
+    <AppModuleComponent type="29" id="{d21a6986-eb11-429c-b4b1-bb747eeb0991}" />
+    <AppModuleComponent type="60" id="{50687e45-f839-eb11-a813-000d3a0b97ca}" />
+    <AppModuleComponent type="60" id="{6e43bd18-f839-eb11-a813-000d3a0b97ca}" />
+    <AppModuleComponent type="1" schemaName="appointment" />
+    <AppModuleComponent type="1" schemaName="email" />
+    <AppModuleComponent type="1" schemaName="sb_mockrecord" />
+    <AppModuleComponent type="1" schemaName="annotation" />
+    <AppModuleComponent type="1" schemaName="phonecall" />
+    <AppModuleComponent type="1" schemaName="sb_primarybusinessprocessflow" />
+    <AppModuleComponent type="1" schemaName="sb_secondarybusinessprocessflow" />
+    <AppModuleComponent type="1" schemaName="sb_secondarymockrecord" />
+    <AppModuleComponent type="1" schemaName="task" />
+  </AppModuleComponents>
+  <AppModuleRoleMaps>
+    <Role id="{627090ff-40a3-4053-8790-584edc5be201}" />
+    <Role id="{119f245c-3cc8-4b62-b31c-d1a046ced15d}" />
+  </AppModuleRoleMaps>
+  <LocalizedNames>
+    <LocalizedName description="Mock App" languagecode="1033" />
+  </LocalizedNames>
+  <Descriptions>
+    <Description description="A mock app used to test the Power Apps SpecFlow Bindings." languagecode="1033" />
+  </Descriptions>
+</AppModule>

@@ -21,6 +21,17 @@
         }
 
         /// <summary>
+        /// Transforms a logical name into a multi-value option set.
+        /// </summary>
+        /// <param name="expression">The logical name.</param>
+        /// <returns>The multi-value option set.</returns>
+        [StepArgumentTransformation]
+        public static MultiValueOptionSet TransformFieldNameToMultiValueOptionSet(string expression)
+        {
+            return new MultiValueOptionSet { Name = expression };
+        }
+
+        /// <summary>
         /// Transforms a logical name into an lookup item.
         /// </summary>
         /// <param name="expression">The logical name.</param>
@@ -40,6 +51,17 @@
         public static DateTimeControl TransformFieldNameToDateTimeItem(string expression)
         {
             return new DateTimeControl(expression);
+        }
+
+        /// <summary>
+        /// Transforms a logical name into a boolean item.
+        /// </summary>
+        /// <param name="expression">The logical name.</param>
+        /// <returns>The boolean item.</returns>
+        [StepArgumentTransformation]
+        public static BooleanItem TransformFieldNameToBooleanItem(string expression)
+        {
+            return new BooleanItem { Name = expression };
         }
     }
 }

@@ -1,0 +1,23 @@
+{
+  "@logicalName": "sb_mockrecord",
+  "@alias": "the record",
+  "sb_name": "A record with a subgrid and related records",
+  "sb_MockRecord_Parent_SecondaryMockRecord": [
+    {
+      "@alias": "the related record",
+      "sb_name": "A related record",
+      "sb_text": "Some text",
+      "sb_number": 10,
+      "sb_yesno": true,
+      "sb_choice": 108550000,
+      "sb_choices": "108550000, 108550001",
+      "sb_dateandtime": "2021-01-01T13:00:00Z",
+      "sb_dateonly": "2021-01-31",
+      "sb_currency": 10.00
+    },
+    {
+      "@alias": "the additional related record",
+      "sb_name": "An additional related record"
+    }
+  ]
+}
