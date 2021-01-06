@@ -5,6 +5,7 @@
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using Microsoft.Dynamics365.UIAutomation.Browser;
     using OpenQA.Selenium;
+    using OpenQA.Selenium.Interactions;
 
     /// <summary>
     /// Extensions to the <see cref="SubGrid"/> class.
@@ -51,22 +52,42 @@
             }
 
             var subGridElement = driver.FindElement(
-                By.XPath(AppElements.Xpath[AppReference.Entity.SubGridContents].Replace("[NAME]", subgridName)));
+           By.XPath(AppElements.Xpath[AppReference.Entity.SubGridContents].Replace("[NAME]", subgridName)));
 
-            var rows = subGridElement.FindElements(By.CssSelector("div.wj-row[role=row][data-lp-id]"));
+            IWebElement subGridRecordList = null;
+            var foundEditableGrid = subGridElement.TryFindElement(By.XPath(AppElements.Xpath[AppReference.Entity.EditableSubGridList].Replace("[NAME]", subgridName)), out subGridRecordList);
 
-            if (rows.Count == 0)
+            if (foundEditableGrid)
             {
-                throw new NoSuchElementException($"No records were found for subgrid {subgridName}");
-            }
+                var editableGridListCells = subGridRecordList.FindElement(By.XPath(AppElements.Xpath[AppReference.Entity.EditableSubGridListCells]));
 
-            if (index + 1 > rows.Count)
+                var editableGridCellRows = editableGridListCells.FindElements(By.XPath(AppElements.Xpath[AppReference.Entity.EditableSubGridListCellRows]));
+
+                var editableGridCellRow = editableGridCellRows[index + 1].FindElements(By.XPath("./div"));
+
+                Actions actions = new Actions(driver);
+                actions.Click(editableGridCellRow[1]).Perform();
+
+                driver.WaitForTransaction();
+            }
+            else
             {
-                throw new IndexOutOfRangeException($"Subgrid {subgridName} record count: {rows.Count}. Expected: {index + 1}");
-            }
 
-            rows[index].FindElement(By.TagName("div")).Click();
-            driver.WaitForTransaction();
+                var rows = subGridElement.FindElements(By.CssSelector("div.wj-row[role=row][data-lp-id]"));
+
+                if (rows.Count == 0)
+                {
+                    throw new NoSuchElementException($"No records were found for subgrid {subgridName}");
+                }
+
+                if (index + 1 > rows.Count)
+                {
+                    throw new IndexOutOfRangeException($"Subgrid {subgridName} record count: {rows.Count}. Expected: {index + 1}");
+                }
+
+                rows[index].FindElement(By.TagName("div")).Click();
+                driver.WaitForTransaction();
+            }
         }
     }
 }
