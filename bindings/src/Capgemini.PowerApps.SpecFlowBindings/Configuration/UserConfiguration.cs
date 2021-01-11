@@ -7,17 +7,20 @@
     /// </summary>
     public class UserConfiguration
     {
+        private string username;
+        private string password;
+
         /// <summary>
         /// Gets or sets the username of the user.
         /// </summary>
         [YamlMember(Alias = "username")]
-        public string Username { get; set; }
+        public string Username { get => ConfigHelper.GetEnvironmentVariableIfExists(this.username); set => this.username = value; }
 
         /// <summary>
         /// Gets or sets the password of the user.
         /// </summary>
         [YamlMember(Alias = "password")]
-        public string Password { get; set; }
+        public string Password { get => ConfigHelper.GetEnvironmentVariableIfExists(this.password); set => this.password = value; }
 
         /// <summary>
         /// Gets or sets the alias of the user (used to retrieve from configuration).

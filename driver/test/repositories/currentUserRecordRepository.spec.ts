@@ -1,12 +1,12 @@
-import { RecordRepository } from '../../src/repositories/index';
+import { CurrentUserRecordRepository, RecordRepository } from '../../src/repositories/index';
 import { AssociateRequest } from '../../src/requests';
 
-describe('RecordRepository', () => {
+describe('CurrentUserRecordRepository', () => {
   let xrmWebApi: jasmine.SpyObj<Xrm.WebApiOnline>;
   let recordRepository: RecordRepository;
   beforeEach(() => {
-    xrmWebApi = jasmine.createSpyObj<Xrm.WebApiOnline>('XrmWebApi', ['createRecord', 'deleteRecord', 'execute', 'retrieveMultipleRecords', 'updateRecord']);
-    recordRepository = new RecordRepository(xrmWebApi);
+    xrmWebApi = jasmine.createSpyObj<Xrm.WebApiOnline>('XrmWebApi', ['createRecord', 'deleteRecord', 'execute', 'retrieveMultipleRecords', 'updateRecord', 'retrieveRecord']);
+    recordRepository = new CurrentUserRecordRepository(xrmWebApi);
   });
 
   describe('createRecord(entityLogicalName, record)', () => {
@@ -17,6 +17,47 @@ describe('RecordRepository', () => {
       const actualReference = await recordRepository.createRecord('account', { name: 'Test Account' });
 
       expect(actualReference).toBe(expectedReference);
+    });
+  });
+
+  describe('retrieveRecord(entityLogicalName, id, query)', () => {
+    it('returns the retrieved record', async () => {
+      const expectedRecord = {};
+      xrmWebApi.retrieveRecord.and.returnValue(Promise.resolve(expectedRecord) as never);
+
+      const actualRecord = await recordRepository.retrieveRecord('account', 'account-id');
+
+      expect(actualRecord).toBe(expectedRecord);
+    });
+
+    it('passes the expected arguments to retrieveRecords', async () => {
+      const logicalName = 'account';
+      const id = 'id';
+      const query = '?$select=accountid';
+
+      await recordRepository.retrieveRecord(logicalName, id, query);
+
+      expect(xrmWebApi.retrieveRecord).toHaveBeenCalledWith(logicalName, id, query);
+    });
+  });
+
+  describe('retrieveMultipleRecord(entityLogicalName, query)', () => {
+    it('returns the retrieved records', async () => {
+      const expectedResponse: Xrm.RetrieveMultipleResult = { entities: [], nextLink: '' };
+      xrmWebApi.retrieveMultipleRecords.and.returnValue(Promise.resolve(expectedResponse) as never);
+
+      const actualResposne = await recordRepository.retrieveMultipleRecords('account', '?');
+
+      expect(actualResposne).toBe(expectedResponse);
+    });
+
+    it('passes the expected arguments to retrieveMultipleRecords', async () => {
+      const logicalName = 'account';
+      const query = '?$select=accountid';
+
+      await recordRepository.retrieveMultipleRecords(logicalName, query);
+
+      expect(xrmWebApi.retrieveMultipleRecords).toHaveBeenCalledWith(logicalName, query);
     });
   });
 

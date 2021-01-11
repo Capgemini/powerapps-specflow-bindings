@@ -11,12 +11,26 @@
         /// Loads scenario test data.
         /// </summary>
         /// <param name="data">The data to load.</param>
+        /// <param name="username">The username of the user to impersonate.</param>
+        /// <param name="authToken">Auth token for the impersonating application user.</param>
+        void LoadTestDataAsUser(string data, string username, string authToken);
+
+        /// <summary>
+        /// Loads scenario test data.
+        /// </summary>
+        /// <param name="data">The data to load.</param>
         void LoadTestData(string data);
 
         /// <summary>
         /// Deletes scenario test data.
         /// </summary>
         void DeleteTestData();
+
+        /// <summary>
+        /// Deletes scenario test data using the access token to authenticate.
+        /// </summary>
+        /// <param name="accessToken">The access token to authenticate with.</param>
+        void DeleteTestData(string accessToken);
 
         /// <summary>
         /// Open a test record.

@@ -15,3 +15,6 @@ Scenario: Set a lookup with an alias
 Scenario: Generate data at run-time with faker
 	And I have created 'data decorated with faker moustache syntax'
 	And I have opened 'the faked record'
+
+Scenario: Generate data as a named user
+	And 'an aliased user' has created 'a record with an alias'

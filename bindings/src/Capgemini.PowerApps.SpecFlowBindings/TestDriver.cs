@@ -41,10 +41,22 @@
             this.ExecuteDriverFunctionAsync($"loadTestData(`{data}`)");
         }
 
+        /// <inheritdoc/>
+        public void LoadTestDataAsUser(string data, string username, string authToken)
+        {
+            this.ExecuteDriverFunctionAsync($"loadTestDataAsUser(`{data}`, '{username}', '{authToken}')");
+        }
+
         /// <inheritdoc cref="ITestDriver"/>
         public void DeleteTestData()
         {
             this.ExecuteDriverFunctionAsync("deleteTestData()");
+        }
+
+        /// <inheritdoc cref="ITestDriver"/>
+        public void DeleteTestData(string accessToken)
+        {
+            this.ExecuteDriverFunctionAsync($"deleteTestData('{accessToken}')");
         }
 
         /// <inheritdoc cref="ITestDriver"/>
@@ -87,7 +99,7 @@
         {
             this.javascriptExecutor.ExecuteScript(
                 $"{File.ReadAllText(this.FilePath)}\n" +
-                $@"var recordRepository = new {LibraryNamespace}.RecordRepository(Xrm.WebApi.online);
+                $@"var recordRepository = new {LibraryNamespace}.CurrentUserRecordRepository(Xrm.WebApi.online);
                    var metadataRepository = new {LibraryNamespace}.MetadataRepository(Xrm.WebApi.online);
                    var deepInsertService = new {LibraryNamespace}.DeepInsertService(metadataRepository, recordRepository);
                    var dataManager = new {LibraryNamespace}.DataManager(recordRepository, deepInsertService, [new {LibraryNamespace}.FakerPreprocessor()]);

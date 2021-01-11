@@ -1,7 +1,10 @@
-import { RecordRepository } from '../repositories';
+import RecordRepository from '../repositories/recordRepository';
+import AuthenticatedRecordRepository from '../repositories/authenticatedRecordRepository';
+import { CreateOptions } from './createOptions';
 import DeepInsertService from './deepInsertService';
 import Preprocessor from './preprocessor';
-import { Record } from './record';
+import Record from './record';
+import MetadataRepository from '../repositories/metadataRepository';
 
 /**
  * Manages the creation and cleanup of data.
@@ -41,12 +44,34 @@ export default class DataManager {
   /**
      * Deep inserts a record for use in a test.
      *
+     * @param {string} logicalName the logical name of the root entity.
      * @param {Record} record The record to deep insert.
+     * @param {CreateOptions} opts options for creating the data.
      * @returns {Promise<Xrm.LookupValue>} An entity reference to the root record.
      * @memberof DataManager
      */
-  public async createData(logicalName: string, record: Record): Promise<Xrm.LookupValue> {
-    const res = await this.deepInsertSvc.deepInsert(
+  public async createData(
+    logicalName: string,
+    record: Record,
+    opts?: CreateOptions,
+  ): Promise<Xrm.LookupValue> {
+    let svc = this.deepInsertSvc;
+
+    if (opts?.authToken && opts?.userToImpersonate) {
+      const azureAdObjectId = await this.getObjectIdForUser(opts.userToImpersonate);
+
+      const metadataRepo = new MetadataRepository();
+      svc = new DeepInsertService(
+        metadataRepo,
+        new AuthenticatedRecordRepository(
+          metadataRepo,
+          opts.authToken,
+          azureAdObjectId,
+        ),
+      );
+    }
+
+    const res = await svc.deepInsert(
       logicalName,
       this.preprocess(record),
       this.refsByAlias,
@@ -64,20 +89,33 @@ export default class DataManager {
     return res.record.reference;
   }
 
+  private async getObjectIdForUser(username: string): Promise<string> {
+    const res = await this.recordRepo.retrieveMultipleRecords('systemuser', `?$filter=internalemailaddress eq '${username}'&$select=azureactivedirectoryobjectid`);
+
+    if (res.entities.length === 0) {
+      throw new Error(`Unable to impersonate ${username} as the user was not found.`);
+    }
+
+    return res.entities[0].azureactivedirectoryobjectid;
+  }
+
   /**
      * Performs cleanup by deleting all records created via the TestDataManager.
-     *
+     * @param authToken An optional auth token to use when deleting test data.
      * @returns {Promise<void>}
      * @memberof DataManager
      */
-  public async cleanup(): Promise<(Xrm.LookupValue | void)[]> {
+  public async cleanup(authToken?: string): Promise<(Xrm.LookupValue | void)[]> {
+    const repo = authToken
+      ? new AuthenticatedRecordRepository(new MetadataRepository(), authToken) : this.recordRepo;
+
     const deletePromises = this.refs.map(async (record) => {
       let reference;
       let retry = 0;
       while (retry < 3) {
         try {
           // eslint-disable-next-line no-await-in-loop
-          reference = await this.recordRepo.deleteRecord(record);
+          reference = await repo.deleteRecord(record);
           break;
         } catch (err) {
           retry += 1;
@@ -85,8 +123,10 @@ export default class DataManager {
       }
       return reference;
     });
+
     this.refs.splice(0, this.refs.length);
     Object.keys(this.refsByAlias).forEach((alias) => delete this.refsByAlias[alias]);
+
     return Promise.all(deletePromises);
   }
 

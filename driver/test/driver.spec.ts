@@ -1,3 +1,4 @@
+import { CreateOptions } from '../src/data/createOptions';
 import DataManager from '../src/data/dataManager';
 import Driver from '../src/driver';
 
@@ -7,6 +8,26 @@ describe('Driver', () => {
   beforeAll(() => {
     dataManager = jasmine.createSpyObj<DataManager>('DataManager', ['createData', 'cleanup', 'refs', 'refsByAlias']);
     driver = new Driver(dataManager);
+  });
+
+  describe('.loadTestDataAsUser(json, username, authToken)', () => {
+    it('throws if a username isn\'t provided', () => expectAsync(driver.loadTestDataAsUser('{}', '', 'token')).toBeRejectedWithError(/.*username.*/));
+
+    it('throws if a token isn\'t provided', () => expectAsync(driver.loadTestDataAsUser('{}', 'user@contoso.com', '')).toBeRejectedWithError(/.*token.*/));
+
+    it('passes CreateOptions to dataManager', async () => {
+      const userToImpersonate = 'user@contoso.com';
+      const authToken = 'token';
+      const expectedCreateOptions: CreateOptions = { authToken, userToImpersonate };
+
+      await driver.loadTestDataAsUser('{ "@logicalName": "contact" }', userToImpersonate, authToken);
+
+      expect(dataManager.createData).toHaveBeenCalledWith(
+        jasmine.anything(),
+        jasmine.anything(),
+        jasmine.objectContaining(expectedCreateOptions),
+      );
+    });
   });
 
   describe('.loadJsonData(json)', () => {

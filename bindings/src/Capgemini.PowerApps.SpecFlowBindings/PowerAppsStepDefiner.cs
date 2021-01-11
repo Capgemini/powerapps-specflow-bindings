@@ -1,11 +1,12 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings
 {
     using System;
+    using System.Configuration;
     using System.IO;
     using System.Reflection;
     using Capgemini.PowerApps.SpecFlowBindings.Configuration;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
-    using Microsoft.Dynamics365.UIAutomation.Browser;
+    using Microsoft.Identity.Client;
     using OpenQA.Selenium;
     using YamlDotNet.Serialization;
     using YamlDotNet.Serialization.NamingConventions;
@@ -16,6 +17,8 @@
     public abstract class PowerAppsStepDefiner
     {
         private static TestConfiguration testConfig;
+
+        private static IConfidentialClientApplication app;
 
         [ThreadStatic]
         private static ITestDriver testDriver;
@@ -28,6 +31,21 @@
 
         [ThreadStatic]
         private static XrmApp xrmApp;
+
+        /// <summary>
+        /// Gets access token used to authenticate as the application user configured for testing.
+        /// </summary>
+        protected static string AccessToken
+        {
+            get
+            {
+                var hostSegments = TestConfig.GetTestUrl().Host.Split('.');
+
+                return App.AcquireTokenForClient(new string[] { $"https://{hostSegments[0]}.api.{hostSegments[1]}.dynamics.com//.default" })
+                    .ExecuteAsync()
+                    .Result.AccessToken;
+            }
+        }
 
         /// <summary>
         /// Gets the configuration for the test project.
@@ -83,6 +101,30 @@
         /// Gets provides utilities for test setup/teardown.
         /// </summary>
         protected static ITestDriver TestDriver => testDriver ?? (testDriver = new TestDriver((IJavaScriptExecutor)Driver));
+
+        /// <summary>
+        /// Gets the <see cref="IConfidentialClientApplication"/> used to authenticate as the configured application user.
+        /// </summary>
+        private static IConfidentialClientApplication App
+        {
+            get
+            {
+                if (TestConfig.ApplicationUser == null)
+                {
+                    throw new ConfigurationErrorsException("An application user has not been configured.");
+                }
+
+                if (app == null)
+                {
+                    app = ConfidentialClientApplicationBuilder.Create(TestConfig.ApplicationUser.ClientId)
+                        .WithTenantId(TestConfig.ApplicationUser.TenantId)
+                        .WithClientSecret(TestConfig.ApplicationUser.ClientSecret)
+                        .Build();
+                }
+
+                return app;
+            }
+        }
 
         /// <summary>
         /// Performs any cleanup necessary when quitting the WebBrowser.

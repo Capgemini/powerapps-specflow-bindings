@@ -1,6 +1,6 @@
 import { MetadataRepository, RecordRepository } from '../repositories';
 import { DeepInsertResponse } from './deepInsertResponse';
-import { Record } from './record';
+import Record from './record';
 
 /**
  * Parses deep insert objects and returns references to all created records.

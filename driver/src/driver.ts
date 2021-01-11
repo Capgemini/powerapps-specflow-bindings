@@ -1,4 +1,5 @@
 import { DataManager } from './data';
+import { CreateOptions } from './data/createOptions';
 import { TestRecord } from './data/testRecord';
 
 /**
@@ -29,16 +30,41 @@ export default class Driver {
   public async loadTestData(json: string): Promise<Xrm.LookupValue> {
     const testRecord = JSON.parse(json) as TestRecord;
     const logicalName = testRecord['@logicalName'];
+
     return this.dataManager.createData(logicalName, testRecord);
   }
 
   /**
+   *
+   * @param json a JSON object.
+   * @param userToImpersonate The username of the user to impersonate.
+   * @param authToken The auth token of the impersonating user.
+   */
+  public async loadTestDataAsUser(
+    json: string,
+    userToImpersonate: string,
+    authToken: string,
+  ) {
+    if (!userToImpersonate) {
+      throw new Error('You have not provided the username of the user to impersonate.');
+    }
+    if (!authToken) {
+      throw new Error('You have not provided the auth token of the impersonating user.');
+    }
+    const testRecord = JSON.parse(json) as TestRecord;
+    const logicalName = testRecord['@logicalName'];
+    const opts: CreateOptions = { authToken, userToImpersonate };
+
+    return this.dataManager.createData(logicalName, testRecord, opts);
+  }
+
+  /**
      * Deletes data that has been created as a result of any requests to load  @see loadJsonData
-     *
+     * @param authToken An optional auth token to use when deleting test data.
      * @memberof Driver
      */
-  public deleteTestData(): Promise<(Xrm.LookupValue | void)[]> {
-    return this.dataManager.cleanup();
+  public deleteTestData(authToken?: string): Promise<(Xrm.LookupValue | void)[]> {
+    return this.dataManager.cleanup(authToken);
   }
 
   /**
