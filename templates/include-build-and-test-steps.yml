@@ -88,6 +88,9 @@ jobs:
           rerunMaxAttempts: 2
         continueOnError: true
         env:
+          POWERAPPS_SPECFLOW_BINDINGS_TEST_TENANTID: $(Application User Tenant ID)
+          POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTID: $(Application User Client ID)
+          POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTSECRET: $(Application User Client Secret)
           POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME: $(User ADO Integration Username)
           POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_PASSWORD: $(User ADO Integration Password)
           POWERAPPS_SPECFLOW_BINDINGS_TEST_URL: $(URL)  
