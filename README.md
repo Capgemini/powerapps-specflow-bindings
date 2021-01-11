@@ -14,6 +14,9 @@ The aim of this project is to make Power Apps test automation easier, faster and
   - [Writing feature files](#Writing-feature-files)
   - [Writing step bindings](#Writing-step-bindings)
   - [Test setup](#Test-setup)
+    - [Bindings](#Bindings)
+    - [Data file syntax](#Data-file-syntax)
+    - [Dynamic data](#Dynamic-data)
 - [Contributing](#Contributing)
 - [Licence](#Licence)
 
@@ -50,20 +53,24 @@ PM> Install-Package Selenium.Chrome.WebDriver
 Installing the NuGet package creates a _power-apps-bindings.yml_ file in your project's root. This is used to configure the URL, browser, and users that will be used for your tests.
 
 ```yaml
-url: SPECFLOW_POWERAPPS_URL
-browserOptions:
+url: SPECFLOW_POWERAPPS_URL # mandatory
+browserOptions: # optional - will use default EasyRepro options if not set
   browserType: Chrome
   headless: true
   width: 1920
   height: 1080
   startMaximized: false
-users:
-  - username: SPECFLOW_POWERAPPS_USERNAME_SALESPERSON
-    password: SPECFLOW_POWERAPPS_PASSWORD_SALESPERSON
-    alias: a salesperson
+applicationUser: # optional - populate if creating test data for users other than the current user
+  tenantId: SPECFLOW_POWERAPPS_TENANTID optional # mandatory
+  clientId: SPECFLOW_POWERAPPS_CLIENTID # mandatory
+  clientSecret: SPECFLOW_POWERAPPS_CLIENTSECRET # mandatory
+users: # mandatory
+  - username: SPECFLOW_POWERAPPS_USERNAME_SALESPERSON # mandatory
+    password: SPECFLOW_POWERAPPS_PASSWORD_SALESPERSON # optional - populate if this user will be logging in for tests
+    alias: a salesperson # mandatory
 ```
 
-The URL, usernames, and passwords will be set from environment variable (if found). Otherwise, the value from the config file will be used. The browserOptions node supports anything in the EasyRepro `BrowserOptions` class.
+The URL, usernames, passwords, and application user details will be set from environment variable (if found). Otherwise, the value from the config file will be used. The browserOptions node supports anything in the EasyRepro `BrowserOptions` class.
 
 ### Writing feature files
 
@@ -97,20 +104,30 @@ public class MyCustomSteps : PowerAppsStepDefiner
 
 ### Test setup
 
+#### Bindings
+
 We avoid performing test setup via the UI. This speeds up test execution and makes the tests more robust (as UI automation is more fragile than using supported APIs). _Given_ steps should therefore be carried out using the [Client API](client-api), [WebAPI](web-api) or [Organization Service](org-service).
 
-You can create test data by using the following _Given_ step -
+You can create test data by using the following _Given_ steps -
 
 ```gherkin
-Given I have created "a record"
+Given I have created 'a record'
+```
+or
+```gherkin
+Given 'someone' has created 'a record'
 ```
 
-This will look for a JSON file named _a record.json_ in the _data_ folder (you must ensure that these files are copying to the build output directory). The JSON is the same as expected by WebAPI when creating records via a [deep insert](https://docs.microsoft.com/en-us/dynamics365/customer-engagement/developer/webapi/create-entity-web-api#create-related-entities-in-one-operation). The example below will create the following -
+The examples above will both look for a JSON file named _a record.json_ in the _data_ folder (you must ensure that these files are copying to the build output directory). The difference is that the latter requires the following in the configuration file: 
 
-- An account
-- An primary contact related to the account
-- An opportunity related to the account
-- A task related to the opportunity
+- a user with an alias of _someone_ in the `users` array 
+- an application user with sufficient privileges to impersonate the above user configured in the `applicationUser` property. 
+
+Refer to the Microsoft documentation on creating an application user [here](https://docs.microsoft.com/en-us/power-platform/admin/create-users-assign-online-security-roles#create-an-application-user).
+
+#### Data file syntax 
+
+The JSON is similar to that expected by Web API when creating records via a [deep insert](https://docs.microsoft.com/en-us/dynamics365/customer-engagement/developer/webapi/create-entity-web-api#create-related-entities-in-one-operation).
 
 ```json
 {
@@ -129,10 +146,16 @@ This will look for a JSON file named _a record.json_ in the _data_ folder (you m
   ]
 }
 ```
+The example above will create the following:
+
+- An account
+- An primary contact related to the account
+- An opportunity related to the account
+- A task related to the opportunity
 
 The `@logicalName` property is required for the root record.
 
-The `@alias` property can optionally be added to any record and allows the record to be referenced in certain bindings. The _Given I have created_ binding itself supports relating records using `@alias.bind` syntax.
+The `@alias` property can optionally be added to any record and allows the record to be referenced in certain bindings. The _Given I have created_ binding itself supports relating records using `@alias.bind` syntax, as shown below:
 
 ```json
 {
@@ -142,6 +165,8 @@ The `@alias` property can optionally be added to any record and allows the recor
   "primarycontactid@alias.bind": "sample contact" 
 }
 ```
+
+#### Dynamic data
 
 We also support the use of 
 [faker.js](https://github.com/marak/Faker.js) moustache template syntax for generating dynamic test data at run-time. Please refer to the faker documentation for all of the functionality that is available. 
