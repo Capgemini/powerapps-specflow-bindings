@@ -10,17 +10,14 @@ describe('Driver', () => {
     driver = new Driver(dataManager);
   });
 
-  describe('.loadTestDataAsUser(json, username, authToken)', () => {
-    it('throws if a username isn\'t provided', () => expectAsync(driver.loadTestDataAsUser('{}', '', 'token')).toBeRejectedWithError(/.*username.*/));
-
-    it('throws if a token isn\'t provided', () => expectAsync(driver.loadTestDataAsUser('{}', 'user@contoso.com', '')).toBeRejectedWithError(/.*token.*/));
+  describe('.loadTestDataAsUser(json, username)', () => {
+    it('throws if a username isn\'t provided', () => expectAsync(driver.loadTestDataAsUser('{}', '')).toBeRejectedWithError(/.*username.*/));
 
     it('passes CreateOptions to dataManager', async () => {
       const userToImpersonate = 'user@contoso.com';
-      const authToken = 'token';
-      const expectedCreateOptions: CreateOptions = { authToken, userToImpersonate };
+      const expectedCreateOptions: CreateOptions = { userToImpersonate };
 
-      await driver.loadTestDataAsUser('{ "@logicalName": "contact" }', userToImpersonate, authToken);
+      await driver.loadTestDataAsUser('{ "@logicalName": "contact" }', userToImpersonate);
 
       expect(dataManager.createData).toHaveBeenCalledWith(
         jasmine.anything(),

@@ -100,7 +100,19 @@
         /// <summary>
         /// Gets provides utilities for test setup/teardown.
         /// </summary>
-        protected static ITestDriver TestDriver => testDriver ?? (testDriver = new TestDriver((IJavaScriptExecutor)Driver));
+        protected static ITestDriver TestDriver
+        {
+            get
+            {
+                if (testDriver == null)
+                {
+                    testDriver = new TestDriver((IJavaScriptExecutor)Driver);
+                    testDriver.InjectOnPage(TestConfig.ApplicationUser != null ? AccessToken : null);
+                }
+
+                return testDriver;
+            }
+        }
 
         /// <summary>
         /// Performs any cleanup necessary when quitting the WebBrowser.

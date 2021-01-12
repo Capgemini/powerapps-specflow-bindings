@@ -30,14 +30,7 @@
         {
             try
             {
-                if (TestConfig.ApplicationUser != null)
-                {
-                    TestDriver.DeleteTestData(AccessToken);
-                }
-                else
-                {
-                    TestDriver.DeleteTestData();
-                }
+                TestDriver.DeleteTestData();
             }
             catch (WebDriverException)
             {

@@ -1,11 +1,11 @@
-import { AuthenticatedRecordRepository, MetadataRepository, RecordRepository } from '../../src/repositories/index';
+import { AuthenticatedRecordRepository, MetadataRepository } from '../../src/repositories/index';
 
 const fetchMock = require('fetch-mock/es5/client');
 
 describe('CurrentUserRecordRepository', () => {
   const logicalName = 'account';
 
-  let recordRepo: RecordRepository;
+  let recordRepo: AuthenticatedRecordRepository;
   let metadataRepo: jasmine.SpyObj<MetadataRepository>;
   beforeEach(() => {
     metadataRepo = jasmine.createSpyObj<MetadataRepository>('MetadataRepository',
@@ -16,11 +16,23 @@ describe('CurrentUserRecordRepository', () => {
         'getRelationshipMetadata',
       ]);
     metadataRepo.getEntitySetForEntity.and.returnValues(Promise.resolve('accounts'), Promise.resolve('contacts'));
-    recordRepo = new AuthenticatedRecordRepository(metadataRepo, '', '');
+    recordRepo = new AuthenticatedRecordRepository(metadataRepo, 'token', '41416194-ee8e-4e6a-9b7a-4a76c4fd9cc7');
   });
 
   afterEach(() => {
     fetchMock.restore();
+  });
+
+  describe('setImpersonatedUserId(userToImpersonateId)', () => {
+    it('updates the CallerObjectId header of requests', async () => {
+      const guid = 'bc148b3f-d7d7-4546-a3a8-d92ffd9a98c8';
+      fetchMock.mock('*', { headers: { 'OData-EntityId': `api/data/v9.1/accounts(${guid})` } });
+      recordRepo.setImpersonatedUserId(guid);
+
+      await recordRepo.createRecord(logicalName, {});
+
+      expect(fetchMock.calls()[0][1].headers.CallerObjectId).toBe(guid);
+    });
   });
 
   describe('createRecord(entityLogicalName, record)', () => {
@@ -57,7 +69,7 @@ describe('CurrentUserRecordRepository', () => {
   });
 
   describe('upsertRecord(entityLogicalName, record)', () => {
-    const record = { '@key': 'keyfield', keyfield: 'Test Key' };
+    const recordWithKey = { '@key': 'keyfield', keyfield: 'Test Key' };
 
     it('performs an update when a match is found on @key', async () => {
       const matchedRecordId = '<account-id>';
@@ -67,7 +79,7 @@ describe('CurrentUserRecordRepository', () => {
       };
       fetchMock.mock('*', retrieveResult);
 
-      const result = await recordRepo.upsertRecord(logicalName, record);
+      const result = await recordRepo.upsertRecord(logicalName, recordWithKey);
 
       expect(result.id).toBe(matchedRecordId);
     });
@@ -79,6 +91,15 @@ describe('CurrentUserRecordRepository', () => {
       };
       const id = 'account-id';
       fetchMock.get('*', retrieveResult);
+      fetchMock.post('*', { headers: { 'OData-EntityId': `api/data/v9.1/accounts(${id})` } });
+
+      const result = await recordRepo.upsertRecord(logicalName, recordWithKey);
+
+      expect(result.id).toBe(id);
+    });
+
+    it('performs a create when no @key is specified', async () => {
+      const id = 'account-id';
       fetchMock.post('*', { headers: { 'OData-EntityId': `api/data/v9.1/accounts(${id})` } });
 
       const result = await recordRepo.upsertRecord(logicalName, {});

@@ -44,8 +44,7 @@
         {
             TestDriver.LoadTestDataAsUser(
                 TestDataRepository.GetTestData(fileName),
-                TestConfig.GetUser(alias).Username,
-                AccessToken);
+                TestConfig.GetUser(alias).Username);
         }
     }
 }

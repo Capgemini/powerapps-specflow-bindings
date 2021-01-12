@@ -34,6 +34,14 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
   }
 
   /**
+   * Sets the user to impersonate.
+   * @param userToImpersonateId The ID of the user to impersonate.
+   */
+  public setImpersonatedUserId(userToImpersonateId: string) {
+    this.headers.CallerObjectId = userToImpersonateId;
+  }
+
+  /**
    * Retrieves a record.
    * @param logicalName The logical name of the record to retrieve.
    * @param id The ID of the record to retrieve.

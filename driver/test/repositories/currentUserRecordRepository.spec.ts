@@ -62,7 +62,7 @@ describe('CurrentUserRecordRepository', () => {
   });
 
   describe('upsertRecord(entityLogicalName, record)', () => {
-    const record = { '@key': 'keyfield', keyfield: 'Test Key' };
+    const recordWithkey = { '@key': 'keyfield', keyfield: 'Test Key' };
 
     it('performs an update when a match is found on @key', async () => {
       const logicalName = 'account';
@@ -73,48 +73,57 @@ describe('CurrentUserRecordRepository', () => {
       };
       xrmWebApi.retrieveMultipleRecords.and.returnValue(Promise.resolve(retrieveResult) as never);
 
-      await recordRepository.upsertRecord(logicalName, record);
+      await recordRepository.upsertRecord(logicalName, recordWithkey);
 
-      expect(xrmWebApi.updateRecord).toHaveBeenCalledWith(logicalName, matchedRecordId, record);
+      expect(xrmWebApi.updateRecord)
+        .toHaveBeenCalledWith(logicalName, matchedRecordId, recordWithkey);
     });
 
     it('performs a create when no match is found on @key', async () => {
       const logicalName = 'account';
       xrmWebApi.retrieveMultipleRecords.and.returnValue(Promise.resolve({ entities: [], nextLink: '' }) as never);
 
-      await recordRepository.upsertRecord(logicalName, record);
+      await recordRepository.upsertRecord(logicalName, recordWithkey);
 
-      expect(xrmWebApi.createRecord).toHaveBeenCalledWith(logicalName, record);
+      expect(xrmWebApi.createRecord).toHaveBeenCalledWith(logicalName, recordWithkey);
     });
 
-    describe('deleteRecord(entityReference)', () => {
-      it('returns a reference to the deleted record', async () => {
-        const entityReference: Xrm.LookupValue = {
-          entityType: 'account',
-          id: '<account-id>',
-        };
-        xrmWebApi.deleteRecord.and.returnValue(Promise.resolve(entityReference) as never);
+    it('performs a create when no @key is specified', async () => {
+      const logicalName = 'account';
+      const recordWithoutKey = {};
+      await recordRepository.upsertRecord(logicalName, recordWithoutKey);
 
-        const result = await recordRepository.deleteRecord(entityReference);
-
-        expect(result).toBe(entityReference);
-      });
+      expect(xrmWebApi.createRecord).toHaveBeenCalledWith(logicalName, recordWithoutKey);
     });
+  });
 
-    describe('associateManyToManyRecords(primaryRecord, relatedRecord, relationshipName)', () => {
-      it('executes an associate request', async () => {
-        const primary: Xrm.LookupValue = { id: '<primary-id>', entityType: 'primaryentity' };
-        const related: Xrm.LookupValue[] = [{ id: '<related-id>', entityType: 'relatedentity' }];
-        const relationship = 'primary_related';
+  describe('deleteRecord(entityReference)', () => {
+    it('returns a reference to the deleted record', async () => {
+      const entityReference: Xrm.LookupValue = {
+        entityType: 'account',
+        id: '<account-id>',
+      };
+      xrmWebApi.deleteRecord.and.returnValue(Promise.resolve(entityReference) as never);
 
-        await recordRepository.associateManyToManyRecords(primary, related, relationship);
+      const result = await recordRepository.deleteRecord(entityReference);
 
-        const actualRequest = xrmWebApi.execute.calls.first().args[0] as AssociateRequest;
+      expect(result).toBe(entityReference);
+    });
+  });
 
-        expect(actualRequest.target).toBe(primary);
-        expect(actualRequest.relatedEntities).toBe(related);
-        expect(actualRequest.relationship).toBe(relationship);
-      });
+  describe('associateManyToManyRecords(primaryRecord, relatedRecord, relationshipName)', () => {
+    it('executes an associate request', async () => {
+      const primary: Xrm.LookupValue = { id: '<primary-id>', entityType: 'primaryentity' };
+      const related: Xrm.LookupValue[] = [{ id: '<related-id>', entityType: 'relatedentity' }];
+      const relationship = 'primary_related';
+
+      await recordRepository.associateManyToManyRecords(primary, related, relationship);
+
+      const actualRequest = xrmWebApi.execute.calls.first().args[0] as AssociateRequest;
+
+      expect(actualRequest.target).toBe(primary);
+      expect(actualRequest.relatedEntities).toBe(related);
+      expect(actualRequest.relationship).toBe(relationship);
     });
   });
 });
