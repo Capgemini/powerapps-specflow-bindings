@@ -27,7 +27,7 @@ Scenario: Assign to user on assign dialog
 Scenario: Assign to team on assign dialog
 	Given I have created 'a different team'
 	When I select the 'Assign' command
-	And I assign to a team named 'the team' on the assign dialog
+	And I assign to a team named 'A different team' on the assign dialog
 
 Scenario: Close warning dialog
 	When I select the 'Show Error Dialog' command
