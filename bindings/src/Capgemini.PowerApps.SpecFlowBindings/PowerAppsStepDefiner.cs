@@ -41,7 +41,7 @@
             {
                 var hostSegments = TestConfig.GetTestUrl().Host.Split('.');
 
-                return App.AcquireTokenForClient(new string[] { $"https://{hostSegments[0]}.api.{hostSegments[1]}.dynamics.com//.default" })
+                return GetApp().AcquireTokenForClient(new string[] { $"https://{hostSegments[0]}.api.{hostSegments[1]}.dynamics.com//.default" })
                     .ExecuteAsync()
                     .Result.AccessToken;
             }
@@ -103,30 +103,6 @@
         protected static ITestDriver TestDriver => testDriver ?? (testDriver = new TestDriver((IJavaScriptExecutor)Driver));
 
         /// <summary>
-        /// Gets the <see cref="IConfidentialClientApplication"/> used to authenticate as the configured application user.
-        /// </summary>
-        private static IConfidentialClientApplication App
-        {
-            get
-            {
-                if (TestConfig.ApplicationUser == null)
-                {
-                    throw new ConfigurationErrorsException("An application user has not been configured.");
-                }
-
-                if (app == null)
-                {
-                    app = ConfidentialClientApplicationBuilder.Create(TestConfig.ApplicationUser.ClientId)
-                        .WithTenantId(TestConfig.ApplicationUser.TenantId)
-                        .WithClientSecret(TestConfig.ApplicationUser.ClientSecret)
-                        .Build();
-                }
-
-                return app;
-            }
-        }
-
-        /// <summary>
         /// Performs any cleanup necessary when quitting the WebBrowser.
         /// </summary>
         protected static void Quit()
@@ -140,6 +116,27 @@
             xrmApp = null;
             client = null;
             testDriver = null;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="IConfidentialClientApplication"/> used to authenticate as the configured application user.
+        /// </summary>
+        private static IConfidentialClientApplication GetApp()
+        {
+            if (TestConfig.ApplicationUser == null)
+            {
+                throw new ConfigurationErrorsException("An application user has not been configured.");
+            }
+
+            if (app == null)
+            {
+                app = ConfidentialClientApplicationBuilder.Create(TestConfig.ApplicationUser.ClientId)
+                    .WithTenantId(TestConfig.ApplicationUser.TenantId)
+                    .WithClientSecret(TestConfig.ApplicationUser.ClientSecret)
+                    .Build();
+            }
+
+            return app;
         }
     }
 }
