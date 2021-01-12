@@ -86,7 +86,6 @@ jobs:
           searchFolder: bindings\tests\Capgemini.PowerApps.SpecFlowBindings.UiTests
           rerunFailedTests: true
           rerunMaxAttempts: 2
-        continueOnError: true
         env:
           POWERAPPS_SPECFLOW_BINDINGS_TEST_TENANTID: $(Application User Tenant ID)
           POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTID: $(Application User Client ID)
