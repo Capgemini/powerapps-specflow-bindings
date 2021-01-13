@@ -29,12 +29,31 @@ export default class Driver {
   public async loadTestData(json: string): Promise<Xrm.LookupValue> {
     const testRecord = JSON.parse(json) as TestRecord;
     const logicalName = testRecord['@logicalName'];
+
     return this.dataManager.createData(logicalName, testRecord);
   }
 
   /**
+   *
+   * @param json a JSON object.
+   * @param userToImpersonate The username of the user to impersonate.
+   */
+  public async loadTestDataAsUser(
+    json: string,
+    userToImpersonate: string,
+  ) {
+    if (!userToImpersonate) {
+      throw new Error('You have not provided the username of the user to impersonate.');
+    }
+
+    const testRecord = JSON.parse(json) as TestRecord;
+    const logicalName = testRecord['@logicalName'];
+
+    return this.dataManager.createData(logicalName, testRecord, { userToImpersonate });
+  }
+
+  /**
      * Deletes data that has been created as a result of any requests to load  @see loadJsonData
-     *
      * @memberof Driver
      */
   public deleteTestData(): Promise<(Xrm.LookupValue | void)[]> {

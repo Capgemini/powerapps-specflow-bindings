@@ -27,15 +27,11 @@
             this.BrowserOptions = new BrowserOptions();
         }
 
-#pragma warning disable CA1056 // Uri properties should not be strings
-
         /// <summary>
-        /// Gets or sets the URL of the target Dynamics 365 instance.
+        /// Sets the URL of the target Dynamics 365 instance.
         /// </summary>
         [YamlMember(Alias = "url")]
-        public string Url { get; set; }
-
-#pragma warning restore CA1056 // Uri properties should not be strings
+        public string Url { private get; set; }
 
         /// <summary>
         /// Gets or sets the browser options to use for running tests.
@@ -43,15 +39,17 @@
         [YamlMember(Alias = "browserOptions")]
         public BrowserOptions BrowserOptions { get; set; }
 
-#pragma warning disable CA2227 // Collection properties should be read only
-
         /// <summary>
         /// Gets or sets users that tests can be run as.
         /// </summary>
         [YamlMember(Alias = "users")]
         public List<UserConfiguration> Users { get; set; }
 
-#pragma warning restore CA2227 // Collection properties should be read only
+        /// <summary>
+        /// Gets or sets application user client ID and client secret for performing certain operations (e.g. impersonating other users during test data creation).
+        /// </summary>
+        [YamlMember(Alias = "applicationUser")]
+        public ClientCredentials ApplicationUser { get; set; }
 
         /// <summary>
         /// Gets the target URL.
@@ -59,9 +57,7 @@
         /// <returns>The URL of the test environment.</returns>
         public Uri GetTestUrl()
         {
-            var urlEnvironmentVariable = Environment.GetEnvironmentVariable(this.Url);
-
-            return string.IsNullOrEmpty(urlEnvironmentVariable) ? new Uri(this.Url) : new Uri(urlEnvironmentVariable);
+            return new Uri(ConfigHelper.GetEnvironmentVariableIfExists(this.Url));
         }
 
         /// <summary>
@@ -73,15 +69,7 @@
         {
             try
             {
-                var user = this.Users.First(u => u.Alias == userAlias);
-
-                var usernameEnvironmentVariable = Environment.GetEnvironmentVariable(user.Username);
-                user.Username = string.IsNullOrEmpty(usernameEnvironmentVariable) ? user.Username : usernameEnvironmentVariable;
-
-                var passwordEnvironmentVariable = Environment.GetEnvironmentVariable(user.Password);
-                user.Password = string.IsNullOrEmpty(passwordEnvironmentVariable) ? user.Password : passwordEnvironmentVariable;
-
-                return user;
+                return this.Users.First(u => u.Alias == userAlias);
             }
             catch (Exception ex)
             {

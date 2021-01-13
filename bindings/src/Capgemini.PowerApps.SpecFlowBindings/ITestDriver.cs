@@ -8,6 +8,19 @@
     public interface ITestDriver
     {
         /// <summary>
+        /// Injects the driver onto the current page.
+        /// </summary>
+        /// <param name="authToken">The application user auth token (if configured).</param>
+        void InjectOnPage(string authToken);
+
+        /// <summary>
+        /// Loads scenario test data.
+        /// </summary>
+        /// <param name="data">The data to load.</param>
+        /// <param name="username">The username of the user to impersonate.</param>
+        void LoadTestDataAsUser(string data, string username);
+
+        /// <summary>
         /// Loads scenario test data.
         /// </summary>
         /// <param name="data">The data to load.</param>
