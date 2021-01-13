@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
+    using System.Text;
     using Microsoft.Xrm.Sdk;
     using OpenQA.Selenium;
 
@@ -29,16 +30,46 @@
         public TestDriver(IJavaScriptExecutor javascriptExecutor)
         {
             this.javascriptExecutor = javascriptExecutor;
-
-            this.Initialise();
         }
 
         private string FilePath => this.path ?? (this.path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), DriverScriptPath));
+
+        /// <inheritdoc/>
+        public void InjectOnPage(string authToken)
+        {
+            var scriptBuilder = new StringBuilder();
+            scriptBuilder.AppendLine(File.ReadAllText(this.FilePath));
+            scriptBuilder.AppendLine($@"var recordRepository = new {LibraryNamespace}.CurrentUserRecordRepository(Xrm.WebApi.online);
+                   var metadataRepository = new {LibraryNamespace}.MetadataRepository(Xrm.WebApi.online);
+                   var deepInsertService = new {LibraryNamespace}.DeepInsertService(metadataRepository, recordRepository);");
+
+            if (!string.IsNullOrEmpty(authToken))
+            {
+                scriptBuilder.AppendLine(
+                    $@"var appUserRecordRepository = new {LibraryNamespace}.AuthenticatedRecordRepository(metadataRepository, '{authToken}');
+                       var dataManager = new {LibraryNamespace}.DataManager(recordRepository, deepInsertService, [new {LibraryNamespace}.FakerPreprocessor()], appUserRecordRepository);");
+            }
+            else
+            {
+                scriptBuilder.AppendLine(
+                    $"var dataManager = new {LibraryNamespace}.DataManager(recordRepository, deepInsertService, [new {LibraryNamespace}.FakerPreprocessor()]);");
+            }
+
+            scriptBuilder.AppendLine($"{TestDriverReference} = new {LibraryNamespace}.Driver(dataManager);");
+
+            this.javascriptExecutor.ExecuteScript(scriptBuilder.ToString());
+        }
 
         /// <inheritdoc cref="ITestDriver"/>
         public void LoadTestData(string data)
         {
             this.ExecuteDriverFunctionAsync($"loadTestData(`{data}`)");
+        }
+
+        /// <inheritdoc/>
+        public void LoadTestDataAsUser(string data, string username)
+        {
+            this.ExecuteDriverFunctionAsync($"loadTestDataAsUser(`{data}`, '{username}')");
         }
 
         /// <inheritdoc cref="ITestDriver"/>
@@ -81,17 +112,6 @@
             }
 
             return result;
-        }
-
-        private void Initialise()
-        {
-            this.javascriptExecutor.ExecuteScript(
-                $"{File.ReadAllText(this.FilePath)}\n" +
-                $@"var recordRepository = new {LibraryNamespace}.RecordRepository(Xrm.WebApi.online);
-                   var metadataRepository = new {LibraryNamespace}.MetadataRepository(Xrm.WebApi.online);
-                   var deepInsertService = new {LibraryNamespace}.DeepInsertService(metadataRepository, recordRepository);
-                   var dataManager = new {LibraryNamespace}.DataManager(recordRepository, deepInsertService, [new {LibraryNamespace}.FakerPreprocessor()]);
-                   {TestDriverReference} = new {LibraryNamespace}.Driver(dataManager);");
         }
     }
 }

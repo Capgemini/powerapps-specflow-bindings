@@ -229,5 +229,13 @@ describe('DeepInsertService', () => {
 
       expect(entityReference.record.reference).toBe(expectedEntityReference);
     });
+
+    it('overrides the default repository with the one passed as an argument (if provided)', async () => {
+      const newRecordRepo = jasmine.createSpyObj<RecordRepository>('RecordRepository', ['upsertRecord']);
+
+      await deepInsertService.deepInsert('account', { name: 'Sample Account' }, {}, newRecordRepo);
+
+      expect(newRecordRepo.upsertRecord).toHaveBeenCalledTimes(1);
+    });
   });
 });

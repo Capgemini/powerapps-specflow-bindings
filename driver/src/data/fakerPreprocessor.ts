@@ -1,6 +1,6 @@
 import * as faker from 'faker';
 import Preprocessor from './preprocessor';
-import { Record } from './record';
+import Record from './record';
 
 export default class FakerPreprocessor extends Preprocessor {
   // eslint-disable-next-line class-methods-use-this

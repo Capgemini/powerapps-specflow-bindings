@@ -25,9 +25,9 @@ Scenario: Assign to user on assign dialog
 	And I assign to a user named 'Power Apps Checker Application' on the assign dialog
 
 Scenario: Assign to team on assign dialog
-	Given I have created 'a team'
+	Given I have created 'a different team'
 	When I select the 'Assign' command
-	And I assign to a team named 'A team' on the assign dialog
+	And I assign to a team named 'A different team' on the assign dialog
 
 Scenario: Close warning dialog
 	When I select the 'Show Error Dialog' command

@@ -1,5 +1,4 @@
 /* eslint-disable class-methods-use-this */
-import Repository from './repository';
 
 /**
  * Repository to handle requests for metadata.
@@ -8,7 +7,7 @@ import Repository from './repository';
  * @class MetadataRepository
  * @extends {Repository}
  */
-export default class MetadataRepository extends Repository {
+export default class MetadataRepository {
   private static readonly RelationshipMetadataSet = 'RelationshipDefinitions';
 
   private static readonly EntityMetadataSet = 'EntityDefinitions';
@@ -26,6 +25,7 @@ export default class MetadataRepository extends Repository {
     const response = await fetch(
       'api/data/v9.1/'
       + `${MetadataRepository.EntityMetadataSet}?$filter=LogicalName eq '${logicalName}'&$select=EntitySetName`,
+      { cache: 'force-cache' },
     );
     const result = await response.json();
 
@@ -45,6 +45,7 @@ export default class MetadataRepository extends Repository {
     const response = await fetch(
       'api/data/v9.1/'
       + `${MetadataRepository.EntityMetadataSet}(LogicalName='${logicalName}')/Attributes/Microsoft.Dynamics.CRM.LookupAttributeMetadata?$filter=LogicalName eq '${navigationProperty.toLowerCase()}'&$select=Targets`,
+      { cache: 'force-cache' },
     );
     const result = await response.json();
 
@@ -62,6 +63,7 @@ export default class MetadataRepository extends Repository {
     const response = await fetch(
       'api/data/v9.1/'
       + `${MetadataRepository.OneToNMetadataSet}?$filter=ReferencedEntityNavigationPropertyName eq '${navPropName}'&$select=ReferencingEntityNavigationPropertyName`,
+      { cache: 'force-cache' },
     );
     const result = await response.json();
 
@@ -78,6 +80,7 @@ export default class MetadataRepository extends Repository {
     const response = await fetch(
       'api/data/v9.1/'
       + `${MetadataRepository.RelationshipMetadataSet}(SchemaName='${relationshipSchemaName}')`,
+      { cache: 'force-cache' },
     );
 
     return response.json();

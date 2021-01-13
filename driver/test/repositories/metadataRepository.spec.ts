@@ -3,13 +3,14 @@ import { MetadataRepository } from '../../src/repositories';
 const fetchMock = require('fetch-mock/es5/client');
 
 describe('MetadataRepository', () => {
-  let xrmWebApi: jasmine.SpyObj<Xrm.WebApiOnline>;
   let metadataRepo: MetadataRepository;
 
   beforeEach(() => {
-    xrmWebApi = jasmine.createSpyObj<Xrm.WebApiOnline>('XrmWebApi', ['createRecord', 'deleteRecord', 'execute', 'retrieveMultipleRecords', 'updateRecord']);
-    metadataRepo = new MetadataRepository(xrmWebApi);
-    fetchMock.reset();
+    metadataRepo = new MetadataRepository();
+  });
+
+  afterEach(() => {
+    fetchMock.restore();
   });
 
   describe('getEntitySetForEntity(logicalName)', () => {
@@ -53,7 +54,7 @@ describe('MetadataRepository', () => {
     it('returns relationship metadata for the provided relationship schema name', async () => {
       const result = {};
       const relationshipSchemaName = 'contact_accounts';
-      fetchMock.mock(/.*RelationshipDefinitions(SchemaName='relationshipSchemaName')/, { body: result, sendAsJson: true });
+      fetchMock.mock('*', { body: result, sendAsJson: true });
 
       expectAsync(metadataRepo.getRelationshipMetadata(relationshipSchemaName))
         .toBeResolvedTo(result as never);

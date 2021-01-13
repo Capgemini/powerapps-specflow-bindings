@@ -1,7 +1,9 @@
-import { RecordRepository } from '../repositories';
+import AuthenticatedRecordRepository from '../repositories/authenticatedRecordRepository';
+import { CreateOptions } from './createOptions';
 import DeepInsertService from './deepInsertService';
 import Preprocessor from './preprocessor';
-import { Record } from './record';
+import Record from './record';
+import { CurrentUserRecordRepository } from '../repositories';
 
 /**
  * Manages the creation and cleanup of data.
@@ -14,7 +16,9 @@ export default class DataManager {
 
   public readonly refsByAlias: { [alias: string]: Xrm.LookupValue };
 
-  private readonly recordRepo: RecordRepository;
+  private readonly currentUserRecordRepo: CurrentUserRecordRepository;
+
+  private readonly appUserRecordRepo?: AuthenticatedRecordRepository;
 
   private readonly deepInsertSvc: DeepInsertService;
 
@@ -22,34 +26,55 @@ export default class DataManager {
 
   /**
      * Creates an instance of DataManager.
-     * @param {RecordRepository} recordRepository A record repository.
+     * @param {RecordRepository} currentUserRecordRepo A record repository.
      * @param {DeepInsertService} deepInsertService A deep insert parser.
+     * @param {Preprocessor} preprocessors Preprocessors that modify test data before creation.
+     * @param {AuthenticatedRecordRepository} appUserRecordRepo An app user record repository
      * @memberof DataManager
      */
   constructor(
-    recordRepository: RecordRepository,
+    currentUserRecordRepo: CurrentUserRecordRepository,
     deepInsertService: DeepInsertService,
     preprocessors?: Preprocessor[],
+    appUserRecordRepo?: AuthenticatedRecordRepository,
   ) {
+    this.currentUserRecordRepo = currentUserRecordRepo;
+    this.deepInsertSvc = deepInsertService;
+    this.appUserRecordRepo = appUserRecordRepo;
+    this.preprocessors = preprocessors;
+
     this.refs = [];
     this.refsByAlias = {};
-    this.recordRepo = recordRepository;
-    this.deepInsertSvc = deepInsertService;
-    this.preprocessors = preprocessors;
   }
 
   /**
      * Deep inserts a record for use in a test.
      *
+     * @param {string} logicalName the logical name of the root entity.
      * @param {Record} record The record to deep insert.
+     * @param {CreateOptions} opts options for creating the data.
      * @returns {Promise<Xrm.LookupValue>} An entity reference to the root record.
      * @memberof DataManager
      */
-  public async createData(logicalName: string, record: Record): Promise<Xrm.LookupValue> {
+  public async createData(
+    logicalName: string,
+    record: Record,
+    opts?: CreateOptions,
+  ): Promise<Xrm.LookupValue> {
+    if (opts?.userToImpersonate) {
+      if (!this.appUserRecordRepo) {
+        throw new Error('Unable to impersonate: an application user respository has not been configured.');
+      }
+      this.appUserRecordRepo.setImpersonatedUserId(
+        await this.getObjectIdForUser(opts.userToImpersonate),
+      );
+    }
+
     const res = await this.deepInsertSvc.deepInsert(
       logicalName,
       this.preprocess(record),
       this.refsByAlias,
+      opts?.userToImpersonate ? this.appUserRecordRepo : this.currentUserRecordRepo,
     );
 
     const newRecords = [res.record, ...res.associatedRecords];
@@ -64,20 +89,32 @@ export default class DataManager {
     return res.record.reference;
   }
 
+  private async getObjectIdForUser(username: string): Promise<string> {
+    const res = await this.currentUserRecordRepo.retrieveMultipleRecords('systemuser', `?$filter=internalemailaddress eq '${username}'&$select=azureactivedirectoryobjectid`);
+
+    if (res.entities.length === 0) {
+      throw new Error(`Unable to impersonate ${username} as the user was not found.`);
+    }
+
+    return res.entities[0].azureactivedirectoryobjectid;
+  }
+
   /**
      * Performs cleanup by deleting all records created via the TestDataManager.
-     *
+     * @param authToken An optional auth token to use when deleting test data.
      * @returns {Promise<void>}
      * @memberof DataManager
      */
   public async cleanup(): Promise<(Xrm.LookupValue | void)[]> {
+    const repo = this.appUserRecordRepo || this.currentUserRecordRepo;
+
     const deletePromises = this.refs.map(async (record) => {
       let reference;
       let retry = 0;
       while (retry < 3) {
         try {
           // eslint-disable-next-line no-await-in-loop
-          reference = await this.recordRepo.deleteRecord(record);
+          reference = await repo.deleteRecord(record);
           break;
         } catch (err) {
           retry += 1;
@@ -85,8 +122,10 @@ export default class DataManager {
       }
       return reference;
     });
+
     this.refs.splice(0, this.refs.length);
     Object.keys(this.refsByAlias).forEach((alias) => delete this.refsByAlias[alias]);
+
     return Promise.all(deletePromises);
   }
 
