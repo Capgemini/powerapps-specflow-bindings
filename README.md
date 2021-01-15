@@ -115,7 +115,7 @@ Given I have created 'a record'
 ```
 or
 ```gherkin
-Given 'someone' has created 'a record a difference'
+Given 'someone' has created 'a record with a difference'
 ```
 
 These bindings look for a corresponding JSON file in a _data_ folder in the root of your project. The file is resolved using a combination of the directory structure and the file name. For example, the bindings above could resolve the following files:
@@ -125,7 +125,7 @@ These bindings look for a corresponding JSON file in a _data_ folder in the root
     │   a record.json
     │
     └───a record
-            with a longer name.json
+            with a difference.json
 ```
 
 If you are using the binding which creates data as someone other than the current user, you will need the following configuration to be present:
