@@ -14,6 +14,26 @@
     <Exec Command="dotnet build ..\sb_PowerAppsSpecFlowBindings_Mock\sb_PowerAppsSpecFlowBindings_Mock.cdsproj --configuration $(Configuration)" />
     <Copy DestinationFolder="$(OutputPath)" SourceFiles="..\sb_PowerAppsSpecFlowBindings_Mock\bin\$(Configuration)\sb_PowerAppsSpecFlowBindings_Mock.zip" />
   </Target>
+  <Target Name="BuildMSBuildTaskProject" AfterTargets="Build">
+    <MSBuild Projects="../../src/Capgemini.PowerApps.SpecFlowBindings.MSBuild/Capgemini.PowerApps.SpecFlowBindings.MSBuild.csproj">
+      <Output TaskParameter="TargetOutputs" ItemName="_MSBuildTaskProjectOutput" />
+    </MSBuild>
+    <PropertyGroup>
+      <_MSBuildOutputPath>@(_MSBuildTaskProjectOutput -> '%(RelativeDir)')</_MSBuildOutputPath>
+    </PropertyGroup>
+    <ItemGroup>
+      <_MSBuildOutputFiles Include="$(_MSBuildOutputPath)/**/*" Visible="false" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_MSBuildOutputFiles)" DestinationFolder="$(IntermediateOutputPath)Capgemini.PowerApps.SpecFlowBindings.MSBuild" />
+  </Target>
+  <UsingTask TaskName="Capgemini.PowerApps.SpecFlowBindings.MSBuild.ExtendDataFiles" AssemblyFile="$(IntermediateOutputPath)Capgemini.PowerApps.SpecFlowBindings.MSBuild/Capgemini.PowerApps.SpecFlowBindings.MSBuild.dll" />
+  <Target Name="CompileDataFiles" AfterTargets="BuildMSBuildTaskProject">
+    <Message Text="$(_MSBuildTaskAssembly)" />
+    <ItemGroup>
+      <DataFiles Include="Data\**\*.json" Visible="true" />
+    </ItemGroup>
+    <ExtendDataFiles Include="@(DataFiles)" DestinationFolder="$(OutputPath)Data" />
+  </Target>
   <ItemGroup>
     <PackageReference Include="Microsoft.CrmSdk.XrmTooling.CoreAssembly" Version="9.1.0.64" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
@@ -27,10 +47,6 @@
     <None Include="CodeCoverage.runsettings">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Data\**">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-
     <None Include="DataSteps.feature" />
     <None Include="GridSteps.feature" />
     <None Include="LookupSteps.feature" />

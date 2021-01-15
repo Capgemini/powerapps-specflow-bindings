@@ -115,12 +115,22 @@ Given I have created 'a record'
 ```
 or
 ```gherkin
-Given 'someone' has created 'a record'
+Given 'someone' has created 'a record with a difference'
 ```
 
-The examples above will both look for a JSON file named _a record.json_ in the _data_ folder (you must ensure that these files are copying to the build output directory). The difference is that the latter requires the following in the configuration file: 
+These bindings look for a corresponding JSON file in a _data_ folder in the root of your project. The file is resolved using a combination of the directory structure and the file name. For example, the bindings above could resolve the following files:
 
-- a user with an alias of _someone_ in the `users` array 
+```
+└───data
+    │   a record.json
+    │
+    └───a record
+            with a difference.json
+```
+
+If you are using the binding which creates data as someone other than the current user, you will need the following configuration to be present:
+
+- a user with a matching alias in the `users` array that has the `username` set
 - an application user with sufficient privileges to impersonate the above user configured in the `applicationUser` property. 
 
 Refer to the Microsoft documentation on creating an application user [here](https://docs.microsoft.com/en-us/power-platform/admin/create-users-assign-online-security-roles#create-an-application-user).
@@ -153,25 +163,17 @@ The example above will create the following:
 - An opportunity related to the account
 - A task related to the opportunity
 
-The `@logicalName` property is required for the root record.
+In addition to the standard Web API syntax, we also have the following:
 
-The `@alias` property can optionally be added to any record and allows the record to be referenced in certain bindings. The _Given I have created_ binding itself supports relating records using `@alias.bind` syntax, as shown below:
-
-```json
-{
-  "@logicalName": "account",
-  "@alias": "sample account",
-  "name": "Sample Account",
-  "primarycontactid@alias.bind": "sample contact" 
-}
-```
+| Property     | Description                                                                                                                                                  | Requirement                                              |
+|--------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------|
+| @logicalName | the entity logical name of the root record                                                                                                                   | Mandatory (unless included using `@extends` - see below) |
+| @alias       | a friendly alias that can be used to reference the created record in certain bindings. Can be set on nested records                                          | Optional                                                 |
+| @extends     | a relative path to a data file to extend. Records in arrays are merged by index (you may need to include blank objects to insert new records into the array) | Optional                                                 |
 
 #### Dynamic data
 
-We also support the use of 
-[faker.js](https://github.com/marak/Faker.js) moustache template syntax for generating dynamic test data at run-time. Please refer to the faker documentation for all of the functionality that is available. 
-
-The below JSON will generate a contact with a random name, credit limit, email address, and date of birth in the past 90 years:
+We support [faker.js](https://github.com/marak/Faker.js) moustache template syntax for generating dynamic test data at run-time. Please refer to the faker documentation for all of the functionality that is available. The below JSON will generate a contact with a random name, credit limit, email address, and date of birth in the past 90 years:
 
 ```json
 {
@@ -181,11 +183,15 @@ The below JSON will generate a contact with a random name, credit limit, email a
   "firstname": "{{name.lastName}}",
   "creditlimit@faker.number": "{{finance.amount}}",
   "emailaddress1": "{{internet.email}}",
-  "birthdate@faker.date":  "{{date.past(90)}}"
+  "birthdate@faker.date": "{{date.past(90)}}",
+  "accountid@alias.bind": "sample account"
 }
 ```
 
 When using faker syntax, you must also annotate number or date fields using `@faker.number`, `@faker.date` or `@faker.dateonly` to ensure that the JSON is formatted correctly.
+
+You can also dynamically set lookups by alias using `<lookup>@alias.bind` (this is limited to aliased records in other files - not the current file).
+
 
 ## Contributing
 

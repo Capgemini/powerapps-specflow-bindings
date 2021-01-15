@@ -11,4 +11,12 @@
       <Visible>false</Visible>
     </None>
   </ItemGroup>
+
+  <UsingTask TaskName="Capgemini.PowerApps.SpecFlowBindings.MSBuild.ExtendDataFiles" AssemblyFile="$(MSBuildThisFileDirectory)/Capgemini.PowerApps.SpecFlowBindings.MSBuild/Capgemini.PowerApps.SpecFlowBindings.MSBuild.dll" />
+  <Target Name="CompileDataFiles" AfterTargets="Build">
+    <ItemGroup>
+      <DataFiles Include="Data\**\*.json" Visible="true" />
+    </ItemGroup>
+    <ExtendDataFiles Include="@(DataFiles)" DestinationFolder="$(OutputPath)Data" />
+  </Target>
 </Project>

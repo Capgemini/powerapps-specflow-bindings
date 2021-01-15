@@ -7,7 +7,6 @@
     <Copyright>Capgemini Copyright © 2020</Copyright>
     <Version>0.1.0</Version>
     <PackageIcon>icon.png</PackageIcon>
-    <CodeAnalysisRuleSet>Capgemini.PowerApps.SpecFlowBindings.ruleset</CodeAnalysisRuleSet>
     <Authors>Capgemini_UK, ewingjm</Authors>
     <PackageId>Capgemini.PowerApps.SpecFlowBindings</PackageId>
     <PackageProjectUrl>https://github.com/Capgemini/powerapps-specflow-bindings</PackageProjectUrl>
@@ -15,17 +14,36 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <DebugType>portable</DebugType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+
   <PropertyGroup>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
   <Target Name="CopyDriver" AfterTargets="Build">
     <Exec Command="npm run build" WorkingDirectory="../../../driver" />
     <Copy SourceFiles="../../../driver/dist/driver.js" DestinationFolder="bin/lib" />
   </Target>
+
+  <Target Name="CopyTaskAssembly" AfterTargets="Build">
+    <MSBuild Projects="../Capgemini.PowerApps.SpecFlowBindings.MSBuild/Capgemini.PowerApps.SpecFlowBindings.MSBuild.csproj">
+      <Output TaskParameter="TargetOutputs" ItemName="BuildTaskAssemblyOutputs" />
+    </MSBuild>
+    <PropertyGroup>
+      <_OutputDirectory>@(BuildTaskAssemblyOutputs->'%(RelativeDir)')</_OutputDirectory>
+    </PropertyGroup>
+    <ItemGroup>
+      <Content Include="$(_OutputDirectory)**\*">
+        <Pack>true</Pack>
+        <PackagePath>build/Capgemini.PowerApps.SpecFlowBindings.MSBuild</PackagePath>
+      </Content>
+    </ItemGroup>
+  </Target>
+
   <ItemGroup>
     <PackageReference Include="Dynamics365.UIAutomation.Api" Version="9.1.0.27021" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
@@ -53,6 +71,7 @@
     </PackageReference>
     <PackageReference Include="YamlDotNet" Version="9.1.0" />
   </ItemGroup>
+
   <ItemGroup>
     <Content Include="build\**">
       <Pack>true</Pack>
@@ -66,7 +85,6 @@
       <Pack>true</Pack>
       <PackagePath>content</PackagePath>
     </Content>
-    <None Include="Capgemini.PowerApps.SpecFlowBindings.ruleset" />
     <None Include="icon.png" Pack="true" PackagePath="\" />
     <!-- Including driver files so that they are picked up by SonarCloud analysis (see https://sonarcloud.io/documentation/analysis/scan/sonarscanner-for-msbuild)  -->
     <None Include="..\..\..\driver\**\*.ts" Exclude="..\..\..\driver\node_modules\**\*" Visible="false" />

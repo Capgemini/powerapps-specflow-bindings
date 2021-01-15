@@ -18,3 +18,6 @@ Scenario: Generate data at run-time with faker
 
 Scenario: Generate data as a named user
 	And 'an aliased user' has created 'a record with an alias'
+
+Scenario: Create data that extends from other data
+	And I have created 'a contact that has been extended with @extend'
