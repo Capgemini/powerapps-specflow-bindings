@@ -5,6 +5,7 @@ VisualStudioVersion = 16.0.29230.47
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4C52F806-6E08-48B3-BC9C-0054D7B8FCA4}"
 	ProjectSection(SolutionItems) = preProject
+		..\.editorconfig = ..\.editorconfig
 		NuGet.config = NuGet.config
 		..\README.md = ..\README.md
 	EndProjectSection
@@ -16,6 +17,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8F8FAAAA-5C66-4ECC-BC4A-1127C1E7FFC8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Capgemini.PowerApps.SpecFlowBindings.UiTests", "tests\Capgemini.PowerApps.SpecFlowBindings.UiTests\Capgemini.PowerApps.SpecFlowBindings.UiTests.csproj", "{EFDA0239-5116-4DFA-90AA-644DD7509017}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Capgemini.PowerApps.SpecFlowBindings.MSBuild", "src\Capgemini.PowerApps.SpecFlowBindings.MSBuild\Capgemini.PowerApps.SpecFlowBindings.MSBuild.csproj", "{7D743F20-F84A-4719-B4CA-5A9FDF895573}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +34,10 @@ Global
 		{EFDA0239-5116-4DFA-90AA-644DD7509017}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFDA0239-5116-4DFA-90AA-644DD7509017}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFDA0239-5116-4DFA-90AA-644DD7509017}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D743F20-F84A-4719-B4CA-5A9FDF895573}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D743F20-F84A-4719-B4CA-5A9FDF895573}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D743F20-F84A-4719-B4CA-5A9FDF895573}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D743F20-F84A-4719-B4CA-5A9FDF895573}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,6 +45,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{88DD21C5-5EE8-4023-847E-2A87E434AD22} = {1BA90815-A570-44B9-96C8-1D087FF8A060}
 		{EFDA0239-5116-4DFA-90AA-644DD7509017} = {8F8FAAAA-5C66-4ECC-BC4A-1127C1E7FFC8}
+		{7D743F20-F84A-4719-B4CA-5A9FDF895573} = {1BA90815-A570-44B9-96C8-1D087FF8A060}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8038BFA0-6A34-41DE-992A-1B4228585614}
