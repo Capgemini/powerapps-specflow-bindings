@@ -115,19 +115,25 @@ Given I have created 'a record'
 ```
 or
 ```gherkin
-Given 'someone' has created 'a record'
+Given 'someone' has created 'a record a difference'
 ```
 
-These bindings look for a corresponding JSON file in a _data_ folder in the root of your project. The file is resolved using a combination of the directory structure and the file name. For example, `Given I have created 'a record with a longer name'` could find either _data/a record with a longer name.json_ or _data/a record/with a longer name.json_. 
+These bindings look for a corresponding JSON file in a _data_ folder in the root of your project. The file is resolved using a combination of the directory structure and the file name. For example, the bindings above could resolve the following files:
 
-> ℹ This is most useful when used in conjunction with the `@extends` functionality (e.g. where files in the _data/a record/_ folder extend _data/a record.json_).
+```
+└───data
+    │   a record.json
+    │
+    └───a record
+            with a longer name.json
+```
 
-The second binding will create data as a user other than the logged in user. This can be helpful when the logged in user doesn't have sufficient permissions to setup the data required for your tests. It requires the following in the configuration file: 
+If you are using the binding which creates data as someone other than the current user, you will need the following configuration to be present:
 
 - a user with a matching alias in the `users` array that has the `username` set
 - an application user with sufficient privileges to impersonate the above user configured in the `applicationUser` property. 
 
-> ℹ Refer to the Microsoft documentation on creating an application user [here](https://docs.microsoft.com/en-us/power-platform/admin/create-users-assign-online-security-roles#create-an-application-user).
+Refer to the Microsoft documentation on creating an application user [here](https://docs.microsoft.com/en-us/power-platform/admin/create-users-assign-online-security-roles#create-an-application-user).
 
 #### Data file syntax 
 
@@ -159,9 +165,11 @@ The example above will create the following:
 
 In addition to the standard Web API syntax, we also have the following:
 
-- `@logicalName` - the entity logical name of the root record. **Mandatory (unless included using `@extends` - see below)**. 
-- `@alias` - a friendly alias that can be used to reference the created record in certain bindings. Can be set on nested records. **Optional**.
-- `@extends` - a relative path to a data file to extend. Records in arrays are merged by index (you may need to include blank objects to insert new records into the array). **Optional**.
+| Property     | Description                                                                                                                                                  | Requirement                                              |
+|--------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------|
+| @logicalName | the entity logical name of the root record                                                                                                                   | Mandatory (unless included using `@extends` - see below) |
+| @alias       | a friendly alias that can be used to reference the created record in certain bindings. Can be set on nested records                                          | Optional                                                 |
+| @extends     | a relative path to a data file to extend. Records in arrays are merged by index (you may need to include blank objects to insert new records into the array) | Optional                                                 |
 
 #### Dynamic data
 
@@ -180,9 +188,10 @@ We support [faker.js](https://github.com/marak/Faker.js) moustache template synt
 }
 ```
 
-You can also dynamically set lookups by alias using `<lookup>@alias.bind`. This is currently limited to records that have already been created as part of a different file.
+When using faker syntax, you must also annotate number or date fields using `@faker.number`, `@faker.date` or `@faker.dateonly` to ensure that the JSON is formatted correctly.
 
-> ⚠ When using faker syntax, you must also annotate number or date fields using `@faker.number`, `@faker.date` or `@faker.dateonly` to ensure that the JSON is formatted correctly.
+You can also dynamically set lookups by alias using `<lookup>@alias.bind` (this is limited to aliased records in other files - not the current file).
+
 
 ## Contributing
 
