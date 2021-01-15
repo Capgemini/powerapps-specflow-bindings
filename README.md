@@ -157,7 +157,7 @@ In addition to the standard Web API syntax, we also have the following:
 
 - `@logicalName` - the entity logical name of the root record. **Mandatory (unless included using `@extends` - see below)**. 
 - `@alias` - a friendly alias that can be used to reference the created record in certain bindings. Can be set on nested records. **Optional**.
-- '@extends` - a relative path to a data file to extend. Records in arrays are merged by index (you may need to include blank objects to insert new records into the array). **Optional**.
+- `@extends` - a relative path to a data file to extend. Records in arrays are merged by index (you may need to include blank objects to insert new records into the array). **Optional**.
 
 #### Dynamic data
 
