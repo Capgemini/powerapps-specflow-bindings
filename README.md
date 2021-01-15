@@ -118,7 +118,7 @@ or
 Given 'someone' has created 'a record'
 ```
 
-The examples above will both look for a JSON file named _a record.json_ in the _data_ folder (you must ensure that these files are copying to the build output directory). The difference is that the latter requires the following in the configuration file: 
+The examples above will both look for a JSON file named _a record.json_ in a _data_ folder in the root of your project. The difference is that the latter requires the following in the configuration file: 
 
 - a user with an alias of _someone_ in the `users` array 
 - an application user with sufficient privileges to impersonate the above user configured in the `applicationUser` property. 
@@ -153,25 +153,15 @@ The example above will create the following:
 - An opportunity related to the account
 - A task related to the opportunity
 
-The `@logicalName` property is required for the root record.
+In addition to the standard Web API syntax, we also have the following:
 
-The `@alias` property can optionally be added to any record and allows the record to be referenced in certain bindings. The _Given I have created_ binding itself supports relating records using `@alias.bind` syntax, as shown below:
-
-```json
-{
-  "@logicalName": "account",
-  "@alias": "sample account",
-  "name": "Sample Account",
-  "primarycontactid@alias.bind": "sample contact" 
-}
-```
+- `@logicalName` - the entity logical name of the root record. **Mandatory (unless included using `@extends` - see below)**. 
+- `@alias` - a friendly alias that can be used to reference the created record in certain bindings. Can be set on nested records. **Optional**.
+- '@extends` - a relative path to a data file to extend. Records in arrays are merged by index (you may need to include blank objects to insert new records into the array). **Optional**.
 
 #### Dynamic data
 
-We also support the use of 
-[faker.js](https://github.com/marak/Faker.js) moustache template syntax for generating dynamic test data at run-time. Please refer to the faker documentation for all of the functionality that is available. 
-
-The below JSON will generate a contact with a random name, credit limit, email address, and date of birth in the past 90 years:
+We support [faker.js](https://github.com/marak/Faker.js) moustache template syntax for generating dynamic test data at run-time. Please refer to the faker documentation for all of the functionality that is available. The below JSON will generate a contact with a random name, credit limit, email address, and date of birth in the past 90 years:
 
 ```json
 {
@@ -181,11 +171,14 @@ The below JSON will generate a contact with a random name, credit limit, email a
   "firstname": "{{name.lastName}}",
   "creditlimit@faker.number": "{{finance.amount}}",
   "emailaddress1": "{{internet.email}}",
-  "birthdate@faker.date":  "{{date.past(90)}}"
+  "birthdate@faker.date": "{{date.past(90)}}",
+  "accountid@alias.bind": "sample account"
 }
 ```
 
-When using faker syntax, you must also annotate number or date fields using `@faker.number`, `@faker.date` or `@faker.dateonly` to ensure that the JSON is formatted correctly.
+> ⚠ When using faker syntax, you must also annotate number or date fields using `@faker.number`, `@faker.date` or `@faker.dateonly` to ensure that the JSON is formatted correctly.
+
+You can dynamically set lookups by alias using `<lookup>@alias.bind` as shown in the example above. This is currently limited to records that have already been created as part of a different file.
 
 ## Contributing
 
