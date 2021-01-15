@@ -118,12 +118,16 @@ or
 Given 'someone' has created 'a record'
 ```
 
-The examples above will both look for a JSON file named _a record.json_ in a _data_ folder in the root of your project. The difference is that the latter requires the following in the configuration file: 
+These bindings look for a corresponding JSON file in a _data_ folder in the root of your project. The file is resolved using a combination of the directory structure and the file name. For example, `Given I have created 'a record with a longer name'` could find either _data/a record with a longer name.json_ or _data/a record/with a longer name.json_. 
 
-- a user with an alias of _someone_ in the `users` array 
+> ℹ This is most useful when used in conjunction with the `@extends` functionality (e.g. where files in the _data/a record/_ folder extend _data/a record.json_).
+
+The second binding will create data as a user other than the logged in user. This can be helpful when the logged in user doesn't have sufficient permissions to setup the data required for your tests. It requires the following in the configuration file: 
+
+- a user with a matching alias in the `users` array that has the `username` set
 - an application user with sufficient privileges to impersonate the above user configured in the `applicationUser` property. 
 
-Refer to the Microsoft documentation on creating an application user [here](https://docs.microsoft.com/en-us/power-platform/admin/create-users-assign-online-security-roles#create-an-application-user).
+> ℹ Refer to the Microsoft documentation on creating an application user [here](https://docs.microsoft.com/en-us/power-platform/admin/create-users-assign-online-security-roles#create-an-application-user).
 
 #### Data file syntax 
 
@@ -176,9 +180,9 @@ We support [faker.js](https://github.com/marak/Faker.js) moustache template synt
 }
 ```
 
-> ⚠ When using faker syntax, you must also annotate number or date fields using `@faker.number`, `@faker.date` or `@faker.dateonly` to ensure that the JSON is formatted correctly.
+You can also dynamically set lookups by alias using `<lookup>@alias.bind`. This is currently limited to records that have already been created as part of a different file.
 
-You can dynamically set lookups by alias using `<lookup>@alias.bind` as shown in the example above. This is currently limited to records that have already been created as part of a different file.
+> ⚠ When using faker syntax, you must also annotate number or date fields using `@faker.number`, `@faker.date` or `@faker.dateonly` to ensure that the JSON is formatted correctly.
 
 ## Contributing
 
