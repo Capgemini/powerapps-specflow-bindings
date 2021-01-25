@@ -5,6 +5,7 @@ browserOptions:
   width: 1920
   height: 1080
   startMaximized: false
+  driversPath: ChromeWebDriver
 applicationUser:
   tenantId: POWERAPPS_SPECFLOW_BINDINGS_TEST_TENANTID
   clientId: POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTID

@@ -64,6 +64,8 @@
                         .Build()
                         .Deserialize<TestConfiguration>(File.ReadAllText(configPath));
 
+                    testConfig.BrowserOptions.DriversPath = ConfigHelper.GetEnvironmentVariableIfExists(testConfig.BrowserOptions.DriversPath);
+
                     if (testConfig.BrowserOptions.DriversPath == Path.Combine(Directory.GetCurrentDirectory()))
                     {
                         if (Directory.GetFiles(testConfig.BrowserOptions.DriversPath, "*driver.exe").Length == 0)

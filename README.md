@@ -60,6 +60,7 @@ browserOptions: # optional - will use default EasyRepro options if not set
   width: 1920
   height: 1080
   startMaximized: false
+  driversPath: ChromeWebDriver # optional - [Recommended when running tests from Azure DevOps Microsoft-hosted agent](https://docs.microsoft.com/en-us/azure/devops/pipelines/test/continuous-test-selenium?view=azure-devops#decide-how-you-will-deploy-and-test-your-app)
 applicationUser: # optional - populate if creating test data for users other than the current user
   tenantId: SPECFLOW_POWERAPPS_TENANTID optional # mandatory
   clientId: SPECFLOW_POWERAPPS_CLIENTID # mandatory
@@ -70,7 +71,7 @@ users: # mandatory
     alias: a salesperson # mandatory
 ```
 
-The URL, usernames, passwords, and application user details will be set from environment variable (if found). Otherwise, the value from the config file will be used. The browserOptions node supports anything in the EasyRepro `BrowserOptions` class.
+The URL, driversPath, usernames, passwords, and application user details will be set from environment variable (if found). Otherwise, the value from the config file will be used. The browserOptions node supports anything in the EasyRepro `BrowserOptions` class.
 
 ### Writing feature files
 
