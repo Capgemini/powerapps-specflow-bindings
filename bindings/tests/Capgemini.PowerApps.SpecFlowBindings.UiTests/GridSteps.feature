@@ -16,12 +16,6 @@ Scenario: Open a grid record at a given position
 	And I open the record at position '0' in the grid
 	Then I am presented with a 'Information' form for the 'sb_mockrecord' entity
 
-Scenario: Open a grid record at a given position with new binding
-	Given I have created 'a record with an alias'
-	When I open the 'Mock Records' sub area of the 'Primary Group' group
-	And I open the 1st record in the grid
-	Then I am presented with a 'Information' form for the 'sb_mockrecord' entity
-
 Scenario: Perform grid search
 	When I open the 'Mock Records' sub area of the 'Primary Group' group
 	And I search for 'Some text' in the grid

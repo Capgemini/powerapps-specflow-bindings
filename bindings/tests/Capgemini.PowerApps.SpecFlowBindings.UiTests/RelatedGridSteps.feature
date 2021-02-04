@@ -12,10 +12,6 @@ Scenario: Open record at a given position in a related grid
 	When I open the related 'Secondary Mock Records' tab
 	And I open the record at position '0' in the related grid
 
-Scenario: Open record at a given position in a related grid with new binding
-	When I open the related 'Secondary Mock Records' tab
-	And I open the 1st record in the related grid
-
 Scenario: Open related tab
 	When I open the related 'Activities' tab
 

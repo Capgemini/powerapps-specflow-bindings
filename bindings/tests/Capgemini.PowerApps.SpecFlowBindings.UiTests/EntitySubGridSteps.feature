@@ -21,10 +21,6 @@ Scenario: Open record at given position in subgrid
 	When I open the record at position '0' in the 'subgrid' subgrid
 	Then I am presented with a 'Information' form for the 'sb_secondarymockrecord' entity
 
-Scenario: Open record at given position in subgrid with new binding
-	When I open the 1st record in the 'subgrid' subgrid
-	Then I am presented with a 'Information' form for the 'sb_secondarymockrecord' entity
-
 Scenario: Search in subgrid
 	When I search for 'This should return no results' in the 'subgrid' subgrid
 	Then I can see exactly 0 records in the 'subgrid' subgrid
