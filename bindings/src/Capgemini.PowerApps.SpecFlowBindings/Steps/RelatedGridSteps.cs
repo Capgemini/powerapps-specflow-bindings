@@ -12,7 +12,6 @@
     [Binding]
     public class RelatedGridSteps : PowerAppsStepDefiner
     {
-
         /// <summary>
         /// Selects a records in a grid by index.
         /// </summary>
