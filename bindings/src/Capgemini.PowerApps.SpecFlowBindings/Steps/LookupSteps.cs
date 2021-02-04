@@ -2,7 +2,6 @@
 {
     using System;
     using System.Linq;
-    using Capgemini.PowerApps.SpecFlowBindings.Steps.StepArgument;
     using FluentAssertions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using Microsoft.Dynamics365.UIAutomation.Browser;
@@ -26,13 +25,23 @@
         }
 
         /// <summary>
+        /// Selects a records in a lookup by position.
+        /// </summary>
+        /// <param name="index">The position of the record.</param>
+        [When(@"I open (\d+(?:(?:st)|(?:nd)|(?:rd)|(?:th))) record in the lookup")]
+        public static void WhenIOpenRecordInTheLookup(int index)
+        {
+            XrmApp.Lookup.OpenRecord(index);
+        }
+
+        /// <summary>
         /// Selects a records in a lookup by index.
         /// </summary>
         /// <param name="index">The position of the record.</param>
-        [When(@"I open the record at position (\d[a-z]+) in the lookup")]
-        public static void WhenIOpenTheRecordAtPositionInTheLookup(HumanReadableIntegerExpression index)
+        [When(@"I open the record at position '(\d+)' in the lookup")]
+        public static void WhenIOpenTheRecordAtPositionInTheLookup(int index)
         {
-            XrmApp.Lookup.OpenRecord(index.Value);
+            XrmApp.Lookup.OpenRecord(index);
         }
 
         /// <summary>

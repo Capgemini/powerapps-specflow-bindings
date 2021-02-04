@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using Capgemini.PowerApps.SpecFlowBindings.Steps.StepArgument;
     using TechTalk.SpecFlow;
 
     /// <summary>
@@ -24,21 +23,14 @@
         }
 
         /// <summary>
-        /// Transforms HumanReadable Integer Expression to numeric values.
+        /// Transforms an ordinal number (e.g. 1st, 2nd, 3rd etc.) to a zero-based index.
         /// </summary>
-        /// <param name="expression">expression value(1st).</param>
-        /// <returns>numeric value.</returns>
-        [StepArgumentTransformation]
-        public static HumanReadableIntegerExpression TransformHumanReadableIntegerExpression(string expression)
+        /// <param name="expression">The ordinal number.</param>
+        /// <returns>The zero-based index.</returns>
+        [StepArgumentTransformation(@"(\d+(?:(?:st)|(?:nd)|(?:rd)|(?:th)))")]
+        public static int TransformOrdinalNumberToZeroBasedIndex(string expression)
         {
-            var regEx = new Regex(@"(\d)");
-
-            if (regEx.Match(expression).Success)
-            {
-                return new HumanReadableIntegerExpression(Convert.ToInt32(regEx.Match(expression).Groups[0].Value) - 1);
-            }
-
-            throw new ArgumentException("Unexpected values");
+            return Convert.ToInt32(Regex.Match(expression, @"\d+").Value) - 1;
         }
     }
 }

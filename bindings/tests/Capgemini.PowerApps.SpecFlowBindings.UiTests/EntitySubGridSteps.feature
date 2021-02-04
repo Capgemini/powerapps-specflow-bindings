@@ -18,7 +18,11 @@ Scenario: Select all subgrid rows
 	When I select all in the 'subgrid' subgrid
 
 Scenario: Open record at given position in subgrid
-	When I open the record at position 1st in the 'subgrid' subgrid
+	When I open the record at position '0' in the 'subgrid' subgrid
+	Then I am presented with a 'Information' form for the 'sb_secondarymockrecord' entity
+
+Scenario: Open record at given position in subgrid with new binding
+	When I open 1st record in the 'subgrid' subgrid
 	Then I am presented with a 'Information' form for the 'sb_secondarymockrecord' entity
 
 Scenario: Search in subgrid
