@@ -12,20 +12,11 @@
     public class GridSteps : PowerAppsStepDefiner
     {
         /// <summary>
-        /// Selects a record in a grid by record position.
-        /// </summary>
-        /// <param name="index">The position of the record.</param>
-        [When(@"I open (\d+(?:(?:st)|(?:nd)|(?:rd)|(?:th))) record in the grid")]
-        public void WhenIOpenRecordInTheGrid(int index)
-        {
-            XrmApp.Grid.OpenRecord(index);
-        }
-
-        /// <summary>
         /// Selects a records in a grid by index.
         /// </summary>
         /// <param name="index">The position of the record.</param>
         [When(@"I open the record at position '(\d+)' in the grid")]
+        [When(@"I open (\d+(?:(?:st)|(?:nd)|(?:rd)|(?:th))) record in the grid")]
         public static void WhenIOpenTheRecordAtPositionInTheGrid(int index)
         {
             XrmApp.Grid.OpenRecord(index);

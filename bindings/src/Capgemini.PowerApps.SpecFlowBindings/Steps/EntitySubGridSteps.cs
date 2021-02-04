@@ -55,22 +55,12 @@
         }
 
         /// <summary>
-        /// Selects a records in a subgrid by position.
-        /// </summary>
-        /// <param name="index">The position of the record.</param>
-        /// <param name="subGridName">The name of the subgrid.</param>
-        [When(@"I open (\d+(?:(?:st)|(?:nd)|(?:rd)|(?:th))) record in the '(.*)' subgrid")]
-        public void WhenIOpenRecordInTheSubgrid(int index, string subGridName)
-        {
-            XrmApp.Entity.SubGrid.OpenSubGridRecord(subGridName, index);
-        }
-
-        /// <summary>
         /// Selects a records in a subgrid by index.
         /// </summary>
         /// <param name="index">The position of the record.</param>
         /// <param name="subGridName">The name of the subgrid.</param>
         [When(@"I open the record at position '(\d+)' in the '(.*)' subgrid")]
+        [When(@"I open (\d+(?:(?:st)|(?:nd)|(?:rd)|(?:th))) record in the '(.*)' subgrid")]
         public static void WhenIOpenTheRecordAtPositionInTheSubgrid(int index, string subGridName)
         {
             XrmApp.Entity.SubGrid.OpenSubGridRecord(subGridName, index);
