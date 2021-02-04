@@ -91,7 +91,7 @@ Scenario: Open and close the record set navigator
 	Given I have created 'data decorated with faker moustache syntax'
 	And I have created 'a record with an alias'
 	When I open the sub area 'Mock Records' under the 'Primary Group' area
-	And I open the record at position '0' in the grid
+	And I open the record at position 1st in the grid
 	And I open the record set navigator
 	And I close the record set navigator
 

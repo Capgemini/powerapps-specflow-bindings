@@ -1,6 +1,7 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Steps
 {
     using Capgemini.PowerApps.SpecFlowBindings;
+    using Capgemini.PowerApps.SpecFlowBindings.Steps.StepArgument;
     using FluentAssertions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using OpenQA.Selenium;
@@ -16,10 +17,10 @@
         /// Selects a records in a grid by index.
         /// </summary>
         /// <param name="index">The position of the record.</param>
-        [When(@"I open the record at position '(\d+)' in the related grid")]
-        public static void WhenIOpenTheRecordAtPositionInTheRelatedGrid(int index)
+        [When(@"I open the record at position (\d[a-z]+) in the related grid")]
+        public static void WhenIOpenTheRecordAtPositionInTheRelatedGrid(HumanReadableIntegerExpression index)
         {
-            XrmApp.Entity.RelatedGrid.OpenGridRow(index);
+            XrmApp.Entity.RelatedGrid.OpenGridRow(index.Value);
         }
 
         /// <summary>

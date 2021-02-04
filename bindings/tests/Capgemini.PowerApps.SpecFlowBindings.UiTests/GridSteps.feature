@@ -13,7 +13,7 @@ Scenario: Switch grid view
 Scenario: Open a grid record at a given position
 	Given I have created 'a record with an alias'
 	When I open the 'Mock Records' sub area of the 'Primary Group' group
-	And I open the record at position '0' in the grid
+	And I open the record at position 1st in the grid
 	Then I am presented with a 'Information' form for the 'sb_mockrecord' entity
 
 Scenario: Perform grid search

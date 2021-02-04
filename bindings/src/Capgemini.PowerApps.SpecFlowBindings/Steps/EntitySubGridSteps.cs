@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
+    using Capgemini.PowerApps.SpecFlowBindings.Steps.StepArgument;
     using FluentAssertions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using Microsoft.Dynamics365.UIAutomation.Browser;
@@ -59,10 +60,10 @@
         /// </summary>
         /// <param name="index">The position of the record.</param>
         /// <param name="subGridName">The name of the subgrid.</param>
-        [When(@"I open the record at position '(\d+)' in the '(.*)' subgrid")]
-        public static void WhenIOpenTheRecordAtPositionInTheSubgrid(int index, string subGridName)
+        [When(@"I open the record at position (\d[a-z]+) in the '(.*)' subgrid")]
+        public static void WhenIOpenTheRecordAtPositionInTheSubgrid(HumanReadableIntegerExpression index, string subGridName)
         {
-            XrmApp.Entity.SubGrid.OpenSubGridRecord(subGridName, index);
+            XrmApp.Entity.SubGrid.OpenSubGridRecord(subGridName, index.Value);
         }
 
         /// <summary>

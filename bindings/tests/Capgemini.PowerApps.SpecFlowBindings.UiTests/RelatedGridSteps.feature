@@ -10,7 +10,7 @@ Background:
 
 Scenario: Open record at a given position in a related grid
 	When I open the related 'Secondary Mock Records' tab
-	And I open the record at position '0' in the related grid
+	And I open the record at position 1st in the related grid
 
 Scenario: Open related tab
 	When I open the related 'Activities' tab

@@ -15,7 +15,7 @@ Scenario: Click new button in lookup
 Scenario: Open a record at a given position in a lookup
 	Given I have created 'a secondary mock record'
 	When I search for 'A secondary mock record' in the 'sb_lookup' lookup
-	And I open the record at position '0' in the lookup
+	And I open the record at position 1st in the lookup
 
 Scenario: Perform a search in a lookup
 	When I search for 'Some text' in the 'sb_lookup' lookup
