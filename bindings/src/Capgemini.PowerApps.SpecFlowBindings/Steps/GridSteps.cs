@@ -16,6 +16,7 @@
         /// </summary>
         /// <param name="index">The position of the record.</param>
         [When(@"I open the record at position '(\d+)' in the grid")]
+        [When(@"I open the (\d+(?:(?:st)|(?:nd)|(?:rd)|(?:th))) record in the grid")]
         public static void WhenIOpenTheRecordAtPositionInTheGrid(int index)
         {
             XrmApp.Grid.OpenRecord(index);
