@@ -22,7 +22,7 @@ Scenario: Open record at given position in subgrid
 	Then I am presented with a 'Information' form for the 'sb_secondarymockrecord' entity
 
 Scenario: Open record at given position in subgrid with new binding
-	When I open 1st record in the 'subgrid' subgrid
+	When I open the 1st record in the 'subgrid' subgrid
 	Then I am presented with a 'Information' form for the 'sb_secondarymockrecord' entity
 
 Scenario: Search in subgrid

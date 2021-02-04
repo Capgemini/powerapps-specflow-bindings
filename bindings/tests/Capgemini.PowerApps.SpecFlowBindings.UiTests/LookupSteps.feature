@@ -20,7 +20,7 @@ Scenario: Open a record at a given position in a lookup
 Scenario: Open a record at a given position in a lookup with new binding
 	Given I have created 'a secondary mock record'
 	When I search for 'A secondary mock record' in the 'sb_lookup' lookup
-	And I open 1st record in the lookup
+	And I open the 1st record in the lookup
 
 Scenario: Perform a search in a lookup
 	When I search for 'Some text' in the 'sb_lookup' lookup

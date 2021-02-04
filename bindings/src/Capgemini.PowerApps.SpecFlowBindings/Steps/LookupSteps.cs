@@ -29,7 +29,7 @@
         /// </summary>
         /// <param name="index">The position of the record.</param>
         [When(@"I open the record at position '(\d+)' in the lookup")]
-        [When(@"I open (\d+(?:(?:st)|(?:nd)|(?:rd)|(?:th))) record in the lookup")]
+        [When(@"I open the (\d+(?:(?:st)|(?:nd)|(?:rd)|(?:th))) record in the lookup")]
         public static void WhenIOpenTheRecordAtPositionInTheLookup(int index)
         {
             XrmApp.Lookup.OpenRecord(index);

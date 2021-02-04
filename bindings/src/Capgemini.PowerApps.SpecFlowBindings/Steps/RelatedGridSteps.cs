@@ -17,7 +17,7 @@
         /// </summary>
         /// <param name="index">The position of the record.</param>
         [When(@"I open the record at position '(\d+)' in the related grid")]
-        [When(@"I open (\d+(?:(?:st)|(?:nd)|(?:rd)|(?:th))) record in the related grid")]
+        [When(@"I open the (\d+(?:(?:st)|(?:nd)|(?:rd)|(?:th))) record in the related grid")]
         public static void WhenIOpenTheRecordAtPositionInTheRelatedGrid(int index)
         {
             XrmApp.Entity.RelatedGrid.OpenGridRow(index);
