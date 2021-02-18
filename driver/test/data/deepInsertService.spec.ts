@@ -232,10 +232,32 @@ describe('DeepInsertService', () => {
 
     it('overrides the default repository with the one passed as an argument (if provided)', async () => {
       const newRecordRepo = jasmine.createSpyObj<RecordRepository>('RecordRepository', ['upsertRecord']);
+      metadataRepo.getLookupPropertyForCollectionProperty.and.resolveTo('customerid_account');
+      metadataRepo.getRelationshipMetadata.and.resolveTo({ RelationshipType: 'OneToManyRelationship' } as Xrm.Metadata.OneToNRelationshipMetadata);
+      newRecordRepo.upsertRecord
+        .and.returnValues(
+          Promise.resolve({ id: '<contact-id>', entityType: 'contact' }),
+          Promise.resolve({ id: '<account-id>', entityType: 'account' }),
+          Promise.resolve({ id: '<opportunity-id>', entityType: 'opportunity' }),
+        );
 
-      await deepInsertService.deepInsert('account', { name: 'Sample Account' }, {}, newRecordRepo);
+      const testRecord: Record = {
+        name: 'Sample Account',
+        opportunity_customer_accounts: [
+          {
+            name: 'Test Opportunity associated to Sample Account',
+          },
+        ],
+        primarycontactid:
+        {
+          firstname: 'John',
+          lastname: 'Smith',
+        },
+      };
 
-      expect(newRecordRepo.upsertRecord).toHaveBeenCalledTimes(1);
+      await deepInsertService.deepInsert('account', testRecord, {}, newRecordRepo);
+
+      expect(newRecordRepo.upsertRecord.calls.count()).toBe(3);
     });
   });
 });

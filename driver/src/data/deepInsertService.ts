@@ -61,7 +61,7 @@ export default class DeepInsertService {
     const singleNavProps = Object.keys(lookupRecordsByNavProp);
     await Promise.all(singleNavProps.map(async (singleNavProp) => {
       const res = await this.createLookupRecord(
-        logicalName, recordToCreate, lookupRecordsByNavProp, singleNavProp, dataByAlias,
+        logicalName, recordToCreate, lookupRecordsByNavProp, singleNavProp, dataByAlias, repo,
       );
       associatedRecords.push(res.record, ...res.associatedRecords);
     }));
@@ -130,6 +130,7 @@ export default class DeepInsertService {
     navigationPropertyMap: { [navigationProperty: string]: Record },
     singleNavProp: string,
     createdRecordsByAlias: { [alias: string]: Xrm.LookupValue },
+    repository: RecordRepository,
   ): Promise<DeepInsertResponse> {
     const record = entity;
     delete record[singleNavProp];
@@ -138,7 +139,7 @@ export default class DeepInsertService {
       logicalName, singleNavProp,
     );
     const deepInsertResponse = await this.deepInsert(
-      entityName, navigationPropertyMap[singleNavProp], createdRecordsByAlias,
+      entityName, navigationPropertyMap[singleNavProp], createdRecordsByAlias, repository,
     );
     const entitySet = await this.metadataRepository.getEntitySetForEntity(entityName);
     record[`${singleNavProp}@odata.bind`] = `/${entitySet}(${deepInsertResponse.record.reference.id})`;
@@ -159,7 +160,13 @@ export default class DeepInsertService {
 
     if (DeepInsertService.isOneToManyMetadata(relMetadata)) {
       return this.createOneToManyRecords(
-        relMetadata.ReferencingEntity, set, collNavProp, navPropMap, parent, refsByAlias,
+        relMetadata.ReferencingEntity,
+        set,
+        collNavProp,
+        navPropMap,
+        parent,
+        refsByAlias,
+        repository,
       );
     }
 
@@ -183,6 +190,7 @@ export default class DeepInsertService {
     navPropMap: { [navProp: string]: Record[] },
     parent: Xrm.LookupValue,
     refsByAlias: { [alias: string]: Xrm.LookupValue },
+    repository: RecordRepository,
   ): Promise<{ alias?: string, reference: Xrm.LookupValue }[]> {
     const oppNavProp = await this.metadataRepository
       .getLookupPropertyForCollectionProperty(navProp);
@@ -190,7 +198,7 @@ export default class DeepInsertService {
     const res = await Promise.all(navPropMap[navProp].map((oneToManyRecord) => {
       // eslint-disable-next-line no-param-reassign
       oneToManyRecord[`${oppNavProp}@odata.bind`] = `/${entitySet}(${parent.id})`;
-      return this.deepInsert(entity, oneToManyRecord, refsByAlias);
+      return this.deepInsert(entity, oneToManyRecord, refsByAlias, repository);
     }));
 
     return res.reduce<{ reference: Xrm.LookupValue; alias?: string; }[]>(
@@ -207,7 +215,12 @@ export default class DeepInsertService {
     repository: RecordRepository,
   ): Promise<{ alias?: string, reference: Xrm.LookupValue }[]> {
     const result = await Promise.all(navPropMap[navProp].map(async (manyToManyRecord) => {
-      const response = await this.deepInsert(entity, manyToManyRecord, createdRecordsByAlias);
+      const response = await this.deepInsert(
+        entity,
+        manyToManyRecord,
+        createdRecordsByAlias,
+        repository,
+      );
 
       await repository.associateManyToManyRecords(
         parent,
