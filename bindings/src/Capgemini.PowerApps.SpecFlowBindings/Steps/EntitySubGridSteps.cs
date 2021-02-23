@@ -27,7 +27,10 @@
         {
             Driver.WaitUntilVisible(
                 By.CssSelector($"div#dataSetRoot_{subGridName} button[aria-label=\"{commandName}\"]"));
-            XrmApp.Entity.SubGrid.ClickCommand(subGridName, commandName);
+
+            // TODO: Replace with commented out code when new EasyRepro version available.
+            // XrmApp.Entity.SubGrid.ClickCommand(subGridName, commandName);
+            Client.ClickSubGridCommandV2(subGridName, commandName);
         }
 
         /// <summary>
@@ -235,7 +238,10 @@
         {
             Driver.WaitUntilVisible(By.CssSelector($"div#dataSetRoot_{subGridName} li[aria-label=\"{flyoutName}\"]"));
 
-            XrmApp.Entity.SubGrid.ClickCommand(subGridName, flyoutName);
+            // TODO: Replace with commented out code when new EasyRepro version available.
+            // XrmApp.Entity.SubGrid.ClickCommand(subGridName, flyoutName);
+            Client.ClickSubGridCommandV2(subGridName, flyoutName);
+
         }
 
         /// <summary>
@@ -290,7 +296,9 @@
         [When(@"I click the '([^']+)' command under the '([^']+)' flyout on the '([^']+)' subgrid")]
         public static void WhenIClickTheCommandUnderTheFlyoutOnTheSubgrid(string commandName, string flyoutName, string subGridName)
         {
-            XrmApp.Entity.SubGrid.ClickCommand(subGridName, flyoutName, commandName);
+            // TODO: Replace with commented out code when new EasyRepro version available.
+            // XrmApp.Entity.SubGrid.ClickCommand(subGridName, flyoutName, commandName);
+            Client.ClickSubGridCommandV2(subGridName, flyoutName, commandName);
         }
 
         /// <summary>

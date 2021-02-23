@@ -1,5 +1,6 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Steps
 {
+    using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using FluentAssertions;
     using TechTalk.SpecFlow;
 
@@ -16,7 +17,9 @@
         [When("I select the '(.*)' command")]
         public static void WhenISelectTheCommand(string commandName)
         {
-            XrmApp.CommandBar.ClickCommand(commandName);
+            // TODO: Replace with commented out code when new EasyRepro version available.
+            // XrmApp.CommandBar.ClickCommand(commandName);
+            Client.ClickCommandV2(commandName);
         }
 
         /// <summary>
@@ -27,7 +30,9 @@
         [When("I select the '([^']+)' command under the '([^']+)' flyout")]
         public static void WhenISelectTheCommandUnderTheFlyout(string commandName, string flyoutName)
         {
-            XrmApp.CommandBar.ClickCommand(flyoutName, commandName);
+            // TODO: Replace with commented out code when new EasyRepro version available.
+            // XrmApp.CommandBar.ClickCommand(flyoutName, commandName);
+            Client.ClickCommandV2(flyoutName, commandName);
         }
 
         /// <summary>
