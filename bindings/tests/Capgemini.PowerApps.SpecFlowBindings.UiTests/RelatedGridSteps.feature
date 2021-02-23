@@ -19,12 +19,12 @@ Scenario: Click command in a related grid
 	When I open the related 'Activities' tab
 	And I click the 'Add Existing Activity' button on the related grid
 
-Scenario: Assert a button is visible on a flyout in a related grid
+Scenario: Assert a button is not visible on a flyout in a related grid
 	When I open the related 'Activities' tab
 	And I click the 'New Activity' button on the related grid
 	Then I should not see a 'Missing' button in the flyout on the related grid
 
-Scenario: Assert a button is not visible on a flyout in a related grid
+Scenario: Assert a button is visible on a flyout in a related grid
 	When I open the related 'Activities' tab
 	And I click the 'New Activity' button on the related grid
 	Then I should see a 'Task' button in the flyout on the related grid
