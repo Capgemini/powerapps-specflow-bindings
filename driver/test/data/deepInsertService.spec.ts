@@ -1,6 +1,38 @@
 import { DeepInsertService, Record } from '../../src/data';
 import { MetadataRepository, RecordRepository } from '../../src/repositories';
 
+function mockRecord(
+  metadataRepo: jasmine.SpyObj<MetadataRepository>,
+  recordRepo: jasmine.SpyObj<RecordRepository>,
+): Record {
+  metadataRepo.getLookupPropertyForCollectionProperty.and.resolveTo('customerid_account');
+  metadataRepo.getRelationshipMetadata.and.resolveTo({ RelationshipType: 'OneToManyRelationship' } as Xrm.Metadata.OneToNRelationshipMetadata);
+  recordRepo.upsertRecord
+    .and.returnValues(
+      Promise.resolve({ id: '<company-id>', entityType: 'account' }),
+      Promise.resolve({ id: '<contact-id>', entityType: 'contact' }),
+      Promise.resolve({ id: '<account-id>', entityType: 'account' }),
+      Promise.resolve({ id: '<opportunity-id>', entityType: 'opportunity' }),
+    );
+
+  return {
+    name: 'Sample Account',
+    opportunity_customer_accounts: [
+      {
+        name: 'Test Opportunity associated to Sample Account',
+      },
+    ],
+    primarycontactid: {
+      firstname: 'John',
+      lastname: 'Smith',
+      masterid: {
+        firstname: 'Jim',
+        lastname: 'Smith',
+      },
+    },
+  };
+}
+
 describe('DeepInsertService', () => {
   let recordRepo: jasmine.SpyObj<RecordRepository>;
   let metadataRepo: jasmine.SpyObj<MetadataRepository>;
@@ -26,33 +58,7 @@ describe('DeepInsertService', () => {
 
   describe('.deepInsert(logicalName, record)', () => {
     it('creates each object in the object graph', async () => {
-      metadataRepo.getLookupPropertyForCollectionProperty.and.resolveTo('customerid_account');
-      metadataRepo.getRelationshipMetadata.and.resolveTo({ RelationshipType: 'OneToManyRelationship' } as Xrm.Metadata.OneToNRelationshipMetadata);
-      recordRepo.upsertRecord
-        .and.returnValues(
-          Promise.resolve({ id: '<company-id>', entityType: 'account' }),
-          Promise.resolve({ id: '<contact-id>', entityType: 'contact' }),
-          Promise.resolve({ id: '<account-id>', entityType: 'account' }),
-          Promise.resolve({ id: '<opportunity-id>', entityType: 'opportunity' }),
-        );
-
-      const testRecord: Record = {
-        name: 'Sample Account',
-        opportunity_customer_accounts: [
-          {
-            name: 'Test Opportunity associated to Sample Account',
-          },
-        ],
-        primarycontactid:
-        {
-          firstname: 'John',
-          lastname: 'Smith',
-          masterid: {
-            firstname: 'Jim',
-            lastname: 'Smith',
-          },
-        },
-      };
+      const testRecord = mockRecord(metadataRepo, recordRepo);
 
       await deepInsertService.deepInsert('account', testRecord, {});
 
@@ -232,10 +238,11 @@ describe('DeepInsertService', () => {
 
     it('overrides the default repository with the one passed as an argument (if provided)', async () => {
       const newRecordRepo = jasmine.createSpyObj<RecordRepository>('RecordRepository', ['upsertRecord']);
+      const testRecord = mockRecord(metadataRepo, newRecordRepo);
 
-      await deepInsertService.deepInsert('account', { name: 'Sample Account' }, {}, newRecordRepo);
+      await deepInsertService.deepInsert('account', testRecord, {}, newRecordRepo);
 
-      expect(newRecordRepo.upsertRecord).toHaveBeenCalledTimes(1);
+      expect(newRecordRepo.upsertRecord.calls.count()).toBe(4);
     });
   });
 });

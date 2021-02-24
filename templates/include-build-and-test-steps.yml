@@ -47,7 +47,7 @@ jobs:
           projectVersion: '$(GitVersion.SemVer)'
           extraProperties: |
             sonar.javascript.lcov.reportPaths=driver/test_results/coverage/lcov/lcov.info
-            sonar.coverage.exclusions=**\*spec.ts, bindings/tests/**/*, bindings/src/Capgemini.PowerApps.SpecFlowBindings.MSBuild/**/*
+            sonar.coverage.exclusions=**\*spec.ts, bindings/tests/**/*, bindings/src/Capgemini.PowerApps.SpecFlowBindings.MSBuild/**/*, bindings\src\Capgemini.PowerApps.SpecFlowBindings\Extensions\WebClientExtensions.cs
             sonar.eslint.reportPaths=$(Build.SourcesDirectory)/driver/test_results/analysis/eslint.json
       - task: VSBuild@1
         displayName: Build solution
