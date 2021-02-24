@@ -9,7 +9,7 @@
     /// <summary>
     /// Extensions to the <see cref="WebClient"/> class.
     /// </summary>
-    internal static class WebClientExtensions
+    public static class WebClientExtensions
     {
         /// <summary>
         /// Temporary workaround until https://github.com/microsoft/EasyRepro/issues/1087 is resolved.
@@ -20,7 +20,7 @@
         /// <param name="subName">The name of the sub-command.</param>
         /// <param name="subSecondName">The name of the second sub-command.</param>
         /// <returns>The <see cref="BrowserCommandResult{TReturn}"/>.</returns>
-        internal static BrowserCommandResult<bool> ClickSubGridCommandV2(this WebClient webClient, string subGridName, string name, string subName = null, string subSecondName = null)
+        public static BrowserCommandResult<bool> ClickSubGridCommandV2(this WebClient webClient, string subGridName, string name, string subName = null, string subSecondName = null)
         {
             return webClient.Execute(GetOptions("Click SubGrid Command"), driver =>
             {
@@ -107,7 +107,7 @@
         /// <param name="subSecondName">The name of the second sub-command.</param>
         /// <param name="thinkTime">The think time.</param>
         /// <returns>The <see cref="BrowserCommandResult{TReturn}"/>.</returns>
-        internal static BrowserCommandResult<bool> ClickCommandV2(this WebClient webClient, string name, string subname = null, string subSecondName = null, int thinkTime = Constants.DefaultThinkTime)
+        public static BrowserCommandResult<bool> ClickCommandV2(this WebClient webClient, string name, string subname = null, string subSecondName = null, int thinkTime = Constants.DefaultThinkTime)
         {
             return webClient.Execute(GetOptions($"Click Command"), driver =>
             {
