@@ -241,7 +241,6 @@
             // TODO: Replace with commented out code when new EasyRepro version available.
             // XrmApp.Entity.SubGrid.ClickCommand(subGridName, flyoutName);
             Client.ClickSubGridCommandV2(subGridName, flyoutName);
-
         }
 
         /// <summary>
