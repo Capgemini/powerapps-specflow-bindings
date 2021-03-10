@@ -11,7 +11,7 @@ describe('CurrentUserRecordRepository', () => {
     metadataRepo = jasmine.createSpyObj<MetadataRepository>('MetadataRepository',
       [
         'getEntitySetForEntity',
-        'getEntityForLookupProperty',
+        'getTargetsForLookupProperty',
         'getLookupPropertyForCollectionProperty',
         'getRelationshipMetadata',
       ]);

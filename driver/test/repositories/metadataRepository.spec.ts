@@ -25,16 +25,26 @@ describe('MetadataRepository', () => {
     });
   });
 
-  describe('getEntityForLookupProperty(logicalName, navigationProperty)', () => {
+  describe('getTargetsForLookupProperty(logicalName, navigationProperty)', () => {
+    const entityLogicalName = 'contact';
+    const targetEntityName = 'account';
+
     it('returns the target entity for a lookup attribute', () => {
-      const entityLogicalName = 'contact';
-      const targetEntityName = 'account';
       const navigationProperty = 'accountid';
       const mockResponse = { value: [{ Targets: [targetEntityName] }] };
       fetchMock.mock('*', { body: mockResponse, sendAsJson: true });
 
-      expectAsync(metadataRepo.getEntityForLookupProperty(entityLogicalName, navigationProperty))
-        .toBeResolvedTo(targetEntityName);
+      expectAsync(metadataRepo.getTargetsForLookupProperty(entityLogicalName, navigationProperty))
+        .toBeResolvedTo(mockResponse.value[0].Targets);
+    });
+
+    it('returns null if the attribute is not found', () => {
+      const navigationProperty = 'accountid';
+      const mockResponse = { value: [] };
+      fetchMock.mock('*', { body: mockResponse, sendAsJson: true });
+
+      expectAsync(metadataRepo.getTargetsForLookupProperty(entityLogicalName, navigationProperty))
+        .toBeResolvedTo(null);
     });
   });
 

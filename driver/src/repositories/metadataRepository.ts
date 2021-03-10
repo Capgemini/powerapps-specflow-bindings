@@ -40,8 +40,8 @@ export default class MetadataRepository {
      * @returns {Promise<string>} A promise which contains the logical name of the related entity.
      * @memberof MetadataRepository
      */
-  public async getEntityForLookupProperty(logicalName: string, navigationProperty: string)
-    : Promise<string> {
+  public async getTargetsForLookupProperty(logicalName: string, navigationProperty: string)
+    : Promise<string[] | null> {
     const response = await fetch(
       'api/data/v9.1/'
       + `${MetadataRepository.EntityMetadataSet}(LogicalName='${logicalName}')/Attributes/Microsoft.Dynamics.CRM.LookupAttributeMetadata?$filter=LogicalName eq '${navigationProperty.toLowerCase()}'&$select=Targets`,
@@ -49,7 +49,7 @@ export default class MetadataRepository {
     );
     const result = await response.json();
 
-    return result.value[0].Targets[0];
+    return result.value[0] ? result.value[0].Targets : null;
   }
 
   /**
