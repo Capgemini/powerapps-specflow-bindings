@@ -17,9 +17,7 @@
         [When("I select the '(.*)' command")]
         public static void WhenISelectTheCommand(string commandName)
         {
-            // TODO: Replace with commented out code when new EasyRepro version available.
-            // XrmApp.CommandBar.ClickCommand(commandName);
-            Client.ClickCommandV2(commandName);
+            XrmApp.CommandBar.ClickCommand(commandName);
         }
 
         /// <summary>
@@ -30,9 +28,7 @@
         [When("I select the '([^']+)' command under the '([^']+)' flyout")]
         public static void WhenISelectTheCommandUnderTheFlyout(string commandName, string flyoutName)
         {
-            // TODO: Replace with commented out code when new EasyRepro version available.
-            // XrmApp.CommandBar.ClickCommand(flyoutName, commandName);
-            Client.ClickCommandV2(flyoutName, commandName);
+            XrmApp.CommandBar.ClickCommand(flyoutName, commandName);
         }
 
         /// <summary>
