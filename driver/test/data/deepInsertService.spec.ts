@@ -7,6 +7,7 @@ function mockRecord(
 ): Record {
   metadataRepo.getLookupPropertyForCollectionProperty.and.resolveTo('customerid_account');
   metadataRepo.getRelationshipMetadata.and.resolveTo({ RelationshipType: 'OneToManyRelationship' } as Xrm.Metadata.OneToNRelationshipMetadata);
+  metadataRepo.getTargetsForLookupProperty.and.resolveTo(['contact']);
   recordRepo.upsertRecord
     .and.returnValues(
       Promise.resolve({ id: '<company-id>', entityType: 'account' }),
@@ -48,7 +49,7 @@ describe('DeepInsertService', () => {
     metadataRepo = jasmine.createSpyObj<MetadataRepository>('MetadataRepository',
       [
         'getEntitySetForEntity',
-        'getEntityForLookupProperty',
+        'getTargetsForLookupProperty',
         'getLookupPropertyForCollectionProperty',
         'getRelationshipMetadata',
       ]);
@@ -68,6 +69,7 @@ describe('DeepInsertService', () => {
     it('replaces nested objects with @odata.bind associations', async () => {
       const entitySetName = 'contacts';
       const contactId = '<contact-id>';
+      metadataRepo.getTargetsForLookupProperty.and.resolveTo(['contact']);
       metadataRepo.getEntitySetForEntity.and.resolveTo(entitySetName);
       recordRepo.upsertRecord.and.returnValues(
         Promise.resolve({ id: contactId, entityType: 'contact' }),
@@ -191,6 +193,7 @@ describe('DeepInsertService', () => {
     });
 
     it("queries for nested object's entity set name", async () => {
+      metadataRepo.getTargetsForLookupProperty.and.resolveTo(['contact']);
       metadataRepo.getEntitySetForEntity.and
         .returnValues(Promise.resolve('contacts'), Promise.resolve('accounts'));
       recordRepo.upsertRecord
@@ -214,6 +217,7 @@ describe('DeepInsertService', () => {
     });
 
     it('returns an entity reference for each created record', async () => {
+      metadataRepo.getTargetsForLookupProperty.and.resolveTo(['contact']);
       const expectedEntityReference = { id: '<contact-id>', entityType: 'contact' };
       const createResponses = [
         Promise.resolve({ id: '<account-id>', entityType: 'account' }),
@@ -243,6 +247,64 @@ describe('DeepInsertService', () => {
       await deepInsertService.deepInsert('account', testRecord, {}, newRecordRepo);
 
       expect(newRecordRepo.upsertRecord.calls.count()).toBe(4);
+    });
+
+    it('throws when the target entity can not be determined for a lookup record', async () => {
+      metadataRepo.getTargetsForLookupProperty.and.resolveTo(['contact', 'account']);
+
+      expectAsync(deepInsertService.deepInsert('account',
+        {
+          primarycontactid:
+            {
+              firstname: 'John',
+              lastname: 'Smith',
+            },
+        },
+        {})).toBeRejectedWithError('Unable to determine target entity for primarycontactid');
+    });
+
+    it('correctly determines the target entity for customer fields', async () => {
+      metadataRepo.getTargetsForLookupProperty.withArgs('account', 'customer_contact').and.resolveTo(null);
+      metadataRepo.getTargetsForLookupProperty.withArgs('account', 'customer').and.resolveTo(['contact', 'account']);
+      recordRepo.upsertRecord
+        .and.returnValues(
+          Promise.resolve({ id: '<contact-id>', entityType: 'contact' }),
+          Promise.resolve({ id: '<account-id>', entityType: 'account' }),
+        );
+
+      await deepInsertService.deepInsert('account',
+        {
+          customer_contact:
+            {
+              firstname: 'John',
+              lastname: 'Smith',
+            },
+        },
+        {});
+
+      expect(recordRepo.upsertRecord.calls.first().args[0]).toBe('contact');
+    });
+
+    it('fallsback to @logicalName if targets are not found', async () => {
+      metadataRepo.getTargetsForLookupProperty.and.resolveTo(['contact']);
+      recordRepo.upsertRecord
+        .and.returnValues(
+          Promise.resolve({ id: '<contact-id>', entityType: 'contact' }),
+          Promise.resolve({ id: '<account-id>', entityType: 'account' }),
+        );
+
+      await deepInsertService.deepInsert('account',
+        {
+          primarycontactid:
+          {
+            '@logicalName': 'contact',
+            firstname: 'John',
+            lastname: 'Smith',
+          },
+        },
+        {});
+
+      expect(recordRepo.upsertRecord.calls.count()).toBe(2);
     });
   });
 });

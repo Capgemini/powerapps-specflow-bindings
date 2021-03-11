@@ -23,7 +23,8 @@
             XrmApp.OnlineLogin.Login(
                 TestConfig.GetTestUrl(),
                 user.Username.ToSecureString(),
-                user.Password.ToSecureString());
+                user.Password.ToSecureString(),
+                string.Empty.ToSecureString());
 
             XrmApp.Navigation.OpenApp(appName);
 

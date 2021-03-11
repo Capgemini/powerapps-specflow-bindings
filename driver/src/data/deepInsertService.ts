@@ -135,9 +135,32 @@ export default class DeepInsertService {
     const record = entity;
     delete record[singleNavProp];
 
-    const entityName = await this.metadataRepository.getEntityForLookupProperty(
+    let entityName: string | null = null;
+    const lookupEntity = navigationPropertyMap[singleNavProp];
+
+    const targets = await this.metadataRepository.getTargetsForLookupProperty(
       logicalName, singleNavProp,
     );
+
+    if (!targets && (singleNavProp.endsWith('_account') || singleNavProp.endsWith('_contact'))) {
+      // Possibly a customer field
+      const fieldWithoutSuffix = singleNavProp.replace('_account', '').replace('_contact', '');
+      const customerTargets = await this.metadataRepository.getTargetsForLookupProperty(
+        logicalName, fieldWithoutSuffix,
+      );
+      if (customerTargets && customerTargets.length === 2) {
+        entityName = singleNavProp.endsWith('account') ? 'account' : 'contact';
+      }
+    } else if (targets && targets.length === 1) {
+      [entityName] = targets;
+    } else if (lookupEntity['@logicalName']) {
+      entityName = lookupEntity['@logicalName'] as string;
+    }
+
+    if (!entityName) {
+      throw new Error(`Unable to determine target entity for ${singleNavProp}.`);
+    }
+
     const deepInsertResponse = await this.deepInsert(
       entityName, navigationPropertyMap[singleNavProp], createdRecordsByAlias, repository,
     );

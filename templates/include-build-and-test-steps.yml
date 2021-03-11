@@ -107,7 +107,7 @@ jobs:
         displayName: Pack NuGet package
         inputs:
           command: pack
-          packagesToPack: bindings/src/**/*.csproj
+          packagesToPack: bindings/src/Capgemini.PowerApps.SpecFlowBindings/Capgemini.PowerApps.SpecFlowBindings.csproj
           modifyOutputPath: true 
           versioningScheme: byEnvVar
           versionEnvVar: GitVersion.NuGetVersionV2
