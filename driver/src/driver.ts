@@ -78,6 +78,22 @@ export default class Driver {
     });
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  public async openForm(formName:string, nameOfEntity:string)
+    :Promise<Xrm.Async.PromiseLike<Xrm.Navigation.OpenFormResult>> {
+    return Xrm.Navigation.openForm({
+      entityName: nameOfEntity,
+      formId: await Xrm.WebApi.retrieveMultipleRecords('systemform', `?$select=formid&$filter=name eq '${formName}' and objecttypecode eq '${nameOfEntity}'`).then(
+        (result) => result.entities[0].formid
+        ,
+      ),
+      useQuickCreateForm: await Xrm.WebApi.retrieveMultipleRecords('systemform', `?$select=type&$filter=name eq '${formName}' and objecttypecode eq '${nameOfEntity}'`).then(
+        (result) => result.entities[0].type === 7,
+      )
+      ,
+    });
+  }
+
   /**
      * Gets a reference to a test record.
      * @param alias The alias of the test record.

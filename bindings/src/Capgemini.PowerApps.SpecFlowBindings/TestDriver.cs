@@ -84,6 +84,12 @@
             this.ExecuteDriverFunctionAsync($"openTestRecord('{recordAlias}')");
         }
 
+        /// <inheritdoc cref="ITestDriver"/>
+        public void OpenForm(string formName, string entityName)
+        {
+            this.ExecuteDriverFunctionAsync($"openForm('{formName}', '{entityName}')");
+        }
+
         /// <inheritdoc/>
         public EntityReference GetTestRecordReference(string recordAlias)
         {
