@@ -103,10 +103,6 @@ Scenario: Open a create form
 	Given I am viewing the 'Information' form for the 'contact' entity
 	Then I am presented with a 'Information' form for the 'contact' entity
 
-Scenario: Open a quick create form
-	Given I am viewing the 'Contact Quick Create' form for the 'contact' entity
-	Then I am presented with a 'Contact Quick Create' form for the 'contact' entity
-
 Scenario: Select a lookup
 	When I select 'sb_lookup' lookup
 
