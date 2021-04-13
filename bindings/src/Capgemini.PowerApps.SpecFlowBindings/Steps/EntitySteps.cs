@@ -185,6 +185,7 @@
         public static void GivenIViewForm(string formName, string entityName)
         {
             TestDriver.OpenForm(formName, entityName);
+            Driver.WaitForTransaction();
         }
 
         /// <summary>
@@ -343,7 +344,7 @@
         [Then(@"I am presented with a '(.*)' form for the '(.*)' entity")]
         public static void ThenIAmPresentedWithANewFormForTheEntity(string formName, string entityName)
         {
-            XrmApp.Entity.GetFormName().Should().Be(formName);
+            EntityExtensions.GetFormName(Driver).Should().Be(formName);
             XrmApp.Entity.GetEntityName().Should().Be(entityName);
         }
 
