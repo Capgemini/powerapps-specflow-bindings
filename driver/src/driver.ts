@@ -81,17 +81,19 @@ export default class Driver {
   // eslint-disable-next-line class-methods-use-this
   public async openForm(formName:string, nameOfEntity:string)
     :Promise<Xrm.Async.PromiseLike<Xrm.Navigation.OpenFormResult>> {
-    return Xrm.Navigation.openForm({
+    const formInfo = await Xrm.WebApi.retrieveMultipleRecords('systemform', `?$select=formid&$filter=name eq '${formName}' and objecttypecode eq '${nameOfEntity}'`);
+    const formId = formInfo.entities[0].formid;
+    const formType = formInfo.entities[0].type;
+    const formPromise = Xrm.Navigation.openForm({
       entityName: nameOfEntity,
-      formId: await Xrm.WebApi.retrieveMultipleRecords('systemform', `?$select=formid&$filter=name eq '${formName}' and objecttypecode eq '${nameOfEntity}'`).then(
-        (result) => result.entities[0].formid
-        ,
-      ),
-      useQuickCreateForm: await Xrm.WebApi.retrieveMultipleRecords('systemform', `?$select=type&$filter=name eq '${formName}' and objecttypecode eq '${nameOfEntity}'`).then(
-        (result) => result.entities[0].type === 7,
-      )
-      ,
+      formId,
+      useQuickCreateForm: formType === 7,
     });
+
+    if (formType === 7) {
+      return Promise.resolve(formPromise);
+    }
+    return formPromise;
   }
 
   /**
