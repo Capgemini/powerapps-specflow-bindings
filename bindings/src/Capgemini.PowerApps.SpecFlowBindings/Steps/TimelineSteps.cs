@@ -109,7 +109,7 @@
         /// </summary>
         /// <param name="activityName">The name of the activity entity.</param>
         [When(@"I click create for (?:a|an) '(.*)' on the timeline")]
-        public static void WhenIAddAnEmailToTheTimeline(string activityName)
+        public static void WhenIClickCreateOnTheTimeline(string activityName)
         {
             Driver.ClickWhenAvailable(By.XPath(Elements.Xpath[Reference.Timeline.Popout]));
             Driver.ClickWhenAvailable(By.XPath($"//li[contains(@id,\"notescontrol-createNewRecord_flyoutMenuItem_{activityName}\")]"));
