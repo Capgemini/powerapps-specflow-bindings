@@ -3,6 +3,8 @@
     using System;
     using System.Linq;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
+    using Microsoft.Dynamics365.UIAutomation.Browser;
+    using OpenQA.Selenium;
     using TechTalk.SpecFlow;
 
     /// <summary>
@@ -100,6 +102,17 @@
             EmailContacts(
                 Reference.Timeline.EmailBcc,
                 contacts.Rows.Where(r => r[0] == "BCC").Select(r => r["Name"]).ToArray());
+        }
+
+        /// <summary>
+        /// Clicks the create button for the given activity.
+        /// </summary>
+        /// <param name="activityName">The name of the activity entity.</param>
+        [When(@"I click create for (?:a|an) '(.*)' on the timeline")]
+        public static void WhenIAddAnEmailToTheTimeline(string activityName)
+        {
+            Driver.ClickWhenAvailable(By.XPath(Elements.Xpath[Reference.Timeline.Popout]));
+            Driver.ClickWhenAvailable(By.XPath($"//li[contains(@id,\"notescontrol-createNewRecord_flyoutMenuItem_{activityName}\")]"));
         }
 
         private static void EmailContacts(string reference, string[] contacts)
