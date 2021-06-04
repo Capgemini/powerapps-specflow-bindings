@@ -18,7 +18,7 @@ Scenarios:
 		| sb_yesno       | boolean        | true               |
 		| sb_choice      | optionset      | Option A           |
 		| sb_choices     | multioptionset | Option A, Option B |
-		| sb_dateandtime | datetime       | 1/1/2021 13:00     |
+		# | sb_dateandtime | datetime       | 1/1/2021 13:00     | Currently failing due to https://github.com/microsoft/EasyRepro/issues/1139
 		| sb_dateonly    | datetime       | 1/1/2021           |
 		| sb_currency    | currency       | £10.00             |
 
