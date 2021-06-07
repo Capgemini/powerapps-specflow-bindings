@@ -16,14 +16,20 @@ Scenario: Cancel a confirmation dialog
 	When I select the 'Show Confirmation Dialog' command
 	And I cancel when presented with the confirmation dialog
 
+@ignore
+#Currently failing due to https://github.com/microsoft/EasyRepro/issues/1120
 Scenario: Assign to me on assign dialog
 	When I select the 'Assign' command
 	And I assign to me on the assign dialog
 
+@ignore
+#Currently failing due to https://github.com/microsoft/EasyRepro/issues/1120
 Scenario: Assign to user on assign dialog
 	When I select the 'Assign' command
 	And I assign to a user named 'Power Apps Checker Application' on the assign dialog
 
+@ignore
+#Currently failing due to https://github.com/microsoft/EasyRepro/issues/1120
 Scenario: Assign to team on assign dialog
 	Given I have created 'a different team'
 	When I select the 'Assign' command
