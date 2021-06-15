@@ -6,6 +6,7 @@
     using System.IO;
     using System.Reflection;
     using Capgemini.PowerApps.SpecFlowBindings.Configuration;
+    using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using Microsoft.Identity.Client;
     using OpenQA.Selenium;
@@ -77,7 +78,7 @@
                         }
                     }
 
-                    if (testConfig.BrowserOptions.BrowserType == Microsoft.Dynamics365.UIAutomation.Browser.BrowserType.Chrome)
+                    if (testConfig.BrowserOptions.BrowserType.SupportsProfiles())
                     {
                         GenerateChromeProfiles(testConfig.Users);
                     }
@@ -131,12 +132,12 @@
         {
             get
             {
-                if (testConfig.BrowserOptions.BrowserType != Microsoft.Dynamics365.UIAutomation.Browser.BrowserType.Chrome)
+                if (testConfig.BrowserOptions.BrowserType.SupportsProfiles())
                 {
-                    throw new ArgumentException("Chrome profiles are only supported when using the Chrome browser.");
+                    return userChromeProfileDirectories;
                 }
 
-                return userChromeProfileDirectories;
+                throw new ArgumentException($"The {testConfig.BrowserOptions.BrowserType} does not support profiles.");
             }
         }
 
@@ -184,7 +185,7 @@
         private static void GenerateChromeProfiles(List<UserConfiguration> users)
         {
             userChromeProfileDirectories = new Dictionary<string, string>();
-            string chromeProfileDir = $"{Directory.GetCurrentDirectory()}\\chrome_profiles";
+            string chromeProfileDir = $"{Directory.GetCurrentDirectory()}\\profiles";
             CreateDirectoryIfNotExists(chromeProfileDir);
 
             foreach (var user in users)

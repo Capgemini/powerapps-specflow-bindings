@@ -1,5 +1,8 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Steps
 {
+    using System;
+    using Capgemini.PowerApps.SpecFlowBindings.Extensions;
+    using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using Microsoft.Dynamics365.UIAutomation.Browser;
     using OpenQA.Selenium;
     using TechTalk.SpecFlow;
@@ -20,16 +23,17 @@
         {
             var user = TestConfig.GetUser(userAlias);
 
-            if (TestConfig.BrowserOptions.BrowserType == BrowserType.Chrome)
+            if (TestConfig.BrowserOptions.BrowserType.SupportsProfiles())
             {
-                TestConfig.BrowserOptions.ChromeProfileDirectory = UserChromeProfileDirectories[user.Username];
+                TestConfig.BrowserOptions.ProfileDirectory = UserChromeProfileDirectories[user.Username];
+                ForgetExistingAccounts(TestConfig.GetTestUrl());
             }
 
             XrmApp.OnlineLogin.Login(
-                TestConfig.GetTestUrl(),
-                user.Username.ToSecureString(),
-                user.Password.ToSecureString(),
-                string.Empty.ToSecureString());
+                    TestConfig.GetTestUrl(),
+                    user.Username.ToSecureString(),
+                    user.Password.ToSecureString(),
+                    string.Empty.ToSecureString());
 
             XrmApp.Navigation.OpenApp(appName);
 
@@ -41,6 +45,19 @@
             foreach (var closeButton in Driver.FindElements(By.ClassName("ms-TeachingBubble-closebutton")))
             {
                 closeButton.Click();
+            }
+        }
+
+        // This logic is only required as there is currently a defect in Easy Repro which causes it to not handle the "Pick and Account" dialog
+        // This can be removed when the PR into EasyRepro is merged. https://github.com/microsoft/EasyRepro/pull/1143
+        private static void ForgetExistingAccounts(Uri orgUrl)
+        {
+            Client.Browser.Driver.Navigate().GoToUrl(orgUrl);
+
+            foreach (var existingAccountMenuButton in Driver.FindElements(By.ClassName("tile-menu")))
+            {
+                existingAccountMenuButton.Click();
+                Driver.FindElement(By.Id("forgetLink")).Click();
             }
         }
     }
