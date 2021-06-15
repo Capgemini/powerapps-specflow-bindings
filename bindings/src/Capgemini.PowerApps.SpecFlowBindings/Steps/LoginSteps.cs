@@ -20,6 +20,11 @@
         {
             var user = TestConfig.GetUser(userAlias);
 
+            if (TestConfig.BrowserOptions.BrowserType == BrowserType.Chrome)
+            {
+                TestConfig.BrowserOptions.ChromeProfileDirectory = UserChromeProfileDirectories[user.Username];
+            }
+
             XrmApp.OnlineLogin.Login(
                 TestConfig.GetTestUrl(),
                 user.Username.ToSecureString(),

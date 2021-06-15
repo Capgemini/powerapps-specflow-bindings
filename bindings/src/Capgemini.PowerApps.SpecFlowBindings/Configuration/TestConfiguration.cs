@@ -24,7 +24,7 @@
         /// </summary>
         public TestConfiguration()
         {
-            this.BrowserOptions = new BrowserOptions();
+            this.BrowserOptions = new BrowserOptionsWithProfileSupport();
         }
 
         /// <summary>
@@ -37,7 +37,7 @@
         /// Gets or sets the browser options to use for running tests.
         /// </summary>
         [YamlMember(Alias = "browserOptions")]
-        public BrowserOptions BrowserOptions { get; set; }
+        public BrowserOptionsWithProfileSupport BrowserOptions { get; set; }
 
         /// <summary>
         /// Gets or sets users that tests can be run as.

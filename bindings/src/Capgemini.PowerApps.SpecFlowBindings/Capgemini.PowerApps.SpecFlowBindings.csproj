@@ -5,7 +5,7 @@
     <Product>Capgemini.PowerApps.SpecFlowBindings</Product>
     <Description>A SpecFlow bindings library for Power Apps.</Description>
     <Copyright>Capgemini Copyright © 2020</Copyright>
-    <Version>0.1.0</Version>
+    <Version>9.9.9</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Authors>Capgemini_UK, ewingjm</Authors>
     <PackageId>Capgemini.PowerApps.SpecFlowBindings</PackageId>

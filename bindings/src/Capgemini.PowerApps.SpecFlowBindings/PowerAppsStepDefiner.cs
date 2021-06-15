@@ -1,6 +1,7 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings
 {
     using System;
+    using System.Collections.Generic;
     using System.Configuration;
     using System.IO;
     using System.Reflection;
@@ -31,6 +32,8 @@
 
         [ThreadStatic]
         private static XrmApp xrmApp;
+
+        private static Dictionary<string, string> userChromeProfileDirectories;
 
         /// <summary>
         /// Gets access token used to authenticate as the application user configured for testing.
@@ -72,6 +75,11 @@
                         {
                             testConfig.BrowserOptions.DriversPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                         }
+                    }
+
+                    if (testConfig.BrowserOptions.BrowserType == Microsoft.Dynamics365.UIAutomation.Browser.BrowserType.Chrome)
+                    {
+                        GenerateChromeProfiles(testConfig.Users);
                     }
                 }
 
@@ -117,6 +125,22 @@
         }
 
         /// <summary>
+        /// Gets the directories for the chrome profiles if the brower type is chrome.
+        /// </summary>
+        protected static Dictionary<string, string> UserChromeProfileDirectories
+        {
+            get
+            {
+                if (testConfig.BrowserOptions.BrowserType != Microsoft.Dynamics365.UIAutomation.Browser.BrowserType.Chrome)
+                {
+                    throw new ArgumentException("Chrome profiles are only supported when using the Chrome browser.");
+                }
+
+                return userChromeProfileDirectories;
+            }
+        }
+
+        /// <summary>
         /// Performs any cleanup necessary when quitting the WebBrowser.
         /// </summary>
         protected static void Quit()
@@ -151,6 +175,38 @@
             }
 
             return app;
+        }
+
+        /// <summary>
+        /// Creates a directory for each user to store information specific to a chrome profile.
+        /// </summary>
+        /// <param name="users">List of user to create profile directories for.</param>
+        private static void GenerateChromeProfiles(List<UserConfiguration> users)
+        {
+            userChromeProfileDirectories = new Dictionary<string, string>();
+            string chromeProfileDir = $"{Directory.GetCurrentDirectory()}\\chrome_profiles";
+            CreateDirectoryIfNotExists(chromeProfileDir);
+
+            foreach (var user in users)
+            {
+                if (userChromeProfileDirectories.ContainsKey(user.Username))
+                {
+                    continue;
+                }
+
+                var userChromeProfileDir = $"{chromeProfileDir}\\{user.Username}";
+                CreateDirectoryIfNotExists(userChromeProfileDir);
+
+                userChromeProfileDirectories.Add(user.Username, userChromeProfileDir);
+            }
+        }
+
+        private static void CreateDirectoryIfNotExists(string directoryPath)
+        {
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
         }
     }
 }
