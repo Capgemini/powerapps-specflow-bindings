@@ -80,7 +80,7 @@
 
                     if (testConfig.UseProfiles && testConfig.BrowserOptions.BrowserType.SupportsProfiles())
                     {
-                        GenerateChromeProfiles(testConfig.Users);
+                        GenerateUserProfiles(testConfig.Users);
                     }
                 }
 
@@ -182,7 +182,7 @@
         /// Creates a directory for each user to store information specific to a chrome profile.
         /// </summary>
         /// <param name="users">List of user to create profile directories for.</param>
-        private static void GenerateChromeProfiles(List<UserConfiguration> users)
+        private static void GenerateUserProfiles(List<UserConfiguration> users)
         {
             userProfileDirectories = new Dictionary<string, string>();
             string chromeProfileDir = $"{Directory.GetCurrentDirectory()}\\profiles";
