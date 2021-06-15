@@ -23,9 +23,9 @@
         {
             var user = TestConfig.GetUser(userAlias);
 
-            if (TestConfig.BrowserOptions.BrowserType.SupportsProfiles())
+            if (TestConfig.UseProfiles && TestConfig.BrowserOptions.BrowserType.SupportsProfiles())
             {
-                TestConfig.BrowserOptions.ProfileDirectory = UserChromeProfileDirectories[user.Username];
+                TestConfig.BrowserOptions.ProfileDirectory = UserProfileDirectories[user.Username];
                 ForgetExistingAccounts(TestConfig.GetTestUrl());
             }
 

@@ -34,7 +34,7 @@
         [ThreadStatic]
         private static XrmApp xrmApp;
 
-        private static Dictionary<string, string> userChromeProfileDirectories;
+        private static Dictionary<string, string> userProfileDirectories;
 
         /// <summary>
         /// Gets access token used to authenticate as the application user configured for testing.
@@ -78,7 +78,7 @@
                         }
                     }
 
-                    if (testConfig.BrowserOptions.BrowserType.SupportsProfiles())
+                    if (testConfig.UseProfiles && testConfig.BrowserOptions.BrowserType.SupportsProfiles())
                     {
                         GenerateChromeProfiles(testConfig.Users);
                     }
@@ -128,13 +128,13 @@
         /// <summary>
         /// Gets the directories for the chrome profiles if the brower type is chrome.
         /// </summary>
-        protected static Dictionary<string, string> UserChromeProfileDirectories
+        protected static Dictionary<string, string> UserProfileDirectories
         {
             get
             {
                 if (testConfig.BrowserOptions.BrowserType.SupportsProfiles())
                 {
-                    return userChromeProfileDirectories;
+                    return userProfileDirectories;
                 }
 
                 throw new ArgumentException($"The {testConfig.BrowserOptions.BrowserType} does not support profiles.");
@@ -184,13 +184,13 @@
         /// <param name="users">List of user to create profile directories for.</param>
         private static void GenerateChromeProfiles(List<UserConfiguration> users)
         {
-            userChromeProfileDirectories = new Dictionary<string, string>();
+            userProfileDirectories = new Dictionary<string, string>();
             string chromeProfileDir = $"{Directory.GetCurrentDirectory()}\\profiles";
             CreateDirectoryIfNotExists(chromeProfileDir);
 
             foreach (var user in users)
             {
-                if (userChromeProfileDirectories.ContainsKey(user.Username))
+                if (userProfileDirectories.ContainsKey(user.Username))
                 {
                     continue;
                 }
@@ -198,7 +198,7 @@
                 var userChromeProfileDir = $"{chromeProfileDir}\\{user.Username}";
                 CreateDirectoryIfNotExists(userChromeProfileDir);
 
-                userChromeProfileDirectories.Add(user.Username, userChromeProfileDir);
+                userProfileDirectories.Add(user.Username, userChromeProfileDir);
             }
         }
 

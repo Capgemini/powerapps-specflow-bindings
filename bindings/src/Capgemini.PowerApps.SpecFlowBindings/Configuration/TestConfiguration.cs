@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Configuration;
     using System.Linq;
-    using Microsoft.Dynamics365.UIAutomation.Browser;
     using YamlDotNet.Serialization;
 
     /// <summary>
@@ -32,6 +31,12 @@
         /// </summary>
         [YamlMember(Alias = "url")]
         public string Url { private get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to use profiles.
+        /// </summary>
+        [YamlMember(Alias = "useProfiles")]
+        public bool UseProfiles { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the browser options to use for running tests.
