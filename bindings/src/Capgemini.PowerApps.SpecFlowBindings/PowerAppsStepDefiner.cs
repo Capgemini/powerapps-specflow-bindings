@@ -185,8 +185,8 @@
         private static void GenerateUserProfiles(List<UserConfiguration> users)
         {
             userProfileDirectories = new Dictionary<string, string>();
-            string chromeProfileDir = $"{Directory.GetCurrentDirectory()}\\profiles";
-            CreateDirectoryIfNotExists(chromeProfileDir);
+            string profilesDir = $"{Directory.GetCurrentDirectory()}\\profiles";
+            CreateDirectoryIfNotExists(profilesDir);
 
             foreach (var user in users)
             {
@@ -195,10 +195,10 @@
                     continue;
                 }
 
-                var userChromeProfileDir = $"{chromeProfileDir}\\{user.Username}";
-                CreateDirectoryIfNotExists(userChromeProfileDir);
+                var userProfileDir = $"{profilesDir}\\{user.Username}";
+                CreateDirectoryIfNotExists(userProfileDir);
 
-                userProfileDirectories.Add(user.Username, userChromeProfileDir);
+                userProfileDirectories.Add(user.Username, userProfileDir);
             }
         }
 
