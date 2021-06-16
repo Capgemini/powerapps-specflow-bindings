@@ -1,10 +1,11 @@
-﻿using Microsoft.Xrm.Tooling.Connector;
-using System.IO;
-using System.Reflection;
-using TechTalk.SpecFlow;
-
-namespace Capgemini.PowerApps.SpecFlowBindings.UiTests.Hooks
+﻿namespace Capgemini.PowerApps.SpecFlowBindings.UiTests.Hooks
 {
+    using Microsoft.Xrm.Tooling.Connector;
+    using System.IO;
+    using System.Reflection;
+    using TechTalk.SpecFlow;
+    using System;
+
     /// <summary>
     /// Hooks related to the mock solution used for testing.
     /// </summary>
@@ -36,6 +37,22 @@ namespace Capgemini.PowerApps.SpecFlowBindings.UiTests.Hooks
         private static CrmServiceClient GetServiceClient()
         {
             var admin = TestConfig.GetUser("an admin");
+            var url = TestConfig.GetTestUrl();
+
+            if (string.IsNullOrEmpty(admin.Username))
+            {
+                throw new ArgumentException("Username cannot be null or blank");
+            }
+
+            if (string.IsNullOrEmpty(admin.Password))
+            {
+                throw new ArgumentException("Password cannot be null or blank");
+            }
+
+            if (string.IsNullOrEmpty(url.AbsoluteUri))
+            {
+                throw new ArgumentException($"Url cannot be null or blank: {url}");
+            }
 
             return new CrmServiceClient(
                 $"AuthType=OAuth; " +

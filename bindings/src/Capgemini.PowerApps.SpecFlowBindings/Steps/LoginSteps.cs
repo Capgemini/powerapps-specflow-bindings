@@ -26,14 +26,9 @@
             if (TestConfig.UseProfiles && TestConfig.BrowserOptions.BrowserType.SupportsProfiles())
             {
                 TestConfig.BrowserOptions.ProfileDirectory = UserProfileDirectories[user.Username];
-                ForgetExistingAccounts(TestConfig.GetTestUrl());
             }
 
-            XrmApp.OnlineLogin.Login(
-                TestConfig.GetTestUrl(),
-                user.Username.ToSecureString(),
-                user.Password.ToSecureString(),
-                string.Empty.ToSecureString());
+            Login(Driver, TestConfig.GetTestUrl(), user.Username, user.Password);
 
             XrmApp.Navigation.OpenApp(appName);
 
@@ -48,17 +43,48 @@
             }
         }
 
-        // This logic is only required as there is currently a defect in Easy Repro which causes it to not handle the "Pick and Account" dialog
-        // This can be removed when the PR into EasyRepro is merged. https://github.com/microsoft/EasyRepro/pull/1143
-        private static void ForgetExistingAccounts(Uri orgUrl)
+        private static void Login(IWebDriver driver, Uri orgUrl, string username, string password)
         {
-            Client.Browser.Driver.Navigate().GoToUrl(orgUrl);
+            driver.Navigate().GoToUrl(orgUrl);
+            driver.ClickIfVisible(By.Id("otherTile"));
 
-            foreach (var existingAccountMenuButton in Driver.FindElements(By.ClassName("tile-menu")))
+            bool waitForMainPage = WaitForMainPage(driver);
+
+            if (!waitForMainPage)
             {
-                existingAccountMenuButton.Click();
-                Driver.FindElement(By.Id("forgetLink")).Click();
+                IWebElement usernameInput = driver.WaitUntilAvailable(By.XPath(Elements.Xpath[Reference.Login.UserId]), 30.Seconds());
+                usernameInput.SendKeys(username);
+                usernameInput.SendKeys(Keys.Enter);
+                driver.WaitForTransaction();
+
+                IWebElement passwordInput = driver.WaitUntilClickable(By.XPath(Elements.Xpath[Reference.Login.LoginPassword]), 30.Seconds());
+                passwordInput.SendKeys(password);
+                passwordInput.Submit();
+                driver.WaitForTransaction();
+
+                var staySignedIn = driver.WaitUntilClickable(By.XPath(Elements.Xpath[Reference.Login.StaySignedIn]), 10.Seconds());
+                if (staySignedIn != null)
+                {
+                    staySignedIn.Click();
+                    driver.WaitForTransaction();
+                }
+
+                WaitForMainPage(driver, 30.Seconds());
             }
+        }
+
+        private static bool WaitForMainPage(IWebDriver driver, TimeSpan? timeout = null)
+        {
+            timeout = timeout ?? 10.Seconds();
+            bool isUCI = driver.HasElement(By.XPath(Elements.Xpath[Reference.Login.CrmUCIMainPage]));
+            if (isUCI)
+            {
+                driver.WaitForTransaction();
+            }
+
+            var xpathToMainPage = By.XPath(Elements.Xpath[Reference.Login.CrmMainPage]);
+            var element = driver.WaitUntilAvailable(xpathToMainPage, timeout);
+            return element != null;
         }
     }
 }
