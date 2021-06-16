@@ -1,10 +1,10 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.UiTests.Hooks
 {
     using Microsoft.Xrm.Tooling.Connector;
+    using System;
     using System.IO;
     using System.Reflection;
     using TechTalk.SpecFlow;
-    using System;
 
     /// <summary>
     /// Hooks related to the mock solution used for testing.
@@ -37,31 +37,19 @@
         private static CrmServiceClient GetServiceClient()
         {
             var admin = TestConfig.GetUser("an admin");
-            var url = TestConfig.GetTestUrl();
 
-            if (string.IsNullOrEmpty(admin.Username))
-            {
-                throw new ArgumentException("Username cannot be null or blank");
-            }
-
-            if (string.IsNullOrEmpty(admin.Password))
-            {
-                throw new ArgumentException("Password cannot be null or blank");
-            }
-
-            if (string.IsNullOrEmpty(url.AbsoluteUri))
-            {
-                throw new ArgumentException($"Url cannot be null or blank: {url}");
-            }
-
-            return new CrmServiceClient(
+            var connectionString = 
                 $"AuthType=OAuth;" +
                 $"Username={admin.Username};" +
                 $"Password={admin.Password};" +
                 $"Url={TestConfig.GetTestUrl()};" +
                 $"AppId=51f81489-12ee-4a9e-aaae-a2591f45987d;" +
                 $"RedirectUri=app://58145B91-0C36-4500-8554-080854F2AC97;" +
-                $"LoginPrompt=Auto");
+                $"LoginPrompt=Auto";
+
+            Console.WriteLine(connectionString);
+
+            return new CrmServiceClient(connectionString);
         }
     }
 }
