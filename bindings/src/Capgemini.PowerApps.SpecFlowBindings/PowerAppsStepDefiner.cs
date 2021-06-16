@@ -77,11 +77,6 @@
                             testConfig.BrowserOptions.DriversPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                         }
                     }
-
-                    if (testConfig.UseProfiles && testConfig.BrowserOptions.BrowserType.SupportsProfiles())
-                    {
-                        GenerateUserProfiles(testConfig.Users);
-                    }
                 }
 
                 return testConfig;
@@ -132,12 +127,34 @@
         {
             get
             {
-                if (testConfig.BrowserOptions.BrowserType.SupportsProfiles())
+                if (!testConfig.BrowserOptions.BrowserType.SupportsProfiles())
+                {
+                    throw new NotSupportedException($"The {testConfig.BrowserOptions.BrowserType} does not support profiles.");
+                }
+
+                if (userProfileDirectories != null)
                 {
                     return userProfileDirectories;
                 }
 
-                throw new ArgumentException($"The {testConfig.BrowserOptions.BrowserType} does not support profiles.");
+                userProfileDirectories = new Dictionary<string, string>();
+                string profilesDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "profiles");
+                Directory.CreateDirectory(profilesDir);
+
+                foreach (var user in TestConfig.Users)
+                {
+                    if (userProfileDirectories.ContainsKey(user.Username))
+                    {
+                        continue;
+                    }
+
+                    var userProfileDir = Path.Combine(profilesDir, user.Username);
+                    Directory.CreateDirectory(userProfileDir);
+
+                    userProfileDirectories.Add(user.Username, userProfileDir);
+                }
+
+                return userProfileDirectories;
             }
         }
 
@@ -176,38 +193,6 @@
             }
 
             return app;
-        }
-
-        /// <summary>
-        /// Creates a directory for each user to store information specific to a chrome profile.
-        /// </summary>
-        /// <param name="users">List of user to create profile directories for.</param>
-        private static void GenerateUserProfiles(List<UserConfiguration> users)
-        {
-            userProfileDirectories = new Dictionary<string, string>();
-            string profilesDir = $"{Directory.GetCurrentDirectory()}\\profiles";
-            CreateDirectoryIfNotExists(profilesDir);
-
-            foreach (var user in users)
-            {
-                if (userProfileDirectories.ContainsKey(user.Username))
-                {
-                    continue;
-                }
-
-                var userProfileDir = $"{profilesDir}\\{user.Username}";
-                CreateDirectoryIfNotExists(userProfileDir);
-
-                userProfileDirectories.Add(user.Username, userProfileDir);
-            }
-        }
-
-        private static void CreateDirectoryIfNotExists(string directoryPath)
-        {
-            if (!Directory.Exists(directoryPath))
-            {
-                Directory.CreateDirectory(directoryPath);
-            }
         }
     }
 }

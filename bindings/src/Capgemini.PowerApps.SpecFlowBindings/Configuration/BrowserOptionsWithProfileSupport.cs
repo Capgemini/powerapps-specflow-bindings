@@ -1,5 +1,6 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Configuration
 {
+    using System.IO;
     using Microsoft.Dynamics365.UIAutomation.Browser;
     using OpenQA.Selenium.Chrome;
     using OpenQA.Selenium.Firefox;
@@ -32,7 +33,7 @@
             var options = base.ToFireFox();
             if (!string.IsNullOrEmpty(this.ProfileDirectory))
             {
-                this.ProfileDirectory = $"{this.ProfileDirectory}\\firefox";
+                this.ProfileDirectory = this.ProfileDirectory.EndsWith("firefox") ? this.ProfileDirectory : Path.Combine(this.ProfileDirectory, "firefox");
                 options.AddArgument($"-profile \"{this.ProfileDirectory}\"");
             }
 
