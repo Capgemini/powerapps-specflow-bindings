@@ -55,18 +55,15 @@
                 IWebElement usernameInput = driver.WaitUntilAvailable(By.XPath(Elements.Xpath[Reference.Login.UserId]), 30.Seconds());
                 usernameInput.SendKeys(username);
                 usernameInput.SendKeys(Keys.Enter);
-                driver.WaitForTransaction();
 
                 IWebElement passwordInput = driver.WaitUntilClickable(By.XPath(Elements.Xpath[Reference.Login.LoginPassword]), 30.Seconds());
                 passwordInput.SendKeys(password);
                 passwordInput.Submit();
-                driver.WaitForTransaction();
 
                 var staySignedIn = driver.WaitUntilClickable(By.XPath(Elements.Xpath[Reference.Login.StaySignedIn]), 10.Seconds());
                 if (staySignedIn != null)
                 {
                     staySignedIn.Click();
-                    driver.WaitForTransaction();
                 }
 
                 WaitForMainPage(driver, 30.Seconds());
