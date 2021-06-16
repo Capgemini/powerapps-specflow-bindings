@@ -54,6 +54,7 @@ Installing the NuGet package creates a _power-apps-bindings.yml_ file in your pr
 
 ```yaml
 url: SPECFLOW_POWERAPPS_URL # mandatory
+useProfiles: false # defaults to false if not provided
 browserOptions: # optional - will use default EasyRepro options if not set
   browserType: Chrome
   headless: true
@@ -72,6 +73,9 @@ users: # mandatory
 ```
 
 The URL, driversPath, usernames, passwords, and application user details will be set from environment variable (if found). Otherwise, the value from the config file will be used. The browserOptions node supports anything in the EasyRepro `BrowserOptions` class.
+
+#### User Profiles
+Setting the `useProfiles` property to true causes the solution to create and use a unique [profile](https://support.google.com/chrome/answer/2364824?co=GENIE.Platform%3DDesktop&hl=en) for each user listed in the config file. This currently only works in Chrome & Firefox and attempting to use it with Edge or IE will cause an exception to be thrown. By using profiles test runs for the same user will not be required to re-authenticate, this saves time during test runs. [To take full advantage of this you will need to have the "Stay Signed In" prompt enabled.](https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/keep-me-signed-in)
 
 ### Writing feature files
 
