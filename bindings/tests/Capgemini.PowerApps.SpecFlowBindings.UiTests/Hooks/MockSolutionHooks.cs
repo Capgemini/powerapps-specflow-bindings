@@ -47,8 +47,6 @@
                 $"RedirectUri=app://58145B91-0C36-4500-8554-080854F2AC97;" +
                 $"LoginPrompt=Auto";
 
-            Console.WriteLine(connectionString);
-
             return new CrmServiceClient(connectionString);
         }
     }
