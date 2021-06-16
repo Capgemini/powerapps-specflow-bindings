@@ -137,13 +137,13 @@
                     return userProfileDirectories;
                 }
 
-                userProfileDirectories = new Dictionary<string, string>();
+                var directoriesDictionary = new Dictionary<string, string>();
                 string profilesDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "profiles");
                 Directory.CreateDirectory(profilesDir);
 
                 foreach (var user in TestConfig.Users)
                 {
-                    if (userProfileDirectories.ContainsKey(user.Username))
+                    if (directoriesDictionary.ContainsKey(user.Username))
                     {
                         continue;
                     }
@@ -151,9 +151,10 @@
                     var userProfileDir = Path.Combine(profilesDir, user.Username);
                     Directory.CreateDirectory(userProfileDir);
 
-                    userProfileDirectories.Add(user.Username, userProfileDir);
+                    directoriesDictionary.Add(user.Username, userProfileDir);
                 }
 
+                userProfileDirectories = directoriesDictionary;
                 return userProfileDirectories;
             }
         }
