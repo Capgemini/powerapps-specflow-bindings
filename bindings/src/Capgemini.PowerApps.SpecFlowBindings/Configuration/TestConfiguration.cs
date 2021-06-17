@@ -19,12 +19,16 @@
 
         private const string GetUserException = "Unable to retrieve user configuration. Please ensure a user with the given alias exists in the config.";
 
+        private int aliasIndex;
+        private UserConfiguration currentUser;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TestConfiguration"/> class.
         /// </summary>
         public TestConfiguration()
         {
             this.BrowserOptions = new BrowserOptions();
+            this.aliasIndex = 0;
         }
 
         /// <summary>
@@ -69,7 +73,24 @@
         {
             try
             {
-                return this.Users.First(u => u.Alias == userAlias);
+                if (this.Users.Count > 1)
+                {
+                    if (this.Users.Count - 1 == this.aliasIndex)
+                    {
+                        this.aliasIndex = 0;
+                    }
+                    else
+                    {
+                        this.currentUser = this.Users[this.aliasIndex];
+                        this.aliasIndex++;
+                    }
+
+                    return this.currentUser;
+                }
+                else
+                {
+                    return this.Users.First(u => u.Alias == userAlias);
+                }
             }
             catch (Exception ex)
             {
@@ -78,3 +99,4 @@
         }
     }
 }
+
