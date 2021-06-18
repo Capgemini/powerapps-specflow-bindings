@@ -19,8 +19,8 @@
 
         private const string GetUserException = "Unable to retrieve user configuration. Please ensure a user with the given alias exists in the config.";
 
-        private int aliasIndex;
-        private UserConfiguration currentUser;
+        private object userEnumeratorsLock = new object();
+        private Dictionary<string, IEnumerator<UserConfiguration>> userEnumerators;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestConfiguration"/> class.
@@ -28,7 +28,6 @@
         public TestConfiguration()
         {
             this.BrowserOptions = new BrowserOptions();
-            this.aliasIndex = 0;
         }
 
         /// <summary>
@@ -55,6 +54,28 @@
         [YamlMember(Alias = "applicationUser")]
         public ClientCredentials ApplicationUser { get; set; }
 
+        [YamlIgnore]
+        private Dictionary<string, IEnumerator<UserConfiguration>> UserEnumerators
+        {
+            get
+            {
+                lock (this.userEnumeratorsLock)
+                {
+                    if (this.userEnumerators == null)
+                    {
+                        this.userEnumerators = this.Users
+                            .Select(user => user.Alias)
+                            .Distinct()
+                            .ToDictionary(
+                                alias => alias,
+                                alias => this.Users.Where(u => u.Alias == alias).GetEnumerator());
+                    }
+                }
+
+                return this.userEnumerators;
+            }
+        }
+
         /// <summary>
         /// Gets the target URL.
         /// </summary>
@@ -71,32 +92,29 @@
         /// <returns>The user configuration.</returns>
         public UserConfiguration GetUser(string userAlias)
         {
+            UserConfiguration user;
+
             try
             {
-                if (this.Users.Count > 1)
+                lock (this.userEnumeratorsLock)
                 {
-                    if (this.Users.Count - 1 == this.aliasIndex)
+                    var aliasEnumerator = this.UserEnumerators[userAlias];
+                    if (!aliasEnumerator.MoveNext())
                     {
-                        this.aliasIndex = 0;
-                    }
-                    else
-                    {
-                        this.currentUser = this.Users[this.aliasIndex];
-                        this.aliasIndex++;
+                        this.UserEnumerators[userAlias] = this.Users.Where(u => u.Alias == userAlias).GetEnumerator();
+                        aliasEnumerator = this.UserEnumerators[userAlias];
+                        aliasEnumerator.MoveNext();
                     }
 
-                    return this.currentUser;
-                }
-                else
-                {
-                    return this.Users.First(u => u.Alias == userAlias);
+                    user = aliasEnumerator.Current;
                 }
             }
             catch (Exception ex)
             {
                 throw new ConfigurationErrorsException($"{GetUserException} User: {userAlias}", ex);
             }
+
+            return user;
         }
     }
 }
-
