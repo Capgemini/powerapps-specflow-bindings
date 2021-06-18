@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Threading;
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using Microsoft.Dynamics365.UIAutomation.Browser;
@@ -14,6 +15,7 @@
     [Binding]
     public class LoginSteps : PowerAppsStepDefiner
     {
+        private static int currentScenarioId = 0;
         private ScenarioContext scenarioContext;
 
         /// <summary>
@@ -120,9 +122,14 @@
             }
         }
 
+        private static int GetScenarioId()
+        {
+            return Interlocked.Increment(ref currentScenarioId);
+        }
+
         private void SetupScenarioProfile(string username)
         {
-            Guid scenarioProfileId = Guid.NewGuid();
+            int scenarioProfileId = GetScenarioId();
             this.scenarioContext.Add("profileId", scenarioProfileId);
 
             var scenarioProfileDir = Path.Combine(UserProfileDirectories[username], scenarioProfileId.ToString());

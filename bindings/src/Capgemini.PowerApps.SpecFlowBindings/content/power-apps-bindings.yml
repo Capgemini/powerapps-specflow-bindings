@@ -1,6 +1,5 @@
 url: 
 useProfiles: false
-profileBasePath: null
 browserOptions: 
   browserType:
 users: 

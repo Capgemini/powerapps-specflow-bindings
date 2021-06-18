@@ -17,7 +17,7 @@
         public const string FileName = "power-apps-bindings.yml";
 
         private const string GetUserException = "Unable to retrieve user configuration. Please ensure a user with the given alias exists in the config.";
-
+        private string profilesBasePath;
         /// <summary>
         /// Initializes a new instance of the <see cref="TestConfiguration"/> class.
         /// </summary>
@@ -42,7 +42,7 @@
         /// Gets or sets the base path where the user profiles are stored.
         /// </summary>
         [YamlMember(Alias = "profilesBasePath")]
-        public string ProfilesBasePath { get; set; } = null;
+        public string ProfilesBasePath { get => ConfigHelper.GetEnvironmentVariableIfExists(this.profilesBasePath); set => this.profilesBasePath = value; }
 
         /// <summary>
         /// Gets or sets the browser options to use for running tests.
