@@ -130,9 +130,8 @@
         private void SetupScenarioProfile(string username)
         {
             int scenarioProfileId = GetScenarioId();
-            this.scenarioContext.Add("profileId", scenarioProfileId);
-
             var scenarioProfileDir = Path.Combine(UserProfileDirectories[username], scenarioProfileId.ToString());
+            this.scenarioContext.Add("scenarioProfileDir", scenarioProfileDir);
 
             var basePath = Path.Combine(UserProfileDirectories[username], "base");
 

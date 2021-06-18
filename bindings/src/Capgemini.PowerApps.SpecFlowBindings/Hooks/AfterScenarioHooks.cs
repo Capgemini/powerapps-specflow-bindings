@@ -1,8 +1,9 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Hooks
 {
+    using Capgemini.PowerApps.SpecFlowBindings.Extensions;
+    using OpenQA.Selenium;
     using System.IO;
     using System.Reflection;
-    using OpenQA.Selenium;
     using TechTalk.SpecFlow;
 
     /// <summary>
@@ -62,6 +63,19 @@
                 Client.Browser.TakeWindowScreenShot(
                     Path.Combine(screenshotsFolder, $"{fileName}.jpg"),
                     ScreenshotImageFormat.Jpeg);
+            }
+        }
+
+        /// <summary>
+        /// Deletes the user profiles used for this scenario.
+        /// </summary>
+        [AfterScenario(Order = 2)]
+        public void CleanUpProfileDirectory()
+        {
+            if (this.scenarioContext.ContainsKey("scenarioProfileDir"))
+            {
+                var scenarioProfileDir = this.scenarioContext["scenarioProfileDir"] as string;
+                new DirectoryInfo(scenarioProfileDir).Delete(true);
             }
         }
     }
