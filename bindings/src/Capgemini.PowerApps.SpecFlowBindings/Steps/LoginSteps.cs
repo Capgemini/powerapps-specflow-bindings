@@ -1,6 +1,7 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Steps
 {
     using System;
+    using System.IO;
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using Microsoft.Dynamics365.UIAutomation.Browser;
@@ -13,37 +14,25 @@
     [Binding]
     public class LoginSteps : PowerAppsStepDefiner
     {
+        private ScenarioContext scenarioContext;
+
         /// <summary>
-        /// Logs in to a given app as a given user.
+        /// Initializes a new instance of the <see cref="LoginSteps"/> class.
         /// </summary>
-        /// <param name="appName">The name of the app.</param>
-        /// <param name="userAlias">The alias of the user.</param>
-        [Given("I am logged in to the '(.*)' app as '(.*)'")]
-        public static void GivenIAmLoggedInToTheAppAs(string appName, string userAlias)
+        /// <param name="scenarioContext">Instance of <see cref="ScenarioContext"/>.</param>
+        public LoginSteps(ScenarioContext scenarioContext)
         {
-            var user = TestConfig.GetUser(userAlias);
-
-            if (TestConfig.UseProfiles && TestConfig.BrowserOptions.BrowserType.SupportsProfiles())
-            {
-                TestConfig.BrowserOptions.ProfileDirectory = UserProfileDirectories[user.Username];
-            }
-
-            Login(Driver, TestConfig.GetTestUrl(), user.Username, user.Password);
-
-            XrmApp.Navigation.OpenApp(appName);
-
-            CloseTeachingBubbles();
+            this.scenarioContext = scenarioContext;
         }
 
-        private static void CloseTeachingBubbles()
-        {
-            foreach (var closeButton in Driver.FindElements(By.ClassName("ms-TeachingBubble-closebutton")))
-            {
-                closeButton.Click();
-            }
-        }
-
-        private static void Login(IWebDriver driver, Uri orgUrl, string username, string password)
+        /// <summary>
+        /// Logs into the given instance with the given credentials.
+        /// </summary>
+        /// <param name="driver">WebDriver used to imitate user actions.</param>
+        /// <param name="orgUrl">The <see cref="Uri"/> of the instance.</param>
+        /// <param name="username">The username of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        public static void Login(IWebDriver driver, Uri orgUrl, string username, string password)
         {
             driver.Navigate().GoToUrl(orgUrl);
             driver.ClickIfVisible(By.Id("otherTile"));
@@ -70,6 +59,36 @@
             }
         }
 
+        /// <summary>
+        /// Logs in to a given app as a given user.
+        /// </summary>
+        /// <param name="appName">The name of the app.</param>
+        /// <param name="userAlias">The alias of the user.</param>
+        [Given("I am logged in to the '(.*)' app as '(.*)'")]
+        public void GivenIAmLoggedInToTheAppAs(string appName, string userAlias)
+        {
+            var user = TestConfig.GetUser(userAlias);
+
+            if (TestConfig.UseProfiles && TestConfig.BrowserOptions.BrowserType.SupportsProfiles())
+            {
+                this.SetupScenarioProfile(user.Username);
+            }
+
+            Login(Driver, TestConfig.GetTestUrl(), user.Username, user.Password);
+
+            XrmApp.Navigation.OpenApp(appName);
+
+            CloseTeachingBubbles();
+        }
+
+        private static void CloseTeachingBubbles()
+        {
+            foreach (var closeButton in Driver.FindElements(By.ClassName("ms-TeachingBubble-closebutton")))
+            {
+                closeButton.Click();
+            }
+        }
+
         private static bool WaitForMainPage(IWebDriver driver, TimeSpan? timeout = null)
         {
             timeout = timeout ?? 10.Seconds();
@@ -82,6 +101,37 @@
             var xpathToMainPage = By.XPath(Elements.Xpath[Reference.Login.CrmMainPage]);
             var element = driver.WaitUntilAvailable(xpathToMainPage, timeout);
             return element != null;
+        }
+
+        private static void CopyAll(DirectoryInfo source, DirectoryInfo target)
+        {
+            Directory.CreateDirectory(target.FullName);
+
+            foreach (FileInfo fi in source.GetFiles())
+            {
+                fi.CopyTo(Path.Combine(target.FullName, fi.Name), true);
+            }
+
+            foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
+            {
+                DirectoryInfo nextTargetSubDir =
+                    target.CreateSubdirectory(diSourceSubDir.Name);
+                CopyAll(diSourceSubDir, nextTargetSubDir);
+            }
+        }
+
+        private void SetupScenarioProfile(string username)
+        {
+            Guid scenarioProfileId = Guid.NewGuid();
+            this.scenarioContext.Add("profileId", scenarioProfileId);
+
+            var scenarioProfileDir = Path.Combine(UserProfileDirectories[username], scenarioProfileId.ToString());
+
+            var basePath = Path.Combine(UserProfileDirectories[username], "base");
+
+            CopyAll(new DirectoryInfo(basePath), new DirectoryInfo(scenarioProfileDir));
+
+            TestConfig.BrowserOptions.ProfileDirectory = scenarioProfileDir;
         }
     }
 }

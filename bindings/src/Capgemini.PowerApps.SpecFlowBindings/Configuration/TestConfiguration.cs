@@ -39,6 +39,12 @@
         public bool UseProfiles { get; set; } = false;
 
         /// <summary>
+        /// Gets or sets the base path where the user profiles are stored.
+        /// </summary>
+        [YamlMember(Alias = "profilesBasePath")]
+        public string ProfilesBasePath { get; set; } = null;
+
+        /// <summary>
         /// Gets or sets the browser options to use for running tests.
         /// </summary>
         [YamlMember(Alias = "browserOptions")]
@@ -68,17 +74,23 @@
         /// <summary>
         /// Retrieves the configuration for a user.
         /// </summary>
-        /// <param name="userAlias">The alias of the user.</param>
+        /// <param name="userAliasOrUsername">The alias or username of the user.</param>
         /// <returns>The user configuration.</returns>
-        public UserConfiguration GetUser(string userAlias)
+        public UserConfiguration GetUser(string userAliasOrUsername)
         {
             try
             {
-                return this.Users.First(u => u.Alias == userAlias);
+                UserConfiguration user = this.Users.FirstOrDefault(u => u.Alias == userAliasOrUsername);
+                if (user != null)
+                {
+                    return user;
+                }
+
+                return this.Users.First(u => u.Username == userAliasOrUsername);
             }
             catch (Exception ex)
             {
-                throw new ConfigurationErrorsException($"{GetUserException} User: {userAlias}", ex);
+                throw new ConfigurationErrorsException($"{GetUserException} User: {userAliasOrUsername}", ex);
             }
         }
     }

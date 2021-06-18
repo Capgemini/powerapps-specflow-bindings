@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Configuration;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using Capgemini.PowerApps.SpecFlowBindings.Configuration;
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
@@ -138,20 +139,22 @@
                 }
 
                 var directoriesDictionary = new Dictionary<string, string>();
-                string profilesDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "profiles");
+
+                var basePath = string.IsNullOrEmpty(TestConfig.ProfilesBasePath) ? Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) : TestConfig.ProfilesBasePath;
+                string profilesDir = Path.Combine(basePath, "profiles");
                 Directory.CreateDirectory(profilesDir);
 
-                foreach (var user in TestConfig.Users)
+                foreach (var username in TestConfig.Users.Select(u => u.Username).ToList())
                 {
-                    if (directoriesDictionary.ContainsKey(user.Username))
+                    if (directoriesDictionary.ContainsKey(username))
                     {
                         continue;
                     }
 
-                    var userProfileDir = Path.Combine(profilesDir, user.Username);
+                    var userProfileDir = Path.Combine(profilesDir, username);
                     Directory.CreateDirectory(userProfileDir);
 
-                    directoriesDictionary.Add(user.Username, userProfileDir);
+                    directoriesDictionary.Add(username, userProfileDir);
                 }
 
                 userProfileDirectories = directoriesDictionary;
