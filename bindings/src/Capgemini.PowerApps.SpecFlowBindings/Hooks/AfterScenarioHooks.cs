@@ -55,6 +55,7 @@
             {
                 var rootFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 var screenshotsFolder = Path.Combine(rootFolder, "screenshots");
+                Console.WriteLine(screenshotsFolder);
 
                 if (!Directory.Exists(screenshotsFolder))
                 {
@@ -85,6 +86,7 @@
                         3.Seconds(),
                         5.Seconds(),
                         10.Seconds(),
+                        15.Seconds(),
                     });
                 retryPolicy.Execute(() => new DirectoryInfo(scenarioProfileDir).Delete(true));
             }
