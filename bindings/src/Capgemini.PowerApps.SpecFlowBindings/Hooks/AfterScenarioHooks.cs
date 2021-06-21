@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Reflection;
+    using Capgemini.PowerApps.SpecFlowBindings.Configuration;
     using Microsoft.Dynamics365.UIAutomation.Browser;
     using OpenQA.Selenium;
     using Polly;
@@ -72,24 +73,26 @@
         /// <summary>
         /// Deletes the user profiles used for this scenario.
         /// </summary>
-        [AfterScenario(Order = 500)]
+        [AfterScenario(Order = 0)]
         public void CleanUpProfileDirectory()
         {
-            if (this.scenarioContext.ContainsKey("scenarioProfileDir"))
-            {
-                var scenarioProfileDir = this.scenarioContext["scenarioProfileDir"] as string;
-                var retryPolicy = Policy
-                    .Handle<UnauthorizedAccessException>()
-                    .Or<IOException>()
-                    .WaitAndRetry(new[]
-                    {
+            Client.Browser.BrowserDisposing += new EventHandler<EventArgs>(this.TryCleanupProfile);
+        }
+
+        private void TryCleanupProfile(object sender, EventArgs e)
+        {
+            BrowserOptionsWithProfileSupport options = (sender as InteractiveBrowser).Options as BrowserOptionsWithProfileSupport;
+            Policy
+                .Handle<UnauthorizedAccessException>()
+                .Or<IOException>()
+                .WaitAndRetry(new[]
+                {
                         3.Seconds(),
                         5.Seconds(),
                         10.Seconds(),
                         15.Seconds(),
-                    });
-                retryPolicy.Execute(() => new DirectoryInfo(scenarioProfileDir).Delete(true));
-            }
+                })
+                .Execute(() => new DirectoryInfo(options.ProfileDirectory).Delete(true));
         }
     }
 }
