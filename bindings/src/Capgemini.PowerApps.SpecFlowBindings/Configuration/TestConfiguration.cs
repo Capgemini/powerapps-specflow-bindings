@@ -90,7 +90,7 @@
         /// </summary>
         /// <param name="userAlias">The alias of the user.</param>
         /// <returns>The user configuration.</returns>
-        public UserConfiguration GetUser(string userAlias)
+        public UserConfiguration GetUser(string userAlias, bool currentUser = true)
         {
             UserConfiguration user;
 
