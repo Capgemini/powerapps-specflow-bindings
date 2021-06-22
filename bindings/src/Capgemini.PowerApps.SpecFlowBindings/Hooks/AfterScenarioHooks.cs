@@ -1,12 +1,9 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Hooks
 {
-    using Capgemini.PowerApps.SpecFlowBindings.Configuration;
-    using Microsoft.Dynamics365.UIAutomation.Browser;
-    using OpenQA.Selenium;
-    using Polly;
     using System;
     using System.IO;
     using System.Reflection;
+    using OpenQA.Selenium;
     using TechTalk.SpecFlow;
 
     /// <summary>
@@ -68,40 +65,6 @@
                     Path.Combine(screenshotsFolder, $"{fileName}.jpg"),
                     ScreenshotImageFormat.Jpeg);
             }
-        }
-
-        /// <summary>
-        /// Deletes the user profiles used for this scenario.
-        /// </summary>
-        [AfterScenario(Order = 0)]
-        public void CleanUpProfileDirectory()
-        {
-            Client.Browser.BrowserDisposing += new EventHandler<EventArgs>(this.TryCleanupProfile);
-        }
-
-        private void TryCleanupProfile(object sender, EventArgs e)
-        {
-            BrowserOptionsWithProfileSupport options = (sender as InteractiveBrowser).Options as BrowserOptionsWithProfileSupport;
-            var retryPolicy = Policy
-                .Handle<UnauthorizedAccessException>()
-                .Or<IOException>()
-                .WaitAndRetry(new[]
-                {
-                        3.Seconds(),
-                        5.Seconds(),
-                        10.Seconds(),
-                        15.Seconds(),
-                });
-            var fallbackPolicy = Policy
-                .Handle<UnauthorizedAccessException>()
-                .Or<IOException>()
-                .Fallback(() =>
-                {
-                    // Give up trying to delete the profile folder.
-                    Console.WriteLine("Failed to clean up user data dir as the browser has not exited after 33 seconds.");
-                });
-            var retryWithFallback = fallbackPolicy.Wrap(retryPolicy);
-            retryWithFallback.Execute(() => new DirectoryInfo(options.ProfileDirectory).Delete(true));
         }
     }
 }

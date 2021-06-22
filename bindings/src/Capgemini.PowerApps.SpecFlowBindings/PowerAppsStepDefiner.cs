@@ -215,7 +215,12 @@
             xrmApp = null;
             client = null;
             testDriver = null;
-            currentProfileDirectory = null;
+
+            if (!string.IsNullOrEmpty(currentProfileDirectory) && !Directory.Exists(currentProfileDirectory))
+            {
+                Directory.Delete(currentProfileDirectory, true);
+                currentProfileDirectory = null;
+            }
         }
 
         /// <summary>
