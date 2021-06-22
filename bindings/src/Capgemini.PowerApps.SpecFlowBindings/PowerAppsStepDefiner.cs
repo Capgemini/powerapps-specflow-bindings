@@ -8,9 +8,11 @@
     using System.Reflection;
     using Capgemini.PowerApps.SpecFlowBindings.Configuration;
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
+    using FluentAssertions.Extensions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using Microsoft.Identity.Client;
     using OpenQA.Selenium;
+    using Polly;
     using YamlDotNet.Serialization;
     using YamlDotNet.Serialization.NamingConventions;
 
@@ -218,8 +220,14 @@
 
             if (!string.IsNullOrEmpty(currentProfileDirectory) && Directory.Exists(currentProfileDirectory))
             {
-                Directory.Delete(currentProfileDirectory, true);
-                currentProfileDirectory = null;
+                Policy
+                    .Handle<UnauthorizedAccessException>()
+                    .WaitAndRetry(5, retry => (retry * 5).Seconds())
+                    .Execute(() =>
+                    {
+                        Directory.Delete(currentProfileDirectory, true);
+                        currentProfileDirectory = null;
+                    });
             }
         }
 

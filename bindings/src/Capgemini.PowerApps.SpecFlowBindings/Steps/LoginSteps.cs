@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Threading;
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using Microsoft.Dynamics365.UIAutomation.Browser;
@@ -98,7 +99,10 @@
         {
             var baseProfileDirectory = Path.Combine(UserProfileDirectories[username], "base");
 
-            new DirectoryInfo(baseProfileDirectory).CopyTo(new DirectoryInfo(CurrentProfileDirectory));
+            lock (UserProfileDirectories[username])
+            {
+                new DirectoryInfo(baseProfileDirectory).CopyTo(new DirectoryInfo(CurrentProfileDirectory));
+            }
         }
     }
 }
