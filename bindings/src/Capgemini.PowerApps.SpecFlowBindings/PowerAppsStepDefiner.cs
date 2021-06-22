@@ -39,6 +39,7 @@
         private static XrmApp xrmApp;
 
         private static IDictionary<string, string> userProfilesDirectories;
+        private static object userProfilesDirectoriesLock = new object();
 
         /// <summary>
         /// Gets access token used to authenticate as the application user configured for testing.
@@ -176,14 +177,9 @@
                     throw new NotSupportedException($"The {testConfig.BrowserOptions.BrowserType} does not support profiles.");
                 }
 
-                if (userProfilesDirectories == null)
+                lock (userProfilesDirectoriesLock)
                 {
-                    userProfilesDirectories = new Dictionary<string, string>();
-                }
-
-                lock (userProfilesDirectories)
-                {
-                    if (userProfilesDirectories.Any())
+                    if (userProfilesDirectories != null)
                     {
                         return userProfilesDirectories;
                     }
