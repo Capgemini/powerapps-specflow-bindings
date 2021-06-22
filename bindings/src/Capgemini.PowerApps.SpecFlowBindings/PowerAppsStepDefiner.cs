@@ -216,7 +216,7 @@
             client = null;
             testDriver = null;
 
-            if (!string.IsNullOrEmpty(currentProfileDirectory) && !Directory.Exists(currentProfileDirectory))
+            if (!string.IsNullOrEmpty(currentProfileDirectory) && Directory.Exists(currentProfileDirectory))
             {
                 Directory.Delete(currentProfileDirectory, true);
                 currentProfileDirectory = null;
