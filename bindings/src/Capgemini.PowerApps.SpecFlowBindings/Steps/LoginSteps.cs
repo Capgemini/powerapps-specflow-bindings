@@ -2,7 +2,6 @@
 {
     using System;
     using System.IO;
-    using System.Threading;
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using Microsoft.Dynamics365.UIAutomation.Browser;
@@ -15,18 +14,6 @@
     [Binding]
     public class LoginSteps : PowerAppsStepDefiner
     {
-        private static int currentScenarioId = 0;
-        private ScenarioContext scenarioContext;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LoginSteps"/> class.
-        /// </summary>
-        /// <param name="scenarioContext">Instance of <see cref="ScenarioContext"/>.</param>
-        public LoginSteps(ScenarioContext scenarioContext)
-        {
-            this.scenarioContext = scenarioContext;
-        }
-
         /// <summary>
         /// Logs into the given instance with the given credentials.
         /// </summary>
@@ -94,7 +81,8 @@
         private static bool WaitForMainPage(IWebDriver driver, TimeSpan? timeout = null)
         {
             timeout = timeout ?? 10.Seconds();
-            bool isUCI = driver.HasElement(By.XPath(Elements.Xpath[Reference.Login.CrmUCIMainPage]));
+
+            var isUCI = driver.HasElement(By.XPath(Elements.Xpath[Reference.Login.CrmUCIMainPage]));
             if (isUCI)
             {
                 driver.WaitForTransaction();
@@ -102,42 +90,15 @@
 
             var xpathToMainPage = By.XPath(Elements.Xpath[Reference.Login.CrmMainPage]);
             var element = driver.WaitUntilAvailable(xpathToMainPage, timeout);
+
             return element != null;
-        }
-
-        private static void CopyAll(DirectoryInfo source, DirectoryInfo target)
-        {
-            Directory.CreateDirectory(target.FullName);
-
-            foreach (FileInfo fi in source.GetFiles())
-            {
-                fi.CopyTo(Path.Combine(target.FullName, fi.Name), true);
-            }
-
-            foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
-            {
-                DirectoryInfo nextTargetSubDir =
-                    target.CreateSubdirectory(diSourceSubDir.Name);
-                CopyAll(diSourceSubDir, nextTargetSubDir);
-            }
-        }
-
-        private static int GetScenarioId()
-        {
-            return Interlocked.Increment(ref currentScenarioId);
         }
 
         private void SetupScenarioProfile(string username)
         {
-            int scenarioProfileId = GetScenarioId();
-            var scenarioProfileDir = Path.Combine(UserProfileDirectories[username], scenarioProfileId.ToString());
-            this.scenarioContext.Add("scenarioProfileDir", scenarioProfileDir);
+            var baseProfileDirectory = Path.Combine(UserProfileDirectories[username], "base");
 
-            var basePath = Path.Combine(UserProfileDirectories[username], "base");
-
-            CopyAll(new DirectoryInfo(basePath), new DirectoryInfo(scenarioProfileDir));
-
-            TestConfig.BrowserOptions.ProfileDirectory = scenarioProfileDir;
+            new DirectoryInfo(baseProfileDirectory).CopyTo(new DirectoryInfo(CurrentProfileDirectory));
         }
     }
 }

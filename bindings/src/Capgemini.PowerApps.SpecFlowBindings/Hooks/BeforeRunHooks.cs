@@ -1,8 +1,11 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Hooks
 {
     using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Capgemini.PowerApps.SpecFlowBindings.Configuration;
-    using Capgemini.PowerApps.SpecFlowBindings.Steps;
+    using Microsoft.Dynamics365.UIAutomation.Api.UCI;
+    using Microsoft.Dynamics365.UIAutomation.Browser;
     using TechTalk.SpecFlow;
 
     /// <summary>
@@ -12,7 +15,7 @@
     public class BeforeRunHooks : PowerAppsStepDefiner
     {
         /// <summary>
-        /// Creates a new folder for the scenario and copies the session/cookies information from previous runs
+        /// Creates a new folder for the scenario and copies the session/cookies information from previous runs.
         /// </summary>
         [BeforeTestRun]
         public static void BaseProfileSetup()
@@ -22,21 +25,22 @@
                 return;
             }
 
-            foreach (var username in UserProfileDirectories.Keys)
+            Parallel.ForEach(UserProfileDirectories.Keys, (username) =>
             {
                 var profileDirectory = UserProfileDirectories[username];
-                if (Directory.GetDirectories(profileDirectory).Length == 0)
+                var baseDirectory = Path.Combine(profileDirectory, "base");
+
+                Directory.CreateDirectory(baseDirectory);
+
+                var userBrowserOptions = (BrowserOptionsWithProfileSupport)TestConfig.BrowserOptions.Clone();
+                userBrowserOptions.ProfileDirectory = baseDirectory;
+
+                using (var app = new XrmApp(new WebClient(userBrowserOptions)))
                 {
-                    var baseDirectory = Path.Combine(profileDirectory, "base");
-                    Directory.CreateDirectory(baseDirectory);
-
-                    TestConfig.BrowserOptions.ProfileDirectory = baseDirectory;
-
-                    UserConfiguration user = TestConfig.GetUser(username);
-                    LoginSteps.Login(Driver, TestConfig.GetTestUrl(), user.Username, user.Password);
-                    Quit();
+                    var user = TestConfig.Users.First(u => u.Username == username);
+                    app.OnlineLogin.Login(TestConfig.GetTestUrl(), user.Username.ToSecureString(), user.Password.ToSecureString());
                 }
-            }
+            });
         }
     }
 }

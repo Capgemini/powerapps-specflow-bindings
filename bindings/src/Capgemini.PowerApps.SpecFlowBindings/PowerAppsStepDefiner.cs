@@ -24,6 +24,9 @@
         private static IConfidentialClientApplication app;
 
         [ThreadStatic]
+        private static string currentProfileDirectory;
+
+        [ThreadStatic]
         private static ITestDriver testDriver;
 
         [ThreadStatic]
@@ -35,7 +38,7 @@
         [ThreadStatic]
         private static XrmApp xrmApp;
 
-        private static Dictionary<string, string> userProfileDirectories;
+        private static IDictionary<string, string> userProfilesDirectories;
 
         /// <summary>
         /// Gets access token used to authenticate as the application user configured for testing.
@@ -92,7 +95,25 @@
         /// <summary>
         /// Gets the EasyRepro WebClient.
         /// </summary>
-        protected static WebClient Client => client ?? (client = new WebClient(TestConfig.BrowserOptions));
+        protected static WebClient Client
+        {
+            get
+            {
+                if (client == null)
+                {
+                    var browserOptions = (BrowserOptionsWithProfileSupport)TestConfig.BrowserOptions.Clone();
+
+                    if (TestConfig.UseProfiles)
+                    {
+                        browserOptions.ProfileDirectory = CurrentProfileDirectory;
+                    }
+
+                    client = new WebClient(browserOptions);
+                }
+
+                return client;
+            }
+        }
 
         /// <summary>
         /// Gets the EasyRepro XrmApp.
@@ -103,6 +124,27 @@
         /// Gets the Selenium WebDriver.
         /// </summary>
         protected static IWebDriver Driver => Client.Browser.Driver;
+
+        /// <summary>
+        /// Gets the profile directory for the current scenario.
+        /// </summary>
+        protected static string CurrentProfileDirectory
+        {
+            get
+            {
+                if (!testConfig.BrowserOptions.BrowserType.SupportsProfiles())
+                {
+                    throw new NotSupportedException($"The {testConfig.BrowserOptions.BrowserType} does not support profiles.");
+                }
+
+                if (string.IsNullOrEmpty(currentProfileDirectory))
+                {
+                    currentProfileDirectory = Path.Combine(Path.GetTempPath(), $"username-{Guid.NewGuid()}");
+                }
+
+                return currentProfileDirectory;
+            }
+        }
 
         /// <summary>
         /// Gets provides utilities for test setup/teardown.
@@ -122,9 +164,9 @@
         }
 
         /// <summary>
-        /// Gets the directories for the chrome profiles if the brower type is chrome.
+        /// Gets the directories for the Chrome or Firefox profiles.
         /// </summary>
-        protected static Dictionary<string, string> UserProfileDirectories
+        protected static IDictionary<string, string> UserProfileDirectories
         {
             get
             {
@@ -133,32 +175,27 @@
                     throw new NotSupportedException($"The {testConfig.BrowserOptions.BrowserType} does not support profiles.");
                 }
 
-                if (userProfileDirectories != null)
+                lock (userProfilesDirectories)
                 {
-                    return userProfileDirectories;
-                }
-
-                var directoriesDictionary = new Dictionary<string, string>();
-
-                var basePath = string.IsNullOrEmpty(TestConfig.ProfilesBasePath) ? Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) : TestConfig.ProfilesBasePath;
-                string profilesDir = Path.Combine(basePath, "profiles");
-                Directory.CreateDirectory(profilesDir);
-
-                foreach (var username in TestConfig.Users.Select(u => u.Username).ToList())
-                {
-                    if (directoriesDictionary.ContainsKey(username))
+                    if (userProfilesDirectories != null)
                     {
-                        continue;
+                        return userProfilesDirectories;
                     }
 
-                    var userProfileDir = Path.Combine(profilesDir, username);
-                    Directory.CreateDirectory(userProfileDir);
+                    var basePath = string.IsNullOrEmpty(TestConfig.ProfilesBasePath) ? Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) : TestConfig.ProfilesBasePath;
+                    var profilesDirectory = Path.Combine(basePath, "profiles");
 
-                    directoriesDictionary.Add(username, userProfileDir);
+                    Directory.CreateDirectory(profilesDirectory);
+
+                    userProfilesDirectories = TestConfig.Users.Select(u => u.Username).Distinct().ToDictionary(u => u, u => Path.Combine(profilesDirectory, u));
+
+                    foreach (var dir in userProfilesDirectories.Values)
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
                 }
 
-                userProfileDirectories = directoriesDictionary;
-                return userProfileDirectories;
+                return userProfilesDirectories;
             }
         }
 

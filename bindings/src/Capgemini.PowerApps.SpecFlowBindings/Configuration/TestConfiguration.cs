@@ -17,7 +17,9 @@
         public const string FileName = "power-apps-bindings.yml";
 
         private const string GetUserException = "Unable to retrieve user configuration. Please ensure a user with the given alias exists in the config.";
+
         private string profilesBasePath;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TestConfiguration"/> class.
         /// </summary>
@@ -74,23 +76,17 @@
         /// <summary>
         /// Retrieves the configuration for a user.
         /// </summary>
-        /// <param name="userAliasOrUsername">The alias or username of the user.</param>
+        /// <param name="userAlias">The alias of the user.</param>
         /// <returns>The user configuration.</returns>
-        public UserConfiguration GetUser(string userAliasOrUsername)
+        public UserConfiguration GetUser(string userAlias)
         {
             try
             {
-                UserConfiguration user = this.Users.FirstOrDefault(u => u.Alias == userAliasOrUsername);
-                if (user != null)
-                {
-                    return user;
-                }
-
-                return this.Users.First(u => u.Username == userAliasOrUsername);
+                return this.Users.First(u => u.Alias == userAlias);
             }
             catch (Exception ex)
             {
-                throw new ConfigurationErrorsException($"{GetUserException} User: {userAliasOrUsername}", ex);
+                throw new ConfigurationErrorsException($"{GetUserException} User: {userAlias}", ex);
             }
         }
     }
