@@ -139,7 +139,8 @@
 
                 if (string.IsNullOrEmpty(currentProfileDirectory))
                 {
-                    currentProfileDirectory = Path.Combine(Path.GetTempPath(), $"username-{Guid.NewGuid()}");
+                    var basePath = string.IsNullOrEmpty(TestConfig.ProfilesBasePath) ? Path.GetTempPath() : TestConfig.ProfilesBasePath;
+                    currentProfileDirectory = Path.Combine(basePath, "profiles", Guid.NewGuid().ToString());
                 }
 
                 return currentProfileDirectory;
@@ -175,14 +176,19 @@
                     throw new NotSupportedException($"The {testConfig.BrowserOptions.BrowserType} does not support profiles.");
                 }
 
+                if (userProfilesDirectories == null)
+                {
+                    userProfilesDirectories = new Dictionary<string, string>();
+                }
+
                 lock (userProfilesDirectories)
                 {
-                    if (userProfilesDirectories != null)
+                    if (userProfilesDirectories.Any())
                     {
                         return userProfilesDirectories;
                     }
 
-                    var basePath = string.IsNullOrEmpty(TestConfig.ProfilesBasePath) ? Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) : TestConfig.ProfilesBasePath;
+                    var basePath = string.IsNullOrEmpty(TestConfig.ProfilesBasePath) ? Path.GetTempPath() : TestConfig.ProfilesBasePath;
                     var profilesDirectory = Path.Combine(basePath, "profiles");
 
                     Directory.CreateDirectory(profilesDirectory);
@@ -213,6 +219,7 @@
             xrmApp = null;
             client = null;
             testDriver = null;
+            currentProfileDirectory = null;
         }
 
         /// <summary>

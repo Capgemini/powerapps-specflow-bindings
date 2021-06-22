@@ -1,5 +1,5 @@
 url: POWERAPPS_SPECFLOW_BINDINGS_TEST_URL
-useProfiles: false
+useProfiles: true
 profilesBasePath: POWERAPPS_SPECFLOW_BINDINGS_PROFILE_BASE_PATH
 browserOptions:
   browserType: Chrome

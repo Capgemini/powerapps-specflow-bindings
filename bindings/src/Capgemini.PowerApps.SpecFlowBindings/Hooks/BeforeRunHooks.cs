@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Capgemini.PowerApps.SpecFlowBindings.Configuration;
+    using Capgemini.PowerApps.SpecFlowBindings.Steps;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using Microsoft.Dynamics365.UIAutomation.Browser;
     using TechTalk.SpecFlow;
@@ -35,10 +36,11 @@
                 var userBrowserOptions = (BrowserOptionsWithProfileSupport)TestConfig.BrowserOptions.Clone();
                 userBrowserOptions.ProfileDirectory = baseDirectory;
 
-                using (var app = new XrmApp(new WebClient(userBrowserOptions)))
+                var webClient = new WebClient(userBrowserOptions);
+                using (new XrmApp(webClient))
                 {
                     var user = TestConfig.Users.First(u => u.Username == username);
-                    app.OnlineLogin.Login(TestConfig.GetTestUrl(), user.Username.ToSecureString(), user.Password.ToSecureString());
+                    LoginSteps.Login(webClient.Browser.Driver, TestConfig.GetTestUrl(), user.Username, user.Password);
                 }
             });
         }
