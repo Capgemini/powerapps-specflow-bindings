@@ -208,7 +208,13 @@
         /// </summary>
         protected static void Quit()
         {
+            var driver = client?.Browser?.Driver;
+
             xrmApp?.Dispose();
+
+            // Ensuring that the driver gets disposed. Previously we were left with orphan processes and were unable to clean up profile folders.
+            driver?.Dispose();
+
             xrmApp = null;
             client = null;
             testDriver = null;
@@ -218,6 +224,7 @@
                 var directoryToDelete = currentProfileDirectory;
                 currentProfileDirectory = null;
 
+                // CrashpadMetrics-active.pma file can continue to be locked even after quitting Chrome. Requires retries.
                 Policy
                     .Handle<UnauthorizedAccessException>()
                     .WaitAndRetry(3, retry => (retry * 5).Seconds())
