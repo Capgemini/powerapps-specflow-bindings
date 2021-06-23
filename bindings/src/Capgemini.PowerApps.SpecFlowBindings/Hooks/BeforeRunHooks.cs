@@ -35,6 +35,7 @@
 
                 var userBrowserOptions = (BrowserOptionsWithProfileSupport)TestConfig.BrowserOptions.Clone();
                 userBrowserOptions.ProfileDirectory = baseDirectory;
+                userBrowserOptions.Headless = true;
 
                 var webClient = new WebClient(userBrowserOptions);
                 using (new XrmApp(webClient))
