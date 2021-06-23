@@ -2,7 +2,6 @@
 {
     using System;
     using System.IO;
-    using System.Threading;
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using Microsoft.Dynamics365.UIAutomation.Browser;
@@ -64,9 +63,13 @@
                 this.SetupScenarioProfile(user.Username);
             }
 
-            Login(Driver, TestConfig.GetTestUrl(), user.Username, user.Password);
+            var url = TestConfig.GetTestUrl();
+            Login(Driver, url, user.Username, user.Password);
 
-            XrmApp.Navigation.OpenApp(appName);
+            if (!url.Query.Contains("appid"))
+            {
+                XrmApp.Navigation.OpenApp(appName);
+            }
 
             CloseTeachingBubbles();
         }
@@ -98,11 +101,7 @@
         private void SetupScenarioProfile(string username)
         {
             var baseProfileDirectory = Path.Combine(UserProfileDirectories[username], "base");
-
-            lock (UserProfileDirectories[username])
-            {
-                new DirectoryInfo(baseProfileDirectory).CopyTo(new DirectoryInfo(CurrentProfileDirectory));
-            }
+            new DirectoryInfo(baseProfileDirectory).CopyTo(new DirectoryInfo(CurrentProfileDirectory));
         }
     }
 }
