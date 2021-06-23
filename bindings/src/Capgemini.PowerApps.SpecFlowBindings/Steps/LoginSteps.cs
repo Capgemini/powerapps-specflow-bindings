@@ -98,7 +98,7 @@
             return element != null;
         }
 
-        private void SetupScenarioProfile(string username)
+        private static void SetupScenarioProfile(string username)
         {
             var baseProfileDirectory = Path.Combine(UserProfileDirectories[username], "base");
             new DirectoryInfo(baseProfileDirectory).CopyTo(new DirectoryInfo(CurrentProfileDirectory));
