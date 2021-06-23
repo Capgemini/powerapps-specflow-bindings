@@ -65,13 +65,15 @@ applicationUser: # optional - populate if creating test data for users other tha
   tenantId: SPECFLOW_POWERAPPS_TENANTID optional # mandatory
   clientId: SPECFLOW_POWERAPPS_CLIENTID # mandatory
   clientSecret: SPECFLOW_POWERAPPS_CLIENTSECRET # mandatory
-users: # mandatory
+users: # One user is mandatory, additional users are optional
   - username: SPECFLOW_POWERAPPS_USERNAME_SALESPERSON # mandatory
     password: SPECFLOW_POWERAPPS_PASSWORD_SALESPERSON # optional - populate if this user will be logging in for tests
     alias: a salesperson # mandatory
 ```
 
 The URL, driversPath, usernames, passwords, and application user details will be set from environment variable (if found). Otherwise, the value from the config file will be used. The browserOptions node supports anything in the EasyRepro `BrowserOptions` class.
+
+Tests will be distributed evenly between the users if multiple users are configured with the same alias. This can be helpful when you run a large number of tests in parallel and are encountering errors due to user-level platform API limits.
 
 ### Writing feature files
 
