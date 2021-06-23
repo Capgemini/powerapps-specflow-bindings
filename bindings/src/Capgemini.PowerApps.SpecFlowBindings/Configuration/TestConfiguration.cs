@@ -19,7 +19,9 @@
 
         private const string GetUserException = "Unable to retrieve user configuration. Please ensure a user with the given alias exists in the config.";
 
-        private object userEnumeratorsLock = new object();
+        private readonly object userEnumeratorsLock = new object();
+        [ThreadStatic]
+        private UserConfiguration currentUser;
         private Dictionary<string, IEnumerator<UserConfiguration>> userEnumerators;
 
         /// <summary>
@@ -89,10 +91,14 @@
         /// Retrieves the configuration for a user.
         /// </summary>
         /// <param name="userAlias">The alias of the user.</param>
+        /// <param name="useCurrentUser">Indicates whether to return the current user or get the next available.</param>
         /// <returns>The user configuration.</returns>
-        public UserConfiguration GetUser(string userAlias, bool currentUser = true)
+        public UserConfiguration GetUser(string userAlias, bool useCurrentUser = true)
         {
-            UserConfiguration user;
+            if (useCurrentUser && this.currentUser != null)
+            {
+                return this.currentUser;
+            }
 
             try
             {
@@ -106,7 +112,7 @@
                         aliasEnumerator.MoveNext();
                     }
 
-                    user = aliasEnumerator.Current;
+                    this.currentUser = aliasEnumerator.Current;
                 }
             }
             catch (Exception ex)
@@ -114,7 +120,7 @@
                 throw new ConfigurationErrorsException($"{GetUserException} User: {userAlias}", ex);
             }
 
-            return user;
+            return this.currentUser;
         }
     }
 }
