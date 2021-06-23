@@ -208,25 +208,22 @@
         /// </summary>
         protected static void Quit()
         {
-            if (xrmApp == null)
-            {
-                return;
-            }
-
-            xrmApp.Dispose();
+            xrmApp?.Dispose();
             xrmApp = null;
             client = null;
             testDriver = null;
 
             if (!string.IsNullOrEmpty(currentProfileDirectory) && Directory.Exists(currentProfileDirectory))
             {
+                var directoryToDelete = currentProfileDirectory;
+                currentProfileDirectory = null;
+
                 Policy
                     .Handle<UnauthorizedAccessException>()
-                    .WaitAndRetry(5, retry => (retry * 5).Seconds())
-                    .Execute(() =>
+                    .WaitAndRetry(3, retry => (retry * 5).Seconds())
+                    .ExecuteAndCapture(() =>
                     {
-                        Directory.Delete(currentProfileDirectory, true);
-                        currentProfileDirectory = null;
+                        Directory.Delete(directoryToDelete, true);
                     });
             }
         }
