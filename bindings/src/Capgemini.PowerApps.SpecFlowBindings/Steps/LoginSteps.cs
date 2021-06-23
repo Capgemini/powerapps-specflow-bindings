@@ -60,7 +60,7 @@
 
             if (TestConfig.UseProfiles && TestConfig.BrowserOptions.BrowserType.SupportsProfiles())
             {
-                this.SetupScenarioProfile(user.Username);
+                SetupScenarioProfile(user.Username);
             }
 
             var url = TestConfig.GetTestUrl();
