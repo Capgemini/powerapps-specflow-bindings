@@ -54,9 +54,9 @@
         /// <param name="appName">The name of the app.</param>
         /// <param name="userAlias">The alias of the user.</param>
         [Given("I am logged in to the '(.*)' app as '(.*)'")]
-        public void GivenIAmLoggedInToTheAppAs(string appName, string userAlias)
+        public static void GivenIAmLoggedInToTheAppAs(string appName, string userAlias)
         {
-            var user = TestConfig.GetUser(userAlias);
+            var user = TestConfig.GetUser(userAlias, useCurrentUser: false);
 
             if (TestConfig.UseProfiles && TestConfig.BrowserOptions.BrowserType.SupportsProfiles())
             {

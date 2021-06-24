@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Configuration;
     using System.Linq;
+    using System.Threading;
     using YamlDotNet.Serialization;
 
     /// <summary>
@@ -18,6 +19,9 @@
 
         private const string GetUserException = "Unable to retrieve user configuration. Please ensure a user with the given alias exists in the config.";
 
+        private readonly object userEnumeratorsLock = new object();
+        private readonly ThreadLocal<UserConfiguration> currentUser = new ThreadLocal<UserConfiguration>();
+        private Dictionary<string, IEnumerator<UserConfiguration>> userEnumerators;
         private string profilesBasePath;
 
         /// <summary>
@@ -64,6 +68,28 @@
         [YamlMember(Alias = "applicationUser")]
         public ClientCredentials ApplicationUser { get; set; }
 
+        [YamlIgnore]
+        private Dictionary<string, IEnumerator<UserConfiguration>> UserEnumerators
+        {
+            get
+            {
+                lock (this.userEnumeratorsLock)
+                {
+                    if (this.userEnumerators == null)
+                    {
+                        this.userEnumerators = this.Users
+                            .Select(user => user.Alias)
+                            .Distinct()
+                            .ToDictionary(
+                                alias => alias,
+                                alias => this.Users.Where(u => u.Alias == alias).GetEnumerator());
+                    }
+                }
+
+                return this.userEnumerators;
+            }
+        }
+
         /// <summary>
         /// Gets the target URL.
         /// </summary>
@@ -77,17 +103,36 @@
         /// Retrieves the configuration for a user.
         /// </summary>
         /// <param name="userAlias">The alias of the user.</param>
+        /// <param name="useCurrentUser">Indicates whether to return the current user or get the next available.</param>
         /// <returns>The user configuration.</returns>
-        public UserConfiguration GetUser(string userAlias)
+        public UserConfiguration GetUser(string userAlias, bool useCurrentUser = true)
         {
+            if (useCurrentUser && this.currentUser.Value != null)
+            {
+                return this.currentUser.Value;
+            }
+
             try
             {
-                return this.Users.First(u => u.Alias == userAlias);
+                lock (this.userEnumeratorsLock)
+                {
+                    var aliasEnumerator = this.UserEnumerators[userAlias];
+                    if (!aliasEnumerator.MoveNext())
+                    {
+                        this.UserEnumerators[userAlias] = this.Users.Where(u => u.Alias == userAlias).GetEnumerator();
+                        aliasEnumerator = this.UserEnumerators[userAlias];
+                        aliasEnumerator.MoveNext();
+                    }
+
+                    this.currentUser.Value = aliasEnumerator.Current;
+                }
             }
             catch (Exception ex)
             {
                 throw new ConfigurationErrorsException($"{GetUserException} User: {userAlias}", ex);
             }
+
+            return this.currentUser.Value;
         }
     }
 }
