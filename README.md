@@ -66,7 +66,7 @@ applicationUser: # optional - populate if creating test data for users other tha
   tenantId: SPECFLOW_POWERAPPS_TENANTID optional # mandatory
   clientId: SPECFLOW_POWERAPPS_CLIENTID # mandatory
   clientSecret: SPECFLOW_POWERAPPS_CLIENTSECRET # mandatory
-users: # One user is mandatory, additional users are optional
+users: # mandatory
   - username: SPECFLOW_POWERAPPS_USERNAME_SALESPERSON # mandatory
     password: SPECFLOW_POWERAPPS_PASSWORD_SALESPERSON # optional - populate if this user will be logging in for tests
     alias: a salesperson # mandatory
