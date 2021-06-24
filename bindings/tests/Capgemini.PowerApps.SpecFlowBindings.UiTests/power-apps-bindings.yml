@@ -1,4 +1,5 @@
 url: POWERAPPS_SPECFLOW_BINDINGS_TEST_URL
+useProfiles: true
 browserOptions:
   browserType: Chrome
   headless: true
