@@ -22,7 +22,7 @@ The aim of this project is to make Power Apps test automation easier, faster and
 
 ## Installation
 
-Follow the guidance in the **Installation and Setup** section in https://specflow.org/getting-started/. After installing the IDE integration and setting up your project, install the NuGet package.
+Follow the guidance in the **Installation and Setup** section in SpecFlow's [docs](https://specflow.org/getting-started/). After installing the IDE integration and setting up your project, install the NuGet package.
 
 ```shell
 PM> Install-Package Capgemini.PowerApps.SpecFlowBindings
@@ -40,7 +40,7 @@ Once the NuGet package is installed, follow the SpecFlow [documentation](https:/
 
 ### WebDrivers
 
-We do not have a dependency on any specific WebDrivers. You will need to ensure that the correct WebDrivers are available in your project based on the browser that you are targetting. For example - if your configuration file is targetting Chrome - you can install the Chrome WebDriver via NuGet - 
+We do not have a dependency on any specific WebDrivers. You will need to ensure that the correct WebDrivers are available in your project based on the browser that you are targetting. For example - if your configuration file is targetting Chrome - you can install the Chrome WebDriver via NuGet -
 
 ```shell
 PM> Install-Package Selenium.Chrome.WebDriver
@@ -54,7 +54,7 @@ Installing the NuGet package creates a _power-apps-bindings.yml_ file in your pr
 
 ```yaml
 url: SPECFLOW_POWERAPPS_URL # mandatory
-useProfiles: false # defaults to false if not provided
+useProfiles: false # optional - defaults to false if not set
 browserOptions: # optional - will use default EasyRepro options if not set
   browserType: Chrome
   headless: true
@@ -74,7 +74,8 @@ users: # mandatory
 
 The URL, driversPath, usernames, passwords, and application user details will be set from environment variable (if found). Otherwise, the value from the config file will be used. The browserOptions node supports anything in the EasyRepro `BrowserOptions` class.
 
-#### User Profiles
+#### User profiles
+
 Setting the `useProfiles` property to true causes the solution to create and use a unique [profile](https://support.google.com/chrome/answer/2364824?co=GENIE.Platform%3DDesktop&hl=en) for each user listed in the config file. This currently only works in Chrome & Firefox and attempting to use it with Edge or IE will cause an exception to be thrown. By using profiles test runs for the same user will not be required to re-authenticate, this saves time during test runs. [To take full advantage of this you will need to have the "Stay Signed In" prompt enabled.](https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/keep-me-signed-in)
 
 ### Writing feature files
@@ -83,9 +84,9 @@ You can use the predefined step bindings to write your tests.
 
 ```gherkin
 Scenario: User can create a new account
-	Given I am logged in to the 'Sales Team Member' app as 'an admin'
-	When I open the 'Accounts' sub area of the 'Customers' group
-	Then I can see the 'New' command
+ Given I am logged in to the 'Sales Team Member' app as 'an admin'
+ When I open the 'Accounts' sub area of the 'Customers' group
+ Then I can see the 'New' command
 ```
 
 Alternatively, write your own step bindings (see below).
@@ -118,14 +119,16 @@ You can create test data by using the following _Given_ steps -
 ```gherkin
 Given I have created 'a record'
 ```
+
 or
+
 ```gherkin
 Given 'someone' has created 'a record with a difference'
 ```
 
 These bindings look for a corresponding JSON file in a _data_ folder in the root of your project. The file is resolved using a combination of the directory structure and the file name. For example, the bindings above could resolve the following files:
 
-```
+```shell
 └───data
     │   a record.json
     │
@@ -136,11 +139,11 @@ These bindings look for a corresponding JSON file in a _data_ folder in the root
 If you are using the binding which creates data as someone other than the current user, you will need the following configuration to be present:
 
 - a user with a matching alias in the `users` array that has the `username` set
-- an application user with sufficient privileges to impersonate the above user configured in the `applicationUser` property. 
+- an application user with sufficient privileges to impersonate the above user configured in the `applicationUser` property.
 
 Refer to the Microsoft documentation on creating an application user [here](https://docs.microsoft.com/en-us/power-platform/admin/create-users-assign-online-security-roles#create-an-application-user).
 
-#### Data file syntax 
+#### Data file syntax
 
 The JSON is similar to that expected by Web API when creating records via a [deep insert](https://docs.microsoft.com/en-us/dynamics365/customer-engagement/developer/webapi/create-entity-web-api#create-related-entities-in-one-operation).
 
@@ -161,6 +164,7 @@ The JSON is similar to that expected by Web API when creating records via a [dee
   ]
 }
 ```
+
 The example above will create the following:
 
 - An account
@@ -196,7 +200,6 @@ We support [faker.js](https://github.com/marak/Faker.js) moustache template synt
 When using faker syntax, you must also annotate number or date fields using `@faker.number`, `@faker.date` or `@faker.dateonly` to ensure that the JSON is formatted correctly.
 
 You can also dynamically set lookups by alias using `<lookup>@alias.bind` (this is limited to aliased records in other files - not the current file).
-
 
 ## Contributing
 
