@@ -191,7 +191,11 @@
 
                     Directory.CreateDirectory(profilesDirectory);
 
-                    userProfilesDirectories = TestConfig.Users.Select(u => u.Username).Distinct().ToDictionary(u => u, u => Path.Combine(profilesDirectory, u));
+                    userProfilesDirectories = TestConfig.Users
+                        .Where(u => !string.IsNullOrEmpty(u.Password))
+                        .Select(u => u.Username)
+                        .Distinct()
+                        .ToDictionary(u => u, u => Path.Combine(profilesDirectory, u));
 
                     foreach (var dir in userProfilesDirectories.Values)
                     {
