@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Configuration;
     using System.Linq;
+    using System.Threading;
     using Microsoft.Dynamics365.UIAutomation.Browser;
     using YamlDotNet.Serialization;
 
@@ -20,8 +21,7 @@
         private const string GetUserException = "Unable to retrieve user configuration. Please ensure a user with the given alias exists in the config.";
 
         private readonly object userEnumeratorsLock = new object();
-        [ThreadStatic]
-        private UserConfiguration currentUser;
+        private ThreadLocal<UserConfiguration> currentUser = new ThreadLocal<UserConfiguration>();
         private Dictionary<string, IEnumerator<UserConfiguration>> userEnumerators;
 
         /// <summary>
@@ -95,9 +95,9 @@
         /// <returns>The user configuration.</returns>
         public UserConfiguration GetUser(string userAlias, bool useCurrentUser = true)
         {
-            if (useCurrentUser && this.currentUser != null)
+            if (useCurrentUser && this.currentUser.Value != null)
             {
-                return this.currentUser;
+                return this.currentUser.Value;
             }
 
             try
@@ -112,7 +112,7 @@
                         aliasEnumerator.MoveNext();
                     }
 
-                    this.currentUser = aliasEnumerator.Current;
+                    this.currentUser.Value = aliasEnumerator.Current;
                 }
             }
             catch (Exception ex)
@@ -120,7 +120,7 @@
                 throw new ConfigurationErrorsException($"{GetUserException} User: {userAlias}", ex);
             }
 
-            return this.currentUser;
+            return this.currentUser.Value;
         }
     }
 }
