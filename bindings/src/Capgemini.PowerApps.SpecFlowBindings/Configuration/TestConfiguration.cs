@@ -5,7 +5,6 @@
     using System.Configuration;
     using System.Linq;
     using System.Threading;
-    using Microsoft.Dynamics365.UIAutomation.Browser;
     using YamlDotNet.Serialization;
 
     /// <summary>
@@ -21,15 +20,16 @@
         private const string GetUserException = "Unable to retrieve user configuration. Please ensure a user with the given alias exists in the config.";
 
         private readonly object userEnumeratorsLock = new object();
-        private ThreadLocal<UserConfiguration> currentUser = new ThreadLocal<UserConfiguration>();
+        private readonly ThreadLocal<UserConfiguration> currentUser = new ThreadLocal<UserConfiguration>();
         private Dictionary<string, IEnumerator<UserConfiguration>> userEnumerators;
+        private string profilesBasePath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestConfiguration"/> class.
         /// </summary>
         public TestConfiguration()
         {
-            this.BrowserOptions = new BrowserOptions();
+            this.BrowserOptions = new BrowserOptionsWithProfileSupport();
         }
 
         /// <summary>
@@ -39,10 +39,22 @@
         public string Url { private get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to use profiles.
+        /// </summary>
+        [YamlMember(Alias = "useProfiles")]
+        public bool UseProfiles { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets the base path where the user profiles are stored.
+        /// </summary>
+        [YamlMember(Alias = "profilesBasePath")]
+        public string ProfilesBasePath { get => ConfigHelper.GetEnvironmentVariableIfExists(this.profilesBasePath); set => this.profilesBasePath = value; }
+
+        /// <summary>
         /// Gets or sets the browser options to use for running tests.
         /// </summary>
         [YamlMember(Alias = "browserOptions")]
-        public BrowserOptions BrowserOptions { get; set; }
+        public BrowserOptionsWithProfileSupport BrowserOptions { get; set; }
 
         /// <summary>
         /// Gets or sets users that tests can be run as.

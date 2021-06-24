@@ -1,10 +1,10 @@
-﻿using Microsoft.Xrm.Tooling.Connector;
-using System.IO;
-using System.Reflection;
-using TechTalk.SpecFlow;
-
-namespace Capgemini.PowerApps.SpecFlowBindings.UiTests.Hooks
+﻿namespace Capgemini.PowerApps.SpecFlowBindings.UiTests.Hooks
 {
+    using Microsoft.Xrm.Tooling.Connector;
+    using System.IO;
+    using System.Reflection;
+    using TechTalk.SpecFlow;
+
     /// <summary>
     /// Hooks related to the mock solution used for testing.
     /// </summary>
@@ -37,14 +37,16 @@ namespace Capgemini.PowerApps.SpecFlowBindings.UiTests.Hooks
         {
             var admin = TestConfig.GetUser("an admin");
 
-            return new CrmServiceClient(
-                $"AuthType=OAuth; " +
-                $"Username={admin.Username}; " +
-                $"Password={admin.Password}; " +
-                $"Url={TestConfig.GetTestUrl()}; " +
-                $"AppId=51f81489-12ee-4a9e-aaae-a2591f45987d; " +
-                $"RedirectUri=app://58145B91-0C36-4500-8554-080854F2AC97; " +
-                $"LoginPrompt=Auto");
+            var connectionString = 
+                $"AuthType=OAuth;" +
+                $"Username={admin.Username};" +
+                $"Password={admin.Password};" +
+                $"Url={TestConfig.GetTestUrl()};" +
+                $"AppId=51f81489-12ee-4a9e-aaae-a2591f45987d;" +
+                $"RedirectUri=app://58145B91-0C36-4500-8554-080854F2AC97;" +
+                $"LoginPrompt=Auto";
+
+            return new CrmServiceClient(connectionString);
         }
     }
 }
