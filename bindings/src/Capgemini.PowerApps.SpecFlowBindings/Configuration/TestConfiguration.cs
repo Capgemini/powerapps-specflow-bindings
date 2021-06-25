@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Configuration;
     using System.Linq;
-    using System.Threading;
     using YamlDotNet.Serialization;
 
     /// <summary>
@@ -20,7 +19,8 @@
         private const string GetUserException = "Unable to retrieve user configuration. Please ensure a user with the given alias exists in the config.";
 
         [ThreadStatic]
-        private static UserConfiguration currentUser;
+        private static readonly Dictionary<string, UserConfiguration> CurrentUsers = new Dictionary<string, UserConfiguration>();
+
         private readonly object userEnumeratorsLock = new object();
         private Dictionary<string, IEnumerator<UserConfiguration>> userEnumerators;
         private string profilesBasePath;
@@ -108,9 +108,9 @@
         /// <returns>The user configuration.</returns>
         public UserConfiguration GetUser(string userAlias, bool useCurrentUser = true)
         {
-            if (useCurrentUser && currentUser != null && currentUser.Alias == userAlias)
+            if (useCurrentUser && CurrentUsers.ContainsKey(userAlias))
             {
-                return currentUser;
+                return CurrentUsers[userAlias];
             }
 
             try
@@ -125,7 +125,14 @@
                         aliasEnumerator.MoveNext();
                     }
 
-                    currentUser = aliasEnumerator.Current;
+                    if (CurrentUsers.ContainsKey(userAlias))
+                    {
+                        CurrentUsers[userAlias] = aliasEnumerator.Current;
+                    }
+                    else
+                    {
+                        CurrentUsers.Add(userAlias, aliasEnumerator.Current);
+                    }
                 }
             }
             catch (Exception ex)
@@ -133,7 +140,15 @@
                 throw new ConfigurationErrorsException($"{GetUserException} User: {userAlias}", ex);
             }
 
-            return currentUser;
+            return CurrentUsers[userAlias];
+        }
+
+        /// <summary>
+        /// Called internally between scenarios to reset thread state.
+        /// </summary>
+        internal void Flush()
+        {
+            CurrentUsers.Clear();
         }
     }
 }

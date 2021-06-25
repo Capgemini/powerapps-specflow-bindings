@@ -222,6 +222,7 @@
             xrmApp = null;
             client = null;
             testDriver = null;
+            testConfig?.Flush();
 
             if (!string.IsNullOrEmpty(currentProfileDirectory) && Directory.Exists(currentProfileDirectory))
             {
