@@ -2,11 +2,11 @@
 {
     using System.IO;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using Capgemini.PowerApps.SpecFlowBindings.Configuration;
     using Capgemini.PowerApps.SpecFlowBindings.Steps;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
-    using Microsoft.Dynamics365.UIAutomation.Browser;
     using TechTalk.SpecFlow;
 
     /// <summary>
@@ -31,17 +31,39 @@
                 var profileDirectory = UserProfileDirectories[username];
                 var baseDirectory = Path.Combine(profileDirectory, "base");
 
-                Directory.CreateDirectory(baseDirectory);
-
-                var userBrowserOptions = (BrowserOptionsWithProfileSupport)TestConfig.BrowserOptions.Clone();
-                userBrowserOptions.ProfileDirectory = baseDirectory;
-                userBrowserOptions.Headless = true;
-
-                var webClient = new WebClient(userBrowserOptions);
-                using (new XrmApp(webClient))
+                // SpecFlow isolation settings may run scenarios in different processes or AppDomains and [BeforeTestRun] runs per thread. Lock statement insufficient.
+                using (var mutex = new Mutex(true, $"{nameof(BaseProfileSetup)}-{username}", out var createdNew))
                 {
-                    var user = TestConfig.Users.First(u => u.Username == username);
-                    LoginSteps.Login(webClient.Browser.Driver, TestConfig.GetTestUrl(), user.Username, user.Password);
+                    if (!createdNew)
+                    {
+                        mutex.WaitOne();
+                    }
+
+                    if (Directory.Exists(baseDirectory))
+                    {
+                        mutex.ReleaseMutex();
+                        return;
+                    }
+
+                    try
+                    {
+                        Directory.CreateDirectory(baseDirectory);
+
+                        var userBrowserOptions = (BrowserOptionsWithProfileSupport)TestConfig.BrowserOptions.Clone();
+                        userBrowserOptions.ProfileDirectory = baseDirectory;
+                        userBrowserOptions.Headless = true;
+
+                        var webClient = new WebClient(userBrowserOptions);
+                        using (new XrmApp(webClient))
+                        {
+                            var user = TestConfig.Users.First(u => u.Username == username);
+                            LoginSteps.Login(webClient.Browser.Driver, TestConfig.GetTestUrl(), user.Username, user.Password);
+                        }
+                    }
+                    finally
+                    {
+                        mutex.ReleaseMutex();
+                    }
                 }
             });
         }
