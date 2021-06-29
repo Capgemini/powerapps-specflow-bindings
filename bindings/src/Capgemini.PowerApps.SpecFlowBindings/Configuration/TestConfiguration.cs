@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Configuration;
     using System.Linq;
+    using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using YamlDotNet.Serialization;
 
     /// <summary>
@@ -82,7 +83,7 @@
                             .Distinct()
                             .ToDictionary(
                                 alias => alias,
-                                alias => this.Users.Where(u => u.Alias == alias).GetEnumerator());
+                                alias => this.GetUserEnumerator(alias));
                     }
                 }
 
@@ -119,7 +120,7 @@
                     var aliasEnumerator = this.UserEnumerators[userAlias];
                     if (!aliasEnumerator.MoveNext())
                     {
-                        this.UserEnumerators[userAlias] = this.Users.Where(u => u.Alias == userAlias).GetEnumerator();
+                        this.UserEnumerators[userAlias] = this.GetUserEnumerator(userAlias);
                         aliasEnumerator = this.UserEnumerators[userAlias];
                         aliasEnumerator.MoveNext();
                     }
@@ -148,6 +149,11 @@
         internal void Flush()
         {
             CurrentUsers.Clear();
+        }
+
+        private IEnumerator<UserConfiguration> GetUserEnumerator(string alias)
+        {
+            return this.Users.Where(u => u.Alias == alias).ToList().Shuffle().GetEnumerator();
         }
     }
 }
