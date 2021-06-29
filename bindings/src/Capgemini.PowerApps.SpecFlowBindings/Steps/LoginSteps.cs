@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Web;
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using Microsoft.Dynamics365.UIAutomation.Browser;
@@ -45,6 +46,13 @@
                 }
 
                 WaitForMainPage(driver, 30.Seconds());
+            }
+
+            var queryParams = $"&flags=easyreproautomation=true,testmode={TestConfig.BrowserOptions.UCITestMode.ToString().ToLower()}&perf={TestConfig.BrowserOptions.UCIPerformanceMode.ToString().ToLower()}";
+            var uri = driver.Url;
+            if (!uri.Contains(queryParams) && !uri.Contains(HttpUtility.UrlEncode(queryParams)))
+            {
+                driver.Navigate().GoToUrl($"{uri}{queryParams}");
             }
         }
 
