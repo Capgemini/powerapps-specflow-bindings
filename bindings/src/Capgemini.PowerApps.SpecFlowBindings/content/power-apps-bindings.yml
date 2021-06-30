@@ -1,4 +1,5 @@
 url: 
+useProfiles: false
 browserOptions: 
   browserType:
 users: 

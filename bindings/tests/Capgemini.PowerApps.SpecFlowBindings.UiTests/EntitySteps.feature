@@ -29,7 +29,7 @@ Scenarios:
 		| sb_yesno       | boolean        | true               |
 		| sb_choice      | optionset      | Option A           |
 		| sb_choices     | multioptionset | Option A, Option B |
-		| sb_dateandtime | datetime       | 1/1/2021 13:00     |
+		# | sb_dateandtime | datetime       | 1/1/2021 13:00     | Currently failing due to https://github.com/microsoft/EasyRepro/issues/1139
 		| sb_dateonly    | datetime       | 1/1/2021           |
 		| sb_currency    | currency       | £10.00             |
 
@@ -110,6 +110,8 @@ Scenario: Save a record
 	When I enter 'Some text' into the 'sb_name' text field on the form
 	And I save the record
 
+@ignore
+#Currently failing due to https://github.com/microsoft/EasyRepro/issues/1120
 Scenario: Assign to a user or team
 	Given I have created 'a team'
 	And I have created 'a secondary mock record'

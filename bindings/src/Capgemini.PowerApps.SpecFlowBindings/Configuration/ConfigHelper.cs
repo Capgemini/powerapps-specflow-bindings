@@ -14,6 +14,11 @@
         /// <returns>The environment variable value (if found) or the passed in value.</returns>
         public static string GetEnvironmentVariableIfExists(string value)
         {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+
             var environmentVariableValue = Environment.GetEnvironmentVariable(value);
 
             if (!string.IsNullOrEmpty(environmentVariableValue))
