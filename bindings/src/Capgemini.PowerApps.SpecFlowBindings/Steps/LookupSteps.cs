@@ -102,9 +102,9 @@
             }
 
             new WebDriverWait(Driver, TimeSpan.FromSeconds(5))
-                .Until(d => d.FindElement(By.CssSelector("ul[aria-label=\"Lookup Search Results\"] li")));
+                .Until(d => d.FindElement(By.CssSelector("ul[aria-label=\"Lookup results\"] li")));
             var items = Driver
-                .FindElements(By.CssSelector("ul[aria-label=\"Lookup Search Results\"] li"))
+                .FindElements(By.CssSelector("ul[aria-label=\"Lookup results\"] li"))
                 .Select(e => e.Text.Split(new string[] { "\r\n" }, StringSplitOptions.None)[0]);
 
             items.Count().Should().Be(recordNames.Rows.Count, because: "the flyout should only contain the given records");

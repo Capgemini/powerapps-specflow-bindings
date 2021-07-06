@@ -11,6 +11,8 @@ Background:
 Scenario: Add appointment to timeline
 	When I add an appointment to the timeline with the subject 'A subject', the description 'A description', the duration '1', and the location 'A location'
 
+@ignore
+#Currently failing due to https://github.com/microsoft/EasyRepro/issues/1075
 Scenario: Add note to timeline
 	When I add a note to the timeline with the title 'A note' and the body 'A note's body'
 
@@ -28,3 +30,7 @@ Scenario: Add email to timeline
 	When I add an email to the timeline with the subject 'A subject', the duration '1', and the following contacts
 		| Type | Name       |
 		| To   | John Smith |
+
+Scenario: Click create for appointment on the timeline
+	Given I have created 'a contact'
+	When I click create for an 'appointment' on the timeline

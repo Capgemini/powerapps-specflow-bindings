@@ -1,5 +1,6 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Hooks
 {
+    using System;
     using System.IO;
     using System.Reflection;
     using OpenQA.Selenium;
@@ -52,6 +53,7 @@
             {
                 var rootFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 var screenshotsFolder = Path.Combine(rootFolder, "screenshots");
+                Console.WriteLine(screenshotsFolder);
 
                 if (!Directory.Exists(screenshotsFolder))
                 {
