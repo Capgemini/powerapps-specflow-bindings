@@ -89,3 +89,11 @@ Scenario: Click a command under a flyout on a subgrid
 
 Scenario: Select a record with a given value in a given column in the subgrid
 	When I select a record with 'A related record' in the 'sb_name' field in the 'subgrid' subgrid
+
+Scenario: Select a record at a particular position in a non-editable subgrid
+	When I select the record at position '0' in the 'subgrid' subgrid
+	Then I can see the 'Edit' command on the 'subgrid' subgrid
+
+Scenario: Select a record at a particular position in an editable subgrid
+	When I select the record at position '0' in the 'EditableSubgrid' subgrid
+	Then I can see the 'Edit' command on the 'EditableSubgrid' subgrid

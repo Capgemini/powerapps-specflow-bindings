@@ -56,7 +56,7 @@
         }
 
         /// <summary>
-        /// Selects a records in a subgrid by index.
+        /// Opens a record in a subgrid by index.
         /// </summary>
         /// <param name="index">The position of the record.</param>
         /// <param name="subGridName">The name of the subgrid.</param>
@@ -65,6 +65,17 @@
         public static void WhenIOpenTheRecordAtPositionInTheSubgrid(int index, string subGridName)
         {
             XrmApp.Entity.SubGrid.OpenSubGridRecord(subGridName, index);
+        }
+
+        /// <summary>
+        /// Selects a records in a subgrid by index.
+        /// </summary>
+        /// <param name="index">The position of the record.</param>
+        /// <param name="subGridName">The name of the subgrid.</param>
+        [When(@"I select the record at position '(\d+)' in the '(.*)' subgrid")]
+        public static void WhenISelectTheRecordAtPositionInTheSubgrid(int index, string subGridName)
+        {
+            XrmApp.Entity.SubGrid.HighlightRecord(subGridName, Driver, index);
         }
 
         /// <summary>

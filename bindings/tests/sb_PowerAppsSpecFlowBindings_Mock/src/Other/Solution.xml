@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.1.0.26437" SolutionPackageVersion="9.1" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ImportExportXml version="9.1.0.27028" SolutionPackageVersion="9.1" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <UniqueName>sb_PowerAppsSpecFlowBindings_Mock</UniqueName>
     <LocalizedNames>
@@ -99,8 +99,12 @@
     </RootComponents>
     <MissingDependencies>
       <MissingDependency>
-        <Required key="0" type="61" schemaName="msdyn_/Images/AppModule_Default_Icon.png" displayName="msdyn_/Images/AppModule_Default_Icon.png" solution="AppModuleWebResources (2.5)" />
-        <Dependent key="1" type="80" schemaName="sb_MockApp" displayName="Mock App" />
+        <Required key="0" type="66" schemaName="MscrmControls.Grid.GridControl" displayName="MscrmControls.Grid.GridControl" solution="BaseCustomControlsCore (9.0.2012.1009)" />
+        <Dependent key="1" type="60" displayName="Information" parentDisplayName="Mock Record" id="{974e0b5b-0d50-40fd-b607-61bb0812dda0}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required key="2" type="61" schemaName="msdyn_/Images/AppModule_Default_Icon.png" displayName="msdyn_/Images/AppModule_Default_Icon.png" solution="AppModuleWebResources (2.5)" />
+        <Dependent key="3" type="80" schemaName="sb_MockApp" displayName="Mock App" />
       </MissingDependency>
     </MissingDependencies>
   </SolutionManifest>
