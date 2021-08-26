@@ -62,7 +62,7 @@
 
             if (index + 1 > rows.Count)
             {
-                throw new IndexOutOfRangeException($"Subgrid {subgridName} record count: {rows.Count}. Expected: {index + 1}");
+                throw new ArgumentOutOfRangeException($"Subgrid {subgridName} record count: {rows.Count}. Expected: {index + 1}");
             }
 
             rows[index].FindElement(By.TagName("div")).Click();

@@ -122,7 +122,7 @@
                     formContext = driver.WaitUntilAvailable(By.XPath(AppElements.Xpath[AppReference.BusinessProcessFlow.BusinessProcessFlowFormContext]));
                     return formContext.WaitUntilAvailable(By.XPath(AppElements.Xpath[AppReference.MultiSelect.DivContainer].Replace("[NAME]", option.Name)));
                 default:
-                    throw new Exception($"Mapping for FormContextType {formContextType} not configured.");
+                    throw new NotImplementedException($"Mapping for FormContextType {formContextType} not configured.");
             }
         }
     }

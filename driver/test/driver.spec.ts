@@ -76,6 +76,12 @@ describe('Driver', () => {
     });
   });
 
+  describe('.openForm(alias)', () => {
+    it('throws an error if the form or entity do not exist', () => {
+      expect(() => driver.openForm('this is not a form', 'this is not an entity')).toBeDefined();
+    });
+  });
+
   describe('.getRecordReference(alias)', () => {
     it('returns a reference to a record matching the provided alias', () => {
       const alias = 'some alias';

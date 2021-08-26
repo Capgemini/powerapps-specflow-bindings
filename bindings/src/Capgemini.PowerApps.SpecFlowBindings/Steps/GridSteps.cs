@@ -63,6 +63,17 @@
         }
 
         /// <summary>
+        /// Navigates to an entity list for the given entity.
+        /// </summary>
+        /// <param name="entityName">The name of the entity to show the list for.</param>
+        [Given(@"I am viewing a list of '(.*)' records")]
+        public static void GivenIAmViewingAList(string entityName)
+        {
+            var url = TestConfig.GetTestUrl() + "&pagetype=entitylist&etn="+entityName;
+            Driver.Navigate().GoToUrl(url);
+        }
+
+        /// <summary>
         /// Asserts that the specified grid contains the specified test record.
         /// </summary>
         /// <param name="recordAlias">The alias of the test record.</param>

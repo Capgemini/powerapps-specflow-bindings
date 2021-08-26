@@ -42,3 +42,7 @@ Scenario: Highlight multiple aliased records from a grid
 		| Alias                 |
 		| the referenced record |
 		| the faked record      |
+
+Scenario: Assert that an entity list is displayed
+	Given I am viewing a list of 'sb_mockrecord' records
+	When I switch to the 'Inactive Mock Records' view in the grid

@@ -31,7 +31,7 @@
             var index = (long)driver.ExecuteScript($"return Object.keys(getCurrentXrmStatus().mainGrid._grid.getRows()._collection).indexOf(\"{recordId}\");");
             if (index == -1)
             {
-                throw new Exception($"A record with an ID of {recordId} is not present in the grid");
+                throw new NotFoundException($"A record with an ID of {recordId} is not present in the grid");
             }
 
             return Convert.ToInt32(index);
