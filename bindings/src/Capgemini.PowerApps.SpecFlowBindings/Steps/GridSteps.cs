@@ -69,7 +69,8 @@
         [Given(@"I am viewing a list of '(.*)' records")]
         public static void GivenIAmViewingAList(string entityName)
         {
-            var url = TestConfig.GetTestUrl() + "&pagetype=entitylist&etn="+entityName;
+            var urlPart = Driver.Url.Substring(0, Driver.Url.IndexOf("&pagetype="));
+            var url = urlPart + "&pagetype=entitylist&etn=" + entityName;
             Driver.Navigate().GoToUrl(url);
         }
 
