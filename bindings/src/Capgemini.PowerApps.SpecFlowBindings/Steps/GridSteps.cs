@@ -23,6 +23,16 @@
         }
 
         /// <summary>
+        /// Selects a previously created test record from a grid.
+        /// </summary>
+        /// <param name="recordAlias">The alias of the test record.</param>
+        [When(@"I select '(.*)' from the grid")]
+        public static void WhenIOpenTheRecordAtPositionInTheGrid(string recordAlias)
+        {
+            HighlightRowByAlias(recordAlias);
+        }
+
+        /// <summary>
         /// Clears the search in a grid.
         /// </summary>
         [When(@"I clear the search in the grid")]
@@ -50,16 +60,6 @@
         public static void WhenISwitchToTheViewInTheGrid(string viewName)
         {
             XrmApp.Grid.SwitchView(viewName);
-        }
-
-        /// <summary>
-        /// Selects a previously created test record from a grid.
-        /// </summary>
-        /// <param name="recordAlias">The alias of the test record.</param>
-        [When(@"I select '(.*)' from the grid")]
-        public static void WhenIOpenTheRecordAtPositionInTheGrid(string recordAlias)
-        {
-            HighlightRowByAlias(recordAlias);
         }
 
         /// <summary>

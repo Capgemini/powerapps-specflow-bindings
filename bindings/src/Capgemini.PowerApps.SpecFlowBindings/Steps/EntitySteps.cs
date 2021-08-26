@@ -547,9 +547,6 @@
                         Value = fieldValue,
                     });
                     break;
-                case "currency":
-                case "numeric":
-                case "text":
                 default:
                     XrmApp.Entity.SetValue(fieldName, fieldValue);
                     break;
@@ -587,9 +584,6 @@
                         Value = fieldValue,
                     });
                     break;
-                case "currency":
-                case "numeric":
-                case "text":
                 default:
                     XrmApp.Entity.SetHeaderValue(fieldName, fieldValue);
                     break;
