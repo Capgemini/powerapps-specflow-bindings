@@ -38,6 +38,7 @@ Scenario: Highlight multiple aliased records from a grid
 	Given I have created 'a record with an alias'
 	And I have created 'data decorated with faker moustache syntax'
 	When I open the 'Mock Records' sub area of the 'Primary Group' group
+	And I sort the 'Created On' column in the grid using the 'Sort Newest to Oldest' option
 	And I select the following records from the grid
 		| Alias                 |
 		| the referenced record |
