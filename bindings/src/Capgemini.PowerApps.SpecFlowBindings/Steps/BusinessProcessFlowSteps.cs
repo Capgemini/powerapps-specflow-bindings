@@ -165,9 +165,6 @@
                         Value = fieldValue,
                     });
                     break;
-                case "currency":
-                case "numeric":
-                case "text":
                 default:
                     XrmApp.Entity.SetValue(fieldName, fieldValue);
                     break;

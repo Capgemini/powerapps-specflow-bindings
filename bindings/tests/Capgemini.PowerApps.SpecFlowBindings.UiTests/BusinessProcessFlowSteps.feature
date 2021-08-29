@@ -37,8 +37,12 @@ Scenarios:
 		| sb_dateonly    | datetime  | 1/1/2021       |
 		| sb_currency    | currency  | £10.00         |
 
-Scenario: Enter lookup value on business process flow
+Scenario Outline: Enter lookup value on business process flow
 	Given I have created 'a secondary mock record'
-	When I select the 'First Stage' stage of the business process flow
-	And I enter 'A secondary mock record' into the 'sb_lookup' lookup field on the business process flow
-	Then I can see a value of 'A secondary mock record' in the 'sb_lookup' lookup field on the business process flow
+	When I select the <stage> stage of the business process flow
+	And I enter <fieldValue> into the <fieldName> <fieldType> field on the business process flow
+	Then I can see a value of <fieldValue> in the <fieldName> <fieldType> field on the business process flow
+
+	Examples: 
+	| stage         | fieldValue                | fieldName   | fieldType |
+	| 'First Stage' | 'A secondary mock record' | 'sb_lookup' | lookup    |

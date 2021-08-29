@@ -203,9 +203,6 @@
                         Value = fieldValue,
                     });
                     break;
-                case "currency":
-                case "numeric":
-                case "text":
                 default:
                     XrmApp.QuickCreate.SetValue(fieldName, fieldValue);
                     break;

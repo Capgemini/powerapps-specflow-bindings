@@ -34,7 +34,6 @@
                     if (ex.Detail.ErrorCode == -2147089919)
                     {
                         // Already configured as a search entity
-                        return;
                     }
                 }
             }

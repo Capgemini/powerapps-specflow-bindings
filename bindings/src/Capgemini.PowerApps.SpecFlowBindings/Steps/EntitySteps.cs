@@ -177,6 +177,18 @@
         }
 
         /// <summary>
+        /// Navigate to a Form.
+        /// </summary>
+        /// <param name="formName">The name of the form.</param>
+        /// <param name="entityName">The name of the entity.</param>
+        [Given(@"I am viewing the '(.*)' form for the '(.*)' entity")]
+        public static void GivenIViewForm(string formName, string entityName)
+        {
+            TestDriver.OpenForm(formName, entityName);
+            Driver.WaitForTransaction();
+        }
+
+        /// <summary>
         /// Select a lookup on the form.
         /// </summary>
         /// <param name="fieldName">The name of the lookup.</param>
@@ -332,7 +344,7 @@
         [Then(@"I am presented with a '(.*)' form for the '(.*)' entity")]
         public static void ThenIAmPresentedWithANewFormForTheEntity(string formName, string entityName)
         {
-            XrmApp.Entity.GetFormName().Should().Be(formName);
+            EntityExtensions.GetFormName(Driver).Should().Be(formName);
             XrmApp.Entity.GetEntityName().Should().Be(entityName);
         }
 
@@ -535,9 +547,6 @@
                         Value = fieldValue,
                     });
                     break;
-                case "currency":
-                case "numeric":
-                case "text":
                 default:
                     XrmApp.Entity.SetValue(fieldName, fieldValue);
                     break;
@@ -575,9 +584,6 @@
                         Value = fieldValue,
                     });
                     break;
-                case "currency":
-                case "numeric":
-                case "text":
                 default:
                     XrmApp.Entity.SetHeaderValue(fieldName, fieldValue);
                     break;

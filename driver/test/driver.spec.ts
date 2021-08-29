@@ -76,6 +76,66 @@ describe('Driver', () => {
     });
   });
 
+  describe('.openForm(formName, nameOfEntity)', () => {
+    it('throws an error if the form or entity do not exist', () => {
+      const entities = [undefined];
+      const returnObj = { entities };
+      const retrieveMultipleRecords = jasmine.createSpy('retrieveMultipleRecords').and.returnValue(returnObj);
+      const openForm = jasmine.createSpy('openForm');
+      window.Xrm = {
+        WebApi: {
+          retrieveMultipleRecords,
+        },
+        Navigation: {
+          openForm,
+        },
+      } as unknown as Xrm.XrmStatic;
+      driver.openForm('Account Form', 'account');
+
+      expectAsync(driver.openForm('Account Form', 'account')).toBeRejectedWithError('The specified form (\'Account Form\') for entity (\'account\') does not exist.');
+    });
+
+    it('opens a form for a given entity', () => {
+      const formid = 'fakeid';
+      const type = 2;
+      const entity = { formid, type };
+      const entities = [entity];
+      const returnObj = { entities };
+      const retrieveMultipleRecords = jasmine.createSpy('retrieveMultipleRecords').and.returnValue(returnObj);
+      const openForm = jasmine.createSpy('openForm');
+      window.Xrm = {
+        WebApi: {
+          retrieveMultipleRecords,
+        },
+        Navigation: {
+          openForm,
+        },
+      } as unknown as Xrm.XrmStatic;
+
+      expectAsync(driver.openForm('Account Form', 'account')).toBeResolved();
+    });
+
+    it('opens a quick create form for a given entity', () => {
+      const formid = 'fakeid';
+      const type = 7;
+      const entity = { formid, type };
+      const entities = [entity];
+      const returnObj = { entities };
+      const retrieveMultipleRecords = jasmine.createSpy('retrieveMultipleRecords').and.returnValue(returnObj);
+      const openForm = jasmine.createSpy('openForm');
+      window.Xrm = {
+        WebApi: {
+          retrieveMultipleRecords,
+        },
+        Navigation: {
+          openForm,
+        },
+      } as unknown as Xrm.XrmStatic;
+
+      expectAsync(driver.openForm('Account Form', 'account')).toBeResolved();
+    });
+  });
+
   describe('.getRecordReference(alias)', () => {
     it('returns a reference to a record matching the provided alias', () => {
       const alias = 'some alias';

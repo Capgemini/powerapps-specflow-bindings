@@ -78,6 +78,27 @@ export default class Driver {
     });
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  public async openForm(formName:string, nameOfEntity:string)
+    :Promise<Xrm.Async.PromiseLike<Xrm.Navigation.OpenFormResult | void>> {
+    const formInfo = await Xrm.WebApi.retrieveMultipleRecords('systemform', `?$select=formid&$filter=name eq '${formName}' and objecttypecode eq '${nameOfEntity}'`);
+    if (formInfo.entities[0] === undefined) {
+      throw new Error(`The specified form ('${formName}') for entity ('${nameOfEntity}') does not exist.`);
+    }
+    const formId = formInfo.entities[0].formid;
+    const formType = formInfo.entities[0].type;
+    const formPromise = Xrm.Navigation.openForm({
+      entityName: nameOfEntity,
+      formId,
+      useQuickCreateForm: formType === 7,
+    });
+
+    if (formType === 7) {
+      return Promise.resolve();
+    }
+    return formPromise;
+  }
+
   /**
      * Gets a reference to a test record.
      * @param alias The alias of the test record.

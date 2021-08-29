@@ -38,6 +38,13 @@
         void OpenTestRecord(string recordAlias);
 
         /// <summary>
+        /// Open a test record.
+        /// </summary>
+        /// <param name="formName">The name of the form.</param>
+        /// <param name="entityName">The logical name of the entity.</param>
+        void OpenForm(string formName, string entityName);
+
+        /// <summary>
         /// Gets an entity reference to a previously created test record.
         /// </summary>
         /// <param name="recordAlias">The alias of the test record.</param>

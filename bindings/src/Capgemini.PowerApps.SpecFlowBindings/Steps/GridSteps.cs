@@ -23,6 +23,16 @@
         }
 
         /// <summary>
+        /// Selects a previously created test record from a grid.
+        /// </summary>
+        /// <param name="recordAlias">The alias of the test record.</param>
+        [When(@"I select '(.*)' from the grid")]
+        public static void WhenIOpenTheRecordAtPositionInTheGrid(string recordAlias)
+        {
+            HighlightRowByAlias(recordAlias);
+        }
+
+        /// <summary>
         /// Clears the search in a grid.
         /// </summary>
         [When(@"I clear the search in the grid")]
@@ -53,13 +63,15 @@
         }
 
         /// <summary>
-        /// Selects a previously created test record from a grid.
+        /// Navigates to an entity list for the given entity.
         /// </summary>
-        /// <param name="recordAlias">The alias of the test record.</param>
-        [When(@"I select '(.*)' from the grid")]
-        public static void WhenIOpenTheRecordAtPositionInTheGrid(string recordAlias)
+        /// <param name="entityName">The name of the entity to show the list for.</param>
+        [Given(@"I am viewing a list of '(.*)' records")]
+        public static void GivenIAmViewingAList(string entityName)
         {
-            HighlightRowByAlias(recordAlias);
+            var urlPart = Driver.Url.Substring(0, Driver.Url.IndexOf("&pagetype="));
+            var url = urlPart + "&pagetype=entitylist&etn=" + entityName;
+            Driver.Navigate().GoToUrl(url);
         }
 
         /// <summary>

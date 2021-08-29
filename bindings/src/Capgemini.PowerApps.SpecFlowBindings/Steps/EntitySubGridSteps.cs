@@ -279,7 +279,7 @@
                     new TimeSpan(0, 0, 1),
                     $"Could not find the {commandName} command on the flyout of the subgrid."))
                 .Should()
-                .Throw<Exception>();
+                .Throw<InvalidOperationException>();
         }
 
         /// <summary>

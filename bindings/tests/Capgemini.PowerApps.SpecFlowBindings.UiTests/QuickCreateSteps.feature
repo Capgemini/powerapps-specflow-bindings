@@ -22,6 +22,10 @@ Scenarios:
 		| sb_dateonly    | datetime       | 1/1/2021           |
 		| sb_currency    | currency       | £10.00             |
 
+Scenario: Open a quick create form
+	Given I am viewing the ' quick create form' form for the 'sb_secondarymockrecord' entity
+	Then I am presented with a 'Quick Create: Secondary Mock Record' form for the 'sb_secondarymockrecord' entity
+
 Scenario: Enter lookup on a quick create
 	Given I have created 'a record with an alias'
 	When I enter 'The referenced record' into the 'sb_parent' lookup field on the quick create

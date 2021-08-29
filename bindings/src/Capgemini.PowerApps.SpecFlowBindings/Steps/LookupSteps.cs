@@ -93,12 +93,10 @@
                 throw new ArgumentNullException(nameof(recordNames));
             }
 
-            if (!Driver.TryFindElement(By.CssSelector("[data-id*=SimpleLookupControlFlyout]"), out var flyout))
+            if (!Driver.TryFindElement(By.CssSelector("[data-id*=SimpleLookupControlFlyout]"), out var flyout) 
+                && !Driver.TryFindElement(By.CssSelector("div[data-id*=LookupResultsDropdown][aria-label*=\"Lookup results\"]"), out flyout))
             {
-                if (!Driver.TryFindElement(By.CssSelector("div[data-id*=LookupResultsDropdown][aria-label*=\"Lookup results\"]"), out flyout))
-                {
-                    throw new ElementNotVisibleException($"The flyout is not visible for the {lookupName} lookup.");
-                }
+                throw new ElementNotVisibleException($"The flyout is not visible for the {lookupName} lookup.");
             }
 
             new WebDriverWait(Driver, TimeSpan.FromSeconds(5))
