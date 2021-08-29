@@ -17,6 +17,8 @@ Scenario: Select aliased record in subgrid
 Scenario: Select all subgrid rows
 	When I select all in the 'subgrid' subgrid
 
+#Fixed By https://github.com/microsoft/EasyRepro/issues/1178
+@ignore
 Scenario: Open record at given position in subgrid
 	When I open the record at position '0' in the 'subgrid' subgrid
 	Then I am presented with a 'Information' form for the 'sb_secondarymockrecord' entity
@@ -25,10 +27,14 @@ Scenario: Search in subgrid
 	When I search for 'This should return no results' in the 'subgrid' subgrid
 	Then I can see exactly 0 records in the 'subgrid' subgrid
 
+#Fixed by - https://github.com/microsoft/EasyRepro/issues/1181
+@ignore
 Scenario: Switch subgrid view
 	When I switch to the 'Inactive Secondary Mock Records' view in the 'subgrid' subgrid
 	Then I can see exactly 0 records in the 'subgrid' subgrid
 
+# Fixed by - https://github.com/microsoft/EasyRepro/issues/1181
+@ignore
 Scenario: Assert aliased record not in subgrid
 	When I switch to the 'Inactive Secondary Mock Records' view in the 'subgrid' subgrid
 	Then I can not see 'the related record' in the 'subgrid' subgrid
