@@ -35,8 +35,13 @@
                 usernameInput.SendKeys(Keys.Enter);
 
                 IWebElement passwordInput = driver.WaitUntilClickable(By.XPath(Elements.Xpath[Reference.Login.LoginPassword]), 30.Seconds());
-                passwordInput.SendKeys(password);
-                passwordInput.Submit();
+
+                // check to see if password is needed as it isn't needed in SSO scenario
+                if (passwordInput != null)
+                {
+                    passwordInput.SendKeys(password);
+                    passwordInput.Submit();
+                }
 
                 var staySignedIn = driver.WaitUntilClickable(By.XPath(Elements.Xpath[Reference.Login.StaySignedIn]), 10.Seconds());
                 if (staySignedIn != null)
