@@ -26,7 +26,7 @@
         public static void WhenISelectTheCommandOnTheSubgrid(string commandName, string subGridName)
         {
             Driver.WaitUntilVisible(
-                By.CssSelector($"div#dataSetRoot_{subGridName} button[aria-label=\"{commandName}\"]"));
+                By.XPath(AppElements.Xpath[AppReference.Entity.SubGridCommandBar].Replace("[NAME]", subGridName)));
 
             XrmApp.Entity.SubGrid.ClickCommand(subGridName, commandName);
         }
