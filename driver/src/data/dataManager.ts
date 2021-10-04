@@ -105,28 +105,31 @@ export default class DataManager {
      * @returns {Promise<void>}
      * @memberof DataManager
      */
+
   public async cleanup(): Promise<(Xrm.LookupValue | void)[]> {
     const repo = this.appUserRecordRepo || this.currentUserRecordRepo;
 
-    const deletePromises = this.refs.map(async (record) => {
-      let reference;
-      let retry = 0;
-      while (retry < 3) {
+    let passThrough = 0;
+    let deletePromises: (Xrm.LookupValue | void)[] = [];
+    while (passThrough < 3 && this.refs.length > 0) {
+      // eslint-disable-next-line no-await-in-loop
+      deletePromises = await Promise.all(this.refs.map(async (record) => {
+        let reference;
         try {
           // eslint-disable-next-line no-await-in-loop
           reference = await repo.deleteRecord(record);
-          break;
+          const i = this.refs.indexOf(record);
+          this.refs.splice(i, 1);
         } catch (err) {
-          retry += 1;
+          // TODO: Log records failed to be deleted after finale passthrough
         }
-      }
-      return reference;
-    });
+        return reference;
+      }));
+      passThrough += 1;
+    }
 
-    this.refs.splice(0, this.refs.length);
     Object.keys(this.refsByAlias).forEach((alias) => delete this.refsByAlias[alias]);
-
-    return Promise.all(deletePromises);
+    return deletePromises;
   }
 
   private preprocess(data: Record): Record {

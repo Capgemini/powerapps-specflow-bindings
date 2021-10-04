@@ -113,7 +113,7 @@ describe('TestDriver', () => {
     it('retries failed delete requests', async () => {
       appUserRecordRepo.deleteRecord.and.throwError('Failed to delete');
 
-      dataManager.cleanup();
+      await dataManager.cleanup();
 
       expect(appUserRecordRepo.deleteRecord.calls.count()).toBe(6);
     });
