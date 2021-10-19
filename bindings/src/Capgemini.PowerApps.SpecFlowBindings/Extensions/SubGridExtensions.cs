@@ -27,7 +27,7 @@
                 throw new ArgumentNullException(nameof(driver));
             }
 
-            driver.WaitUntilAvailable(By.XPath(AppElements.Xpath[AppReference.Grid.Container]));
+            driver.WaitUntilAvailable(By.XPath(AppElements.Xpath[AppReference.Entity.SubGridContents].Replace("[NAME]", subgridName)));
 
             var index = (long)driver.ExecuteScript(
                 $"return Xrm.Page.getControl(\"{subgridName}\").getGrid().getRows().get().findIndex(row => row.getData().getEntity().getId() == \"{recordId.ToString("B").ToUpper(CultureInfo.CurrentCulture)}\")");
@@ -52,8 +52,7 @@
 
             var subGridElement = driver.FindElement(
                 By.XPath(AppElements.Xpath[AppReference.Entity.SubGridContents].Replace("[NAME]", subgridName)));
-
-            var rows = subGridElement.FindElements(By.CssSelector("div.wj-row[role=row][data-lp-id]"));
+            var rows = subGridElement.FindElements(By.XPath(AppElements.Xpath[AppReference.Entity.SubGridRows]));
 
             if (rows.Count == 0)
             {
@@ -65,7 +64,7 @@
                 throw new IndexOutOfRangeException($"Subgrid {subgridName} record count: {rows.Count}. Expected: {index + 1}");
             }
 
-            rows[index].FindElement(By.TagName("div")).Click();
+            rows[index].FindElements(By.XPath(AppElements.Xpath[AppReference.Entity.SubGridCells]))[0].Click();
             driver.WaitForTransaction();
         }
     }
