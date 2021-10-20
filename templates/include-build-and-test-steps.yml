@@ -74,6 +74,7 @@ jobs:
           summaryFileLocation: driver/test_results/coverage/cobertura/cobertura.xml
       - task: VSTest@2
         displayName: Run UI tests
+        enabled: false
         inputs:
           uiTests: true
           runInParallel: true
