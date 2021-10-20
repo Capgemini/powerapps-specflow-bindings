@@ -97,13 +97,16 @@ jobs:
           POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_PASSWORD2: $(Extra Admin User Password)
           POWERAPPS_SPECFLOW_BINDINGS_TEST_URL: $(URL)
       - task: SonarCloudAnalyze@1
+        enabled: false
         displayName: Analyse with SonarCloud
       - task: SonarCloudPublish@1
+        enabled: false
         displayName: Publish SonarCloud results
         inputs:
           pollingTimeoutSec: '300'
       - task: WhiteSource Bolt@20
         displayName: Detect security and licence issues
+        enabled: false
         inputs:
           cwd: '$(Build.SourcesDirectory)'
       - task: DotNetCoreCLI@2
