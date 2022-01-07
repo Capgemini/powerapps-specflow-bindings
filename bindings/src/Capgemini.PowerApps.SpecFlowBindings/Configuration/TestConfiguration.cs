@@ -46,6 +46,12 @@
         public bool UseProfiles { get; set; } = false;
 
         /// <summary>
+        /// Gets or sets a value indicating whether to delete test data.
+        /// </summary>
+        [YamlMember(Alias = "deleteTestData")]
+        public bool DeleteTestData { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets the base path where the user profiles are stored.
         /// </summary>
         [YamlMember(Alias = "profilesBasePath")]

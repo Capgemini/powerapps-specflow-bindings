@@ -31,7 +31,10 @@
         {
             try
             {
-                TestDriver.DeleteTestData();
+                if (TestConfig.DeleteTestData)
+                {
+                    TestDriver.DeleteTestData();
+                }
             }
             catch (WebDriverException)
             {
