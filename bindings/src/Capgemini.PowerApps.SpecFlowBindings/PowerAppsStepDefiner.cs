@@ -212,12 +212,17 @@
         /// </summary>
         protected static void Quit()
         {
-            var driver = client?.Browser?.Driver;
-
-            xrmApp?.Dispose();
-
-            // Ensuring that the driver gets disposed. Previously we were left with orphan processes and were unable to clean up profile folders.
-            driver?.Dispose();
+            // Try to dispose, and catch web driver errors that can occur on disposal. Retry the disposal if these occur. Trap the final exception and continue the disposal process.
+            var polly = Policy
+                .Handle<WebDriverException>()
+                .Retry(3, (ex, i) =>
+                {
+                    Console.WriteLine(ex.Message);
+                })
+                .ExecuteAndCapture(() =>
+                {
+                    xrmApp?.Dispose();
+                });
 
             xrmApp = null;
             client = null;
