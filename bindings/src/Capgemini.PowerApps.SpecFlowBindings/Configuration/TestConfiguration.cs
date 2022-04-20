@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Configuration;
     using System.Linq;
-    using Microsoft.Dynamics365.UIAutomation.Browser;
+    using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using YamlDotNet.Serialization;
 
     /// <summary>
@@ -19,12 +19,18 @@
 
         private const string GetUserException = "Unable to retrieve user configuration. Please ensure a user with the given alias exists in the config.";
 
+        private static readonly Dictionary<string, UserConfiguration> CurrentUsers = new Dictionary<string, UserConfiguration>();
+
+        private readonly object userEnumeratorsLock = new object();
+        private Dictionary<string, IEnumerator<UserConfiguration>> userEnumerators;
+        private string profilesBasePath;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TestConfiguration"/> class.
         /// </summary>
         public TestConfiguration()
         {
-            this.BrowserOptions = new BrowserOptions();
+            this.BrowserOptions = new BrowserOptionsWithProfileSupport();
         }
 
         /// <summary>
@@ -34,10 +40,22 @@
         public string Url { private get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to use profiles.
+        /// </summary>
+        [YamlMember(Alias = "useProfiles")]
+        public bool UseProfiles { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets the base path where the user profiles are stored.
+        /// </summary>
+        [YamlMember(Alias = "profilesBasePath")]
+        public string ProfilesBasePath { get => ConfigHelper.GetEnvironmentVariableIfExists(this.profilesBasePath); set => this.profilesBasePath = value; }
+
+        /// <summary>
         /// Gets or sets the browser options to use for running tests.
         /// </summary>
         [YamlMember(Alias = "browserOptions")]
-        public BrowserOptions BrowserOptions { get; set; }
+        public BrowserOptionsWithProfileSupport BrowserOptions { get; set; }
 
         /// <summary>
         /// Gets or sets users that tests can be run as.
@@ -50,6 +68,28 @@
         /// </summary>
         [YamlMember(Alias = "applicationUser")]
         public ClientCredentials ApplicationUser { get; set; }
+
+        [YamlIgnore]
+        private Dictionary<string, IEnumerator<UserConfiguration>> UserEnumerators
+        {
+            get
+            {
+                lock (this.userEnumeratorsLock)
+                {
+                    if (this.userEnumerators == null)
+                    {
+                        this.userEnumerators = this.Users
+                            .Select(user => user.Alias)
+                            .Distinct()
+                            .ToDictionary(
+                                alias => alias,
+                                alias => this.GetUserEnumerator(alias));
+                    }
+                }
+
+                return this.userEnumerators;
+            }
+        }
 
         /// <summary>
         /// Gets the target URL.
@@ -64,17 +104,56 @@
         /// Retrieves the configuration for a user.
         /// </summary>
         /// <param name="userAlias">The alias of the user.</param>
+        /// <param name="useCurrentUser">Indicates whether to return the current user or get the next available.</param>
         /// <returns>The user configuration.</returns>
-        public UserConfiguration GetUser(string userAlias)
+        public UserConfiguration GetUser(string userAlias, bool useCurrentUser = true)
         {
+            if (useCurrentUser && CurrentUsers.ContainsKey(userAlias))
+            {
+                return CurrentUsers[userAlias];
+            }
+
             try
             {
-                return this.Users.First(u => u.Alias == userAlias);
+                lock (this.userEnumeratorsLock)
+                {
+                    var aliasEnumerator = this.UserEnumerators[userAlias];
+                    if (!aliasEnumerator.MoveNext())
+                    {
+                        this.UserEnumerators[userAlias] = this.GetUserEnumerator(userAlias);
+                        aliasEnumerator = this.UserEnumerators[userAlias];
+                        aliasEnumerator.MoveNext();
+                    }
+
+                    if (CurrentUsers.ContainsKey(userAlias))
+                    {
+                        CurrentUsers[userAlias] = aliasEnumerator.Current;
+                    }
+                    else
+                    {
+                        CurrentUsers.Add(userAlias, aliasEnumerator.Current);
+                    }
+                }
             }
             catch (Exception ex)
             {
                 throw new ConfigurationErrorsException($"{GetUserException} User: {userAlias}", ex);
             }
+
+            return CurrentUsers[userAlias];
+        }
+
+        /// <summary>
+        /// Called internally between scenarios to reset thread state.
+        /// </summary>
+        internal void Flush()
+        {
+            CurrentUsers.Clear();
+        }
+
+        private IEnumerator<UserConfiguration> GetUserEnumerator(string alias)
+        {
+            return this.Users.Where(u => u.Alias == alias).ToList().Shuffle().GetEnumerator();
         }
     }
 }
