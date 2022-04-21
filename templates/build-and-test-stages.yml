@@ -86,7 +86,7 @@ stages:
             repositoryName: '$(RepositoryName)'
             comment: |
               **Manual validation requested**
-              Please perform any checks required on $(BuildTools.EnvironmentUrl) then approve @(BuildUrl).      
+              Please perform any checks required on $(BuildTools.EnvironmentUrl) then approve $(BuildUrl).      
       - job: ManualValidationJob
         displayName: Manual validation
         pool: server
