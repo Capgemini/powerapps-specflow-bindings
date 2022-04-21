@@ -1,5 +1,21 @@
+parameters:
+  - name: environmentUrl
+    displayName: Environment URL
+    type: string
+  - name: environmentName
+    displayName: environmentName
+    type: string
+  - name: username
+    displayName: Username
+    type: string
+  - name: password
+    displayName: Password
+    type: string
+
 jobs: 
-  - job: BuildJob
+    # build and tests executed in single job in order to allow SonarCloud to capture coverage
+  - job: BuildAndTestJob
+    displayName: Build and Test
     variables:
       - name: GitVersion.SemVer
         value: ''
@@ -10,8 +26,6 @@ jobs:
         value: 'Any CPU'
       - name: buildConfiguration
         value: 'Release'
-    # build and tests executed in single job in order to allow SonarCloud to capture coverage
-    displayName: Build and Test
     timeoutInMinutes: 180 
     steps:
       - task: gitversion/setup@0
@@ -66,7 +80,7 @@ jobs:
       - task: PublishTestResults@2
         displayName: Publish unit test results
         inputs:
-          testResultsFiles: driver\test_results\reports\TESTS-*.xml
+          testResultsFiles: driver\test_results\reports\TESTS-*.xml        
       - task: PublishCodeCoverageResults@1
         displayName: Publish unit code coverage results
         inputs:
@@ -90,11 +104,11 @@ jobs:
           POWERAPPS_SPECFLOW_BINDINGS_TEST_TENANTID: $(Application User Tenant ID)
           POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTID: $(Application User Client ID)
           POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTSECRET: $(Application User Client Secret)
-          POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME: $(User ADO Integration Username)
-          POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_PASSWORD: $(User ADO Integration Password)
+          POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME: ${{ parameters.username }}
+          POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_PASSWORD: ${{ parameters.password }}
           POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME2: $(Extra Admin User Username)
           POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_PASSWORD2: $(Extra Admin User Password)
-          POWERAPPS_SPECFLOW_BINDINGS_TEST_URL: $(URL)
+          POWERAPPS_SPECFLOW_BINDINGS_TEST_URL: ${{ parameters.environmentUrl }}
       - task: SonarCloudAnalyze@1
         displayName: Analyse with SonarCloud
       - task: SonarCloudPublish@1
