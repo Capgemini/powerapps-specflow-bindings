@@ -14,3 +14,5 @@ stages:
       environmentIdentifier: $(Build.BuildId)
       environmentDisplayName: SpecFlow Bindings - pr
       environmentDomainName: sfb-pr
+      buildUrl: https://dev.azure.com/capgeminiuk/GitHub%20Support/_build/results?buildId=$(Build.BuildId)
+      repositoryName: $(Build.Repository.Name)

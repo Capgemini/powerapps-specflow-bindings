@@ -8,6 +8,12 @@ parameters:
   - name: environmentDomainName
     displayName: Environment domain name
     type: string
+  - name: buildUrl
+    displayName: Build URL
+    type: string
+  - name: repositoryName
+    displayName: Repository Name
+    type: string
 
 stages:
   - stage: ProvisionEnvironment
@@ -67,6 +73,8 @@ stages:
       - BuildAndTest
     condition: and(not(canceled()), ne(dependencies.ProvisionEnvironment.outputs['ProvisionEnvironmentJob.SetEnvironmentOutputVariables.EnvironmentUrl'], ''))
     variables:
+      RepositoryName: ${{ parameters.repositoryName }}
+      BuildUrl: ${{ parameters.buildUrl }}
       BuildTools.EnvironmentUrl: $[ stageDependencies.ProvisionEnvironment.ProvisionEnvironmentJob.outputs['SetEnvironmentOutputVariables.EnvironmentUrl'] ]
     jobs:
       - job: ManualValidationJob
@@ -74,6 +82,13 @@ stages:
         pool: server
         timeoutInMinutes: 8640
         steps:
+          - task: GitHubComment@0
+            inputs:
+              gitHubConnection: 'github.com_tdashworth'
+              repositoryName: '$(RepositoryName)'
+              comment: |
+                **Manual validation requested**
+                Please perform any checks required on $(BuildTools.EnvironmentUrl) then approve @(BuildUrl).      
           - task: ManualValidation@0
             displayName: Wait for manual validation
             timeoutInMinutes: 7200
