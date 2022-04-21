@@ -77,18 +77,21 @@ stages:
       BuildUrl: ${{ parameters.buildUrl }}
       BuildTools.EnvironmentUrl: $[ stageDependencies.ProvisionEnvironment.ProvisionEnvironmentJob.outputs['SetEnvironmentOutputVariables.EnvironmentUrl'] ]
     jobs:
+      - job: ManualValidationCommentJob
+        displayName: Manual validation (comment)
+        steps:
+        - task: GitHubComment@0
+          inputs:
+            gitHubConnection: 'github.com_tdashworth'
+            repositoryName: '$(RepositoryName)'
+            comment: |
+              **Manual validation requested**
+              Please perform any checks required on $(BuildTools.EnvironmentUrl) then approve @(BuildUrl).      
       - job: ManualValidationJob
         displayName: Manual validation
         pool: server
         timeoutInMinutes: 8640
         steps:
-          - task: GitHubComment@0
-            inputs:
-              gitHubConnection: 'github.com_tdashworth'
-              repositoryName: '$(RepositoryName)'
-              comment: |
-                **Manual validation requested**
-                Please perform any checks required on $(BuildTools.EnvironmentUrl) then approve @(BuildUrl).      
           - task: ManualValidation@0
             displayName: Wait for manual validation
             timeoutInMinutes: 7200
