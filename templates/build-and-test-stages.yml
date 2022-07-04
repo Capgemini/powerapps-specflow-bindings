@@ -46,8 +46,8 @@ stages:
               CurrencyName: GBP
               DomainName: $(TestEnvironment.DomainName)
           - powershell: |
-              echo "##vso[task.setvariable variable=EnvironmentUrl;isOutput=true]$env:env:POWERPLATFORMCREATEENVIRONMENT_BUILDTOOLS_ENVIRONMENTURL"
-              echo "##vso[task.setvariable variable=EnvironmentName;isOutput=true]$env:env:POWERPLATFORMCREATEENVIRONMENT_BUILDTOOLS_ENVIRONMENTID"
+              echo "##vso[task.setvariable variable=EnvironmentUrl;isOutput=true]$env:POWERPLATFORMCREATEENVIRONMENT_BUILDTOOLS_ENVIRONMENTURL"
+              echo "##vso[task.setvariable variable=EnvironmentName;isOutput=true]$env:POWERPLATFORMCREATEENVIRONMENT_BUILDTOOLS_ENVIRONMENTID"
             displayName: Set output variables
             name: SetEnvironmentOutputVariables  
   - stage: BuildAndTest
