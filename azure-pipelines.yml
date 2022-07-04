@@ -1,24 +1,27 @@
 name: $(GITVERSION_FullSemVer)
+
 trigger:
  batch: true
  branches:
   include:
     - master
+
 pr: none
+
 pool:
-  vmImage: 'windows-latest'
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
-  GitVersion.SemVer: ''
+  vmImage: windows-latest
 stages:
-  - stage: BuildAndTest
-    displayName: Build and test
-    jobs:
-    - template: templates/include-build-and-test-steps.yml
+  - template: templates/build-and-test-stages.yml
+    parameters:
+      environmentIdentifier: $(Build.BuildId)
+      environmentDisplayName: SpecFlow Bindings - CI
+      environmentDomainName: sfb-ci
+      buildUrl: https://dev.azure.com/capgeminiuk/GitHub%20Support/_build/results?buildId=$(Build.BuildId)
+      repositoryName: $(Build.Repository.Name)
+      
   - stage: Publish
     displayName: Publish
+    dependsOn: ManualValidation
     jobs:
       - job: PublishJob
         displayName: Publish 

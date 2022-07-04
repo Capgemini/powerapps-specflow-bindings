@@ -1,11 +1,18 @@
 name: $(GITVERSION_FullSemVer)
+
 trigger: none
+
 pr:
   - master
+
 pool:
   vmImage: 'windows-latest'
+
 stages:
-  - stage: BuildAndTest
-    displayName: Build and test
-    jobs:
-    - template: templates/include-build-and-test-steps.yml
+  - template: templates/build-and-test-stages.yml
+    parameters:
+      environmentIdentifier: $(Build.BuildId)
+      environmentDisplayName: SpecFlow Bindings - pr
+      environmentDomainName: sfb-pr
+      buildUrl: https://dev.azure.com/capgeminiuk/GitHub%20Support/_build/results?buildId=$(Build.BuildId)
+      repositoryName: $(Build.Repository.Name)
