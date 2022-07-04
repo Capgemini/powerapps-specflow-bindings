@@ -1,0 +1,123 @@
+parameters:
+  - name: environmentIdentifier
+    displayName: Environment identifier
+    type: string
+  - name: environmentDisplayName
+    displayName: Environment display name
+    type: string
+  - name: environmentDomainName
+    displayName: Environment domain name
+    type: string
+  - name: buildUrl
+    displayName: Build URL
+    type: string
+  - name: repositoryName
+    displayName: Repository Name
+    type: string
+
+stages:
+  - stage: ProvisionEnvironment
+    displayName: Provision environment
+    variables:
+      - name: Environment.Identifier
+        value: ${{ parameters.environmentIdentifier }}
+      - name: Environment.DisplayName
+        value: ${{ parameters.environmentDisplayName }} $(Environment.Identifier)
+      - name: TestEnvironment.DomainName
+        value: ${{ parameters.environmentDomainName }}-$(Environment.Identifier)
+      - group: Dataverse users
+    jobs:
+      - job: ProvisionEnvironmentJob
+        displayName: Provision environment
+        steps:
+          - task: PowerPlatformToolInstaller@0
+            displayName: Install Power Platform Build Tools
+            inputs:
+              DefaultVersion: true
+          - task: PowerPlatformCreateEnvironment@0
+            displayName: Create environment
+            inputs:
+              authenticationType: PowerPlatformSPN
+              PowerPlatformSPN: Dataverse (placeholder)
+              DisplayName: $(Environment.DisplayName)
+              EnvironmentSku: Sandbox
+              LocationName: unitedkingdom
+              LanguageName: 1033
+              CurrencyName: GBP
+              DomainName: $(TestEnvironment.DomainName)
+          - powershell: |
+              echo "##vso[task.setvariable variable=EnvironmentUrl;isOutput=true]$env:BUILDTOOLS_ENVIRONMENTURL"
+              echo "##vso[task.setvariable variable=EnvironmentName;isOutput=true]$env:BUILDTOOLS_ENVIRONMENTID"
+            displayName: Set output variables
+            name: SetEnvironmentOutputVariables  
+  - stage: BuildAndTest
+    displayName: Build and Test
+    dependsOn: ProvisionEnvironment
+    variables:
+      - name: BuildTools.EnvironmentUrl
+        value: $[ stageDependencies.ProvisionEnvironment.ProvisionEnvironmentJob.outputs['SetEnvironmentOutputVariables.EnvironmentUrl'] ]
+      - name: BuildTools.EnvironmentId
+        value: $[ stageDependencies.ProvisionEnvironment.ProvisionEnvironmentJob.outputs['SetEnvironmentOutputVariables.EnvironmentName'] ]
+      - group: Dataverse users
+    jobs:
+      - template: build-and-test-job.yml
+        parameters:
+          environmentUrl: $(BuildTools.EnvironmentUrl)
+          environmentName: $(BuildTools.EnvironmentId)
+          username: $(DataverseUsers.AzureDevOps.Username)
+          password: $(DataverseUsers.AzureDevOps.Password)
+  - stage: ManualValidation
+    displayName: Manual validation
+    dependsOn:
+      - ProvisionEnvironment
+      - BuildAndTest
+    condition: and(not(canceled()), ne(dependencies.ProvisionEnvironment.outputs['ProvisionEnvironmentJob.SetEnvironmentOutputVariables.EnvironmentUrl'], ''))
+    variables:
+      RepositoryName: ${{ parameters.repositoryName }}
+      BuildUrl: ${{ parameters.buildUrl }}
+      BuildTools.EnvironmentUrl: $[ stageDependencies.ProvisionEnvironment.ProvisionEnvironmentJob.outputs['SetEnvironmentOutputVariables.EnvironmentUrl'] ]
+    jobs:
+      - job: ManualValidationCommentJob
+        displayName: Manual validation (comment)
+        steps:
+        - task: GitHubComment@0
+          inputs:
+            gitHubConnection: 'github.com_tdashworth'
+            repositoryName: '$(RepositoryName)'
+            comment: |
+              **Manual validation requested**
+              Please perform any checks required on $(BuildTools.EnvironmentUrl) then approve $(BuildUrl).      
+      - job: ManualValidationJob
+        displayName: Manual validation
+        pool: server
+        timeoutInMinutes: 8640
+        steps:
+          - task: ManualValidation@0
+            displayName: Wait for manual validation
+            timeoutInMinutes: 7200
+            inputs:
+              onTimeout: resume
+              instructions: Please perform any checks required on $(BuildTools.EnvironmentUrl).
+  - stage: DeleteEnvironment
+    displayName: Delete environment
+    dependsOn:
+      - ProvisionEnvironment
+      - ManualValidation
+    condition: ne(dependencies.ProvisionEnvironment.outputs['ProvisionEnvironmentJob.SetEnvironmentOutputVariables.EnvironmentUrl'], '')
+    variables:
+      BuildTools.EnvironmentUrl: $[ stageDependencies.ProvisionEnvironment.ProvisionEnvironmentJob.outputs['SetEnvironmentOutputVariables.EnvironmentUrl'] ]
+    jobs:
+      - job: DeleteEnvironmentJob
+        displayName: Delete environment
+        steps:
+          - checkout: none
+          - task: PowerPlatformToolInstaller@0
+            displayName: Install Power Platform Build Tools
+            inputs:
+              DefaultVersion: true
+          - task: PowerPlatformDeleteEnvironment@0
+            displayName: Delete environment
+            continueOnError: true
+            inputs:
+              authenticationType: PowerPlatformSPN
+              PowerPlatformSPN: Dataverse (placeholder)
