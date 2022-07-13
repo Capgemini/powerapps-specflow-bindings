@@ -289,6 +289,27 @@
         }
 
         /// <summary>
+        /// Asserts that a set of fields are mandatory or optional.
+        /// </summary>
+        /// <param name="requirementLevel">Whether the field should be mandatory or optional.</param>
+        /// <param name="table">The names of the fields.</param>
+        [Then("the following fields are (mandatory|optional)")]
+        public static void ThenTheFieldsAreMandatory(string requirementLevel, Table table)
+        {
+            if (table is null)
+            {
+                throw new ArgumentNullException(nameof(table));
+            }
+
+            var fields = table.Rows.Select(x => x.Values.First());
+
+            foreach (var field in fields)
+            {
+                ThenTheFieldIsMandatory(field, requirementLevel);
+            }
+        }
+
+        /// <summary>
         /// Asserts that a value is shown in a boolean field.
         /// </summary>
         /// <param name="expectedValue">The expected value.</param>
