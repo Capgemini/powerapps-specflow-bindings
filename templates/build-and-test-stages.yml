@@ -26,7 +26,6 @@ stages:
       - name: TestEnvironment.DomainName
         value: ${{ parameters.environmentDomainName }}-$(Environment.Identifier)
       - group: Dataverse users
-      - group: Cap Dev - CI
     jobs:
       - job: ProvisionEnvironmentJob
         displayName: Provision environment
@@ -56,9 +55,9 @@ stages:
             inputs:
               filePath: '.\scripts\Set-AllUserLocalesToUk.ps1'
             env:
-              POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTID: $(Application User Client ID)
-              POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTSECRET: $(Application User Client Secret)
-              POWERAPPS_SPECFLOW_BINDINGS_TEST_URL: $(SetEnvironmentOutputVariables.EnvironmentUrl)
+              environmentUrl: $(SetEnvironmentOutputVariables.EnvironmentUrl)
+              username: $(DataverseUsers.AzureDevOps.Username)
+              password: $(DataverseUsers.AzureDevOps.Password)
   - stage: BuildAndTest
     displayName: Build and Test
     dependsOn: ProvisionEnvironment

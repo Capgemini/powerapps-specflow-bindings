@@ -1,9 +1,11 @@
 Install-Module -Name Microsoft.Xrm.Tooling.CrmConnector.PowerShell -Force -Scope CurrentUser -AllowClobber
 
 Write-Host "Updating user settings to English (United Kingdom)"
-Write-Host "Url=$env:POWERAPPS_SPECFLOW_BINDINGS_TEST_URL; ClientId=$env:POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTID; ClientSecret=$env:POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTSECRET; AuthType=ClientSecret"
 
-$conn = Get-CrmConnection -ConnectionString "Url=$env:POWERAPPS_SPECFLOW_BINDINGS_TEST_URL; ClientId=$env:POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTID; ClientSecret=$env:POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTSECRET; AuthType=ClientSecret"
+$connectionString = "AuthType=OAuth; Username=$env:username; Password=$env:password; Url=$env:environmentUrl; AppId=51f81489-12ee-4a9e-aaae-a2591f45987d; RedirectUri=app://58145B91-0C36-4500-8554-080854F2AC97; LoginPrompt=Auto";
+Write-Host $connectionString
+
+$conn = Get-CrmConnection -ConnectionString $connectionString;
 
 $condition = [Microsoft.Xrm.Sdk.Query.ConditionExpression]::new();  
 $condition.AttributeName = "localeid";  
