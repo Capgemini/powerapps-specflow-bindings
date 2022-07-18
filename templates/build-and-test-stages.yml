@@ -49,7 +49,15 @@ stages:
               echo "##vso[task.setvariable variable=EnvironmentUrl;isOutput=true]$env:POWERPLATFORMCREATEENVIRONMENT_BUILDTOOLS_ENVIRONMENTURL"
               echo "##vso[task.setvariable variable=EnvironmentName;isOutput=true]$env:POWERPLATFORMCREATEENVIRONMENT_BUILDTOOLS_ENVIRONMENTID"
             displayName: Set output variables
-            name: SetEnvironmentOutputVariables  
+            name: SetEnvironmentOutputVariables
+          - task: PowerShell@2
+            displayName: Update user settings to English (United Kingdom)
+            inputs:
+              filePath: '.\scripts\Set-AllUserLocalesToUk.ps1'
+            env:
+              POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTID: $(Application User Client ID)
+              POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTSECRET: $(Application User Client Secret)
+              POWERAPPS_SPECFLOW_BINDINGS_TEST_URL: $[ SetEnvironmentOutputVariables.EnvironmentUrl ]
   - stage: BuildAndTest
     displayName: Build and Test
     dependsOn: ProvisionEnvironment
