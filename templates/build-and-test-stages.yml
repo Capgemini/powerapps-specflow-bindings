@@ -26,6 +26,7 @@ stages:
       - name: TestEnvironment.DomainName
         value: ${{ parameters.environmentDomainName }}-$(Environment.Identifier)
       - group: Dataverse users
+      - group: Cap Dev - CI
     jobs:
       - job: ProvisionEnvironmentJob
         displayName: Provision environment
@@ -46,8 +47,8 @@ stages:
               CurrencyName: GBP
               DomainName: $(TestEnvironment.DomainName)
           - powershell: |
-              echo "##vso[task.setvariable variable=EnvironmentUrl;isOutput=true]$env:POWERPLATFORMCREATEENVIRONMENT_BUILDTOOLS_ENVIRONMENTURL"
-              echo "##vso[task.setvariable variable=EnvironmentName;isOutput=true]$env:POWERPLATFORMCREATEENVIRONMENT_BUILDTOOLS_ENVIRONMENTID"
+              echo "##vso[task.setvariable variable=EnvironmentUrl;isOutput=true]$env:BUILDTOOLS_ENVIRONMENTURL"
+              echo "##vso[task.setvariable variable=EnvironmentName;isOutput=true]$env:BUILDTOOLS_ENVIRONMENTID"
             displayName: Set output variables
             name: SetEnvironmentOutputVariables
           - task: PowerShell@2
