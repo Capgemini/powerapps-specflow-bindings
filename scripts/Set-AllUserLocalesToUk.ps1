@@ -9,7 +9,7 @@ $conn = Get-CrmConnection -ConnectionString $connectionString;
 
 $condition = [Microsoft.Xrm.Sdk.Query.ConditionExpression]::new();  
 $condition.AttributeName = "localeid";  
-$condition.Operator = ConditionOperator.NotEqual;  
+$condition.Operator = [Microsoft.Xrm.Sdk.Query.ConditionOperator]::NotEqual;  
 $condition.Values.Add(2057);              
   
 $filter = [Microsoft.Xrm.Sdk.Query.FilterExpression]::new();  
