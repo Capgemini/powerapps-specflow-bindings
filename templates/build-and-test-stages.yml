@@ -57,7 +57,7 @@ stages:
             env:
               POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTID: $(Application User Client ID)
               POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTSECRET: $(Application User Client Secret)
-              POWERAPPS_SPECFLOW_BINDINGS_TEST_URL: $[ SetEnvironmentOutputVariables.EnvironmentUrl ]
+              POWERAPPS_SPECFLOW_BINDINGS_TEST_URL: $(SetEnvironmentOutputVariables.EnvironmentUrl)
   - stage: BuildAndTest
     displayName: Build and Test
     dependsOn: ProvisionEnvironment
