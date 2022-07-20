@@ -107,7 +107,7 @@
             var groupNameWithoutWhitespace = groupName?.Replace(" ", string.Empty);
 
             Driver
-                .WaitUntilAvailable(By.XPath($"//span[@data-id='sitemap-sitemapAreaGroup-{groupNameWithoutWhitespace}']"))
+                .WaitUntilAvailable(By.XPath($"//h3[@data-id='sitemap-sitemapAreaGroup-{groupNameWithoutWhitespace}']"))
                 .Text
                 .Should().Contain(groupName);
         }
