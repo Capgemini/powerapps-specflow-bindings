@@ -16,6 +16,8 @@ jobs:
     # build and tests executed in single job in order to allow SonarCloud to capture coverage
   - job: BuildAndTestJob
     displayName: Build and Test
+    strategy:
+      parallel: 3
     variables:
       - name: GitVersion.SemVer
         value: ''
