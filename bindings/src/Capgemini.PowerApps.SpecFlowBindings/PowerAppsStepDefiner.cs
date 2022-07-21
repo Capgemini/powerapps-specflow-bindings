@@ -40,13 +40,15 @@
         [ThreadStatic]
         private static XrmApp xrmApp;
 
+        private static AuthenticationResult authenticationResult;
+
         private static IDictionary<string, string> userProfilesDirectories;
         private static object userProfilesDirectoriesLock = new object();
 
         /// <summary>
         /// Gets access token used to authenticate as the application user configured for testing.
         /// </summary>
-        protected static string AccessToken
+        protected static AuthenticationResult NewAuthResult
         {
             get
             {
@@ -54,7 +56,7 @@
 
                 return GetApp().AcquireTokenForClient(new string[] { $"https://{hostSegments[0]}.api.{hostSegments[1]}.dynamics.com//.default" })
                     .ExecuteAsync()
-                    .Result.AccessToken;
+                    .Result;
             }
         }
 
@@ -157,10 +159,18 @@
         {
             get
             {
-                if (testDriver == null)
+                if (testDriver == null) // First Time 
                 {
+                    authenticationResult = NewAuthResult;
                     testDriver = new TestDriver((IJavaScriptExecutor)Driver);
-                    testDriver.InjectOnPage(TestConfig.ApplicationUser != null ? AccessToken : null);
+                    testDriver.InjectOnPage(TestConfig.ApplicationUser != null ? authenticationResult?.AccessToken : null);
+                }
+
+                if (!(authenticationResult is null) && DateTime.UtcNow >= authenticationResult.ExpiresOn)
+                {
+                    authenticationResult = NewAuthResult;
+                    // Set it in the JS 
+                    testDriver.UpdateAccessToken(authenticationResult.AccessToken);
                 }
 
                 return testDriver;

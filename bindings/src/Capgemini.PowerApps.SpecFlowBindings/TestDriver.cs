@@ -60,6 +60,16 @@
             this.javascriptExecutor.ExecuteScript(scriptBuilder.ToString());
         }
 
+        void UpdateAccessToken(string accessToken)
+        {
+            var script = $"appUserRecordRepository.UpdateAccessToken({accessToken})";
+            this.javascriptExecutor.ExecuteScript(script);
+        }
+
+
+
+
+
         /// <inheritdoc cref="ITestDriver"/>
         public void LoadTestData(string data)
         {

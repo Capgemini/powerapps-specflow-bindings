@@ -24,13 +24,17 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
     this.metadataRepo = metadataRepo;
 
     this.headers = {
-      Authorization: `Bearer ${authToken}`,
       'Content-Type': 'application/json',
     };
+    this.updateAccessToken(authToken);
 
     if (userToImpersonateId) {
       this.headers.CallerObjectId = userToImpersonateId;
     }
+  }
+
+  public updateAccessToken(authToken: string) {
+    this.headers['Authorization'] = `Bearer ${authToken}`;
   }
 
   /**
