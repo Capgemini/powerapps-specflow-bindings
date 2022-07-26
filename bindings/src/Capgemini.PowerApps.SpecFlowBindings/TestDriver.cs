@@ -46,8 +46,8 @@
             if (!string.IsNullOrEmpty(authToken))
             {
                 scriptBuilder.AppendLine(
-                    $@"var appUserRecordRepository = new {LibraryNamespace}.AuthenticatedRecordRepository(metadataRepository, '{authToken}');
-                       var dataManager = new {LibraryNamespace}.DataManager(recordRepository, deepInsertService, [new {LibraryNamespace}.FakerPreprocessor()], appUserRecordRepository);");
+                    $@"window.appUserRecordRepository = new {LibraryNamespace}.AuthenticatedRecordRepository(metadataRepository, '{authToken}');
+                       var dataManager = new {LibraryNamespace}.DataManager(recordRepository, deepInsertService, [new {LibraryNamespace}.FakerPreprocessor()], window.appUserRecordRepository);");
             }
             else
             {
@@ -60,15 +60,13 @@
             this.javascriptExecutor.ExecuteScript(scriptBuilder.ToString());
         }
 
-        void UpdateAccessToken(string accessToken)
+        /// <inheritdoc cref="ITestDriver"/>
+        public void UpdateAccessToken(string accessToken)
         {
-            var script = $"appUserRecordRepository.UpdateAccessToken({accessToken})";
+            var script = $"window.appUserRecordRepository.updateAccessToken('{accessToken}')";
+
             this.javascriptExecutor.ExecuteScript(script);
         }
-
-
-
-
 
         /// <inheritdoc cref="ITestDriver"/>
         public void LoadTestData(string data)

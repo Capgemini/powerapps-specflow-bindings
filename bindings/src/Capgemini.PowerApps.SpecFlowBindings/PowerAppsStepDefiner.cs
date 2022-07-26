@@ -40,23 +40,29 @@
         [ThreadStatic]
         private static XrmApp xrmApp;
 
-        private static AuthenticationResult authenticationResult;
-
         private static IDictionary<string, string> userProfilesDirectories;
         private static object userProfilesDirectoriesLock = new object();
 
         /// <summary>
+        /// Date and Time when access token will expire.
+        /// </summary>
+        private static DateTimeOffset accessTokenExpiresOn;
+
+        /// <summary>
         /// Gets access token used to authenticate as the application user configured for testing.
         /// </summary>
-        protected static AuthenticationResult NewAuthResult
+        protected static string NewAccessToken
         {
             get
             {
                 var hostSegments = TestConfig.GetTestUrl().Host.Split('.');
 
-                return GetApp().AcquireTokenForClient(new string[] { $"https://{hostSegments[0]}.api.{hostSegments[1]}.dynamics.com//.default" })
+                var result = GetApp().AcquireTokenForClient(new string[] { $"https://{hostSegments[0]}.api.{hostSegments[1]}.dynamics.com//.default" })
                     .ExecuteAsync()
                     .Result;
+
+                accessTokenExpiresOn = result.ExpiresOn;
+                return result.AccessToken;
             }
         }
 
@@ -159,18 +165,16 @@
         {
             get
             {
-                if (testDriver == null) // First Time 
+                if (testDriver == null) // First Time
                 {
-                    authenticationResult = NewAuthResult;
                     testDriver = new TestDriver((IJavaScriptExecutor)Driver);
-                    testDriver.InjectOnPage(TestConfig.ApplicationUser != null ? authenticationResult?.AccessToken : null);
+                    testDriver.InjectOnPage(TestConfig.ApplicationUser != null ? NewAccessToken : null);
                 }
 
-                if (!(authenticationResult is null) && DateTime.UtcNow >= authenticationResult.ExpiresOn)
+                if (TestConfig.ApplicationUser != null && DateTime.UtcNow >= accessTokenExpiresOn)
                 {
-                    authenticationResult = NewAuthResult;
-                    // Set it in the JS 
-                    testDriver.UpdateAccessToken(authenticationResult.AccessToken);
+                    // Set it in the JS
+                    testDriver.UpdateAccessToken(NewAccessToken);
                 }
 
                 return testDriver;

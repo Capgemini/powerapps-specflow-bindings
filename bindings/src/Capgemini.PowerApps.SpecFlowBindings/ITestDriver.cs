@@ -21,6 +21,12 @@
         void LoadTestDataAsUser(string data, string username);
 
         /// <summary>
+        /// Updates the access token of the application user repository.
+        /// </summary>
+        /// <param name="accessToken">accessToken to refresh.</param>
+        void UpdateAccessToken(string accessToken);
+
+        /// <summary>
         /// Loads scenario test data.
         /// </summary>
         /// <param name="data">The data to load.</param>
