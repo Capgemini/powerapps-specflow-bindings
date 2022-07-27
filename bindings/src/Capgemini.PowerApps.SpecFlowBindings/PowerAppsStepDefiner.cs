@@ -43,26 +43,26 @@
         private static IDictionary<string, string> userProfilesDirectories;
         private static object userProfilesDirectoriesLock = new object();
 
+        private static string accessToken;
+
         /// <summary>
-        /// Date and Time when access token will expire.
+        /// Date and Time when access token expires....
         /// </summary>
         private static DateTimeOffset accessTokenExpiresOn;
 
         /// <summary>
         /// Gets access token used to authenticate as the application user configured for testing.
         /// </summary>
-        protected static string NewAccessToken
+        protected static string AccessToken
         {
             get
             {
-                var hostSegments = TestConfig.GetTestUrl().Host.Split('.');
+                if (accessToken == null)
+                {
+                    accessToken = GetAccessToken();
+                }
 
-                var result = GetApp().AcquireTokenForClient(new string[] { $"https://{hostSegments[0]}.api.{hostSegments[1]}.dynamics.com//.default" })
-                    .ExecuteAsync()
-                    .Result;
-
-                accessTokenExpiresOn = result.ExpiresOn;
-                return result.AccessToken;
+                return accessToken;
             }
         }
 
@@ -165,16 +165,19 @@
         {
             get
             {
-                if (testDriver == null) // First Time
+                // First Time
+                if (testDriver == null)
                 {
                     testDriver = new TestDriver((IJavaScriptExecutor)Driver);
-                    testDriver.InjectOnPage(TestConfig.ApplicationUser != null ? NewAccessToken : null);
+                    testDriver.InjectOnPage(TestConfig.ApplicationUser != null ? AccessToken : null);
                 }
 
                 if (TestConfig.ApplicationUser != null && DateTime.UtcNow >= accessTokenExpiresOn)
                 {
                     // Set it in the JS
-                    testDriver.UpdateAccessToken(NewAccessToken);
+                    accessToken = GetAccessToken();
+                    testDriver.UpdateAccessToken(AccessToken);
+                    Console.WriteLine("Application user access token has been refreshed");
                 }
 
                 return testDriver;
@@ -219,6 +222,21 @@
 
                 return userProfilesDirectories;
             }
+        }
+
+        /// <summary>
+        /// Acquires an access token used to authenticate as the application user configured for testing.
+        /// </summary>
+        /// <returns>Returns access token as a string.</returns>
+        protected static string GetAccessToken()
+        {
+            var hostSegments = TestConfig.GetTestUrl().Host.Split('.');
+
+            var result = GetApp().AcquireTokenForClient(new string[] { $"https://{hostSegments[0]}.api.{hostSegments[1]}.dynamics.com//.default" })
+                .ExecuteAsync()
+                .Result;
+            accessTokenExpiresOn = result.ExpiresOn;
+            return result.AccessToken;
         }
 
         /// <summary>
