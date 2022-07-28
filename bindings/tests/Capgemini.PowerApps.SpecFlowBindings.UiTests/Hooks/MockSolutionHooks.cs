@@ -1,6 +1,7 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.UiTests.Hooks
 {
     using Microsoft.Xrm.Tooling.Connector;
+    using System;
     using System.IO;
     using System.Reflection;
     using TechTalk.SpecFlow;
@@ -24,6 +25,7 @@
         {
             using (var serviceClient = GetServiceClient())
             {
+                serviceClient.OrganizationServiceProxy.Timeout = new TimeSpan(0, 10, 0);
                 serviceClient.ImportSolutionToCrm(SolutionPath, out var importId);
 
                 if (serviceClient.LastCrmException != null)
