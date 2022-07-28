@@ -1,54 +1,54 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.UiTests.Hooks
 {
-    using Microsoft.Xrm.Tooling.Connector;
-    using System;
-    using System.IO;
-    using System.Reflection;
-    using TechTalk.SpecFlow;
+  using Microsoft.Xrm.Tooling.Connector;
+  using System;
+  using System.IO;
+  using System.Reflection;
+  using TechTalk.SpecFlow;
+
+  /// <summary>
+  /// Hooks related to the mock solution used for testing.
+  /// </summary>
+  [Binding]
+  public class MockSolutionHooks : PowerAppsStepDefiner
+  {
+    private const string SolutionName = "sb_PowerAppsSpecFlowBindings_Mock";
+
+    private static string SolutionPath => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), $"{SolutionName}.zip");
 
     /// <summary>
-    /// Hooks related to the mock solution used for testing.
+    /// Installs the mock solution to test against.
+    /// If the solution is already installed in the target environment, you may wish to comment out this binding if you're running the tests locally to save time.
     /// </summary>
-    [Binding]
-    public class MockSolutionHooks : PowerAppsStepDefiner
+    [BeforeTestRun]
+    public static void ImportMockSolution()
     {
-        private const string SolutionName = "sb_PowerAppsSpecFlowBindings_Mock";
+      using (var serviceClient = GetServiceClient())
+      {
+        CrmServiceClient.MaxConnectionTimeout = new TimeSpan(0, 5, 0);
+        serviceClient.ImportSolutionToCrm(SolutionPath, out var importId);
 
-        private static string SolutionPath => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), $"{SolutionName}.zip");
-
-        /// <summary>
-        /// Installs the mock solution to test against.
-        /// If the solution is already installed in the target environment, you may wish to comment out this binding if you're running the tests locally to save time.
-        /// </summary>
-        [BeforeTestRun]
-        public static void ImportMockSolution()
+        if (serviceClient.LastCrmException != null)
         {
-            using (var serviceClient = GetServiceClient())
-            {
-                serviceClient.OrganizationServiceProxy.Timeout = new TimeSpan(0, 10, 0);
-                serviceClient.ImportSolutionToCrm(SolutionPath, out var importId);
-
-                if (serviceClient.LastCrmException != null)
-                {
-                    throw serviceClient.LastCrmException;
-                }
-            }
+          throw serviceClient.LastCrmException;
         }
-
-        private static CrmServiceClient GetServiceClient()
-        {
-            var admin = TestConfig.GetUser("an admin");
-
-            var connectionString = 
-                $"AuthType=OAuth;" +
-                $"Username={admin.Username};" +
-                $"Password={admin.Password};" +
-                $"Url={TestConfig.GetTestUrl()};" +
-                $"AppId=51f81489-12ee-4a9e-aaae-a2591f45987d;" +
-                $"RedirectUri=app://58145B91-0C36-4500-8554-080854F2AC97;" +
-                $"LoginPrompt=Auto";
-
-            return new CrmServiceClient(connectionString);
-        }
+      }
     }
+
+    private static CrmServiceClient GetServiceClient()
+    {
+      var admin = TestConfig.GetUser("an admin");
+
+      var connectionString =
+          $"AuthType=OAuth;" +
+          $"Username={admin.Username};" +
+          $"Password={admin.Password};" +
+          $"Url={TestConfig.GetTestUrl()};" +
+          $"AppId=51f81489-12ee-4a9e-aaae-a2591f45987d;" +
+          $"RedirectUri=app://58145B91-0C36-4500-8554-080854F2AC97;" +
+          $"LoginPrompt=Auto";
+
+      return new CrmServiceClient(connectionString);
+    }
+  }
 }
