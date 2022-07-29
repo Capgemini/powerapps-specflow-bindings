@@ -68,6 +68,7 @@
                 if (result.TryGetValue("statecode", out var statecode) && statecode?.ToString() == "Completed")
                 {
                     solutionInstalled = true;
+                    break;
                 }
                 if (stopwatch.ElapsedMilliseconds > timeout.TotalMilliseconds)
                 {

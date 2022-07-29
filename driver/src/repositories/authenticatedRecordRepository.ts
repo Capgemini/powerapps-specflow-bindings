@@ -34,7 +34,7 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
   }
 
   public updateAccessToken(authToken: string) {
-    this.headers['Authorization'] = `Bearer ${authToken}`;
+    this.headers.Authorization = `Bearer ${authToken}`;
   }
 
   /**
