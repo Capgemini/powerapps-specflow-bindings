@@ -45,7 +45,7 @@
   </Target>
 
   <ItemGroup>
-    <PackageReference Include="Dynamics365.UIAutomation.Api" Version="9.2.21101.119-RW2-Preview" />
+    <PackageReference Include="Dynamics365.UIAutomation.Api" Version="9.2.22023.129-RW2-Preview" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.Build.Tasks.Git" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
