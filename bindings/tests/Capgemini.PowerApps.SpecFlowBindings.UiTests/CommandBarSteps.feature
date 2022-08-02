@@ -16,7 +16,6 @@ Scenario: Assert a command not visible
 Scenario: Select a command
 	When I select the 'Refresh' command
 
-# EasyRepro issue
-@ignore
+@ignore # EasyRepro issue: https://github.com/microsoft/EasyRepro/issues/1087
 Scenario: Select a command under a flyout
 	When I select the 'No Options Available' command under the 'Run Report' flyout 
