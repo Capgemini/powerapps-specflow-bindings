@@ -172,7 +172,7 @@
                     testDriver.InjectOnPage(TestConfig.ApplicationUser != null ? AccessToken : null);
                 }
 
-                if (TestConfig.ApplicationUser != null && DateTime.UtcNow >= accessTokenExpiresOn)
+                if (TestConfig.ApplicationUser != null && (DateTime.UtcNow + TimeSpan.FromMinutes(5)) >= accessTokenExpiresOn)
                 {
                     // Set it in the JS
                     accessToken = GetAccessToken();
