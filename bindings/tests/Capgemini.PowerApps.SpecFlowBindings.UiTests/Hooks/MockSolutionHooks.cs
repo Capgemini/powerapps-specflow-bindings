@@ -27,14 +27,12 @@
         {
             using (var serviceClient = GetServiceClient())
             {
-                if (serviceClient != null && serviceClient.IsReady)
-                {
-                    InstallSolution(serviceClient, SolutionPath, TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(30));
-                }
-                else
+                if (serviceClient == null && !serviceClient.IsReady)
                 {
                     throw serviceClient.LastCrmException;
                 }
+
+                InstallSolution(serviceClient, SolutionPath, TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(30));
             }
         }
 
