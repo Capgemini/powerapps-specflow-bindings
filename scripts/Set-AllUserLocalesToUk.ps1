@@ -3,7 +3,7 @@ Install-Module -Name Microsoft.Xrm.Tooling.CrmConnector.PowerShell -Force -Scope
 Write-Host "Updating user settings to English (United Kingdom)"
 
 # $connectionString = "AuthType=OAuth; Username=$env:username; Password=$env:password; Url=$env:environmentUrl; AppId=51f81489-12ee-4a9e-aaae-a2591f45987d; RedirectUri=app://58145B91-0C36-4500-8554-080854F2AC97; LoginPrompt=Auto";
-$connectionString = "AuthType=ClientSecret; ClientId=$env:clientId; ClientSecret='$env:clientSecret' Url=$env:environmentUrl";
+$connectionString = "AuthType=ClientSecret; ClientId=$env:clientId; ClientSecret=`"$env:clientSecret`"; Url=$env:environmentUrl";
 Write-Host $connectionString
 
 $conn = Get-CrmConnection -ConnectionString $connectionString;
