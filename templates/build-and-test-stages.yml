@@ -25,7 +25,7 @@ stages:
         value: ${{ parameters.environmentDisplayName }} $(Environment.Identifier)
       - name: TestEnvironment.DomainName
         value: ${{ parameters.environmentDomainName }}-$(Environment.Identifier)
-      - group: Dataverse users
+      - group: Cap Dev - CI
     jobs:
       - job: ProvisionEnvironmentJob
         displayName: Provision environment
