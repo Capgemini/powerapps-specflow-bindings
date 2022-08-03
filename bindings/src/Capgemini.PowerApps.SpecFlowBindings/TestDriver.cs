@@ -39,7 +39,7 @@
         {
             var scriptBuilder = new StringBuilder();
             scriptBuilder.AppendLine(File.ReadAllText(this.FilePath));
-            scriptBuilder.AppendLine($@"var top.recordRepository = new {LibraryNamespace}.CurrentUserRecordRepository(Xrm.WebApi.online);
+            scriptBuilder.AppendLine($@"top.recordRepository = new {LibraryNamespace}.CurrentUserRecordRepository(Xrm.WebApi.online);
                    top.metadataRepository = new {LibraryNamespace}.MetadataRepository(Xrm.WebApi.online);
                    top.deepInsertService = new {LibraryNamespace}.DeepInsertService(top.metadataRepository, top.recordRepository);");
 
@@ -55,7 +55,7 @@
                     $"top.dataManager = new {LibraryNamespace}.DataManager(top.recordRepository, top.deepInsertService, [new {LibraryNamespace}.FakerPreprocessor()]);");
             }
 
-            scriptBuilder.AppendLine($"{TestDriverReference} = new {LibraryNamespace}.Driver(dataManager);");
+            scriptBuilder.AppendLine($"{TestDriverReference} = new {LibraryNamespace}.Driver(top.dataManager);");
 
             this.javascriptExecutor.ExecuteScript(scriptBuilder.ToString());
         }
