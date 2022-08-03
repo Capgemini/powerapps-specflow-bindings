@@ -50,6 +50,8 @@
         {
             get
             {
+                var hostSegments = TestConfig.GetTestUrl().Host.Split('.');
+
                 return GetApp()
                     .AcquireTokenForClient(new string[] { $"https://{hostSegments[0]}.api.{hostSegments[1]}.dynamics.com//.default" })
                     .ExecuteAsync()
