@@ -10,7 +10,7 @@ import Record from '../data/record';
  * @extends {Repository}
  */
 export default class AuthenticatedRecordRepository implements RecordRepository {
-  private readonly headers: {[header:string]: string};
+  private readonly headers: { [header: string]: string };
 
   private readonly metadataRepo: MetadataRepository;
 
@@ -24,17 +24,13 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
     this.metadataRepo = metadataRepo;
 
     this.headers = {
+      Authorization: `Bearer ${authToken}`,
       'Content-Type': 'application/json',
     };
-    this.updateAccessToken(authToken);
 
     if (userToImpersonateId) {
       this.headers.CallerObjectId = userToImpersonateId;
     }
-  }
-
-  public updateAccessToken(authToken: string) {
-    this.headers.Authorization = `Bearer ${authToken}`;
   }
 
   /**

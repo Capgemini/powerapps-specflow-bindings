@@ -1,4 +1,4 @@
-namespace Capgemini.PowerApps.SpecFlowBindings
+﻿namespace Capgemini.PowerApps.SpecFlowBindings
 {
     using System;
     using System.Collections.Generic;
@@ -58,14 +58,6 @@ namespace Capgemini.PowerApps.SpecFlowBindings
             scriptBuilder.AppendLine($"{TestDriverReference} = new {LibraryNamespace}.Driver(dataManager);");
 
             this.javascriptExecutor.ExecuteScript(scriptBuilder.ToString());
-        }
-
-        /// <inheritdoc cref="ITestDriver"/>
-        public void UpdateAccessToken(string accessToken)
-        {
-            var script = $"window.appUserRecordRepository.updateAccessToken('{accessToken}')";
-
-            this.javascriptExecutor.ExecuteScript(script);
         }
 
         /// <inheritdoc cref="ITestDriver"/>
