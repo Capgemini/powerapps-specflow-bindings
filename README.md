@@ -63,6 +63,8 @@ browserOptions: # optional - will use default EasyRepro options if not set
   height: 1080
   startMaximized: false
   driversPath: ChromeWebDriver # optional - [Recommended when running tests from Azure DevOps Microsoft-hosted agent](https://docs.microsoft.com/en-us/azure/devops/pipelines/test/continuous-test-selenium?view=azure-devops#decide-how-you-will-deploy-and-test-your-app)
+  additionalCapabilities: # optional - additional capabilities to pass to the WebDriver
+    capabilityName: capabilityValue 
 applicationUser: # optional - populate if creating test data for users other than the current user
   tenantId: SPECFLOW_POWERAPPS_TENANTID optional # mandatory
   clientId: SPECFLOW_POWERAPPS_CLIENTID # mandatory
