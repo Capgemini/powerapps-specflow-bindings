@@ -51,6 +51,18 @@ stages:
             displayName: Set output variables
             name: SetEnvironmentOutputVariables
           - task: PowerShell@2
+            displayName: Sync required users
+            inputs:
+              filePath: '.\scripts\Sync-DataverseUsers.ps1'
+              arguments: >
+                -EnvironmentName $env:BUILDTOOLS_ENVIRONMENTID
+                -ObjectIds @(
+                  "6bc9aff9-6f6e-49ac-96df-d862f20c3d63" <# ado.integration  #>
+                )
+                -TenantId "f6dd1854-a44d-45a5-9537-c809a5d76c74"
+                -ClientId $(Application User Client ID)
+                -ClientSecret $(Application User Client Secret)
+          - task: PowerShell@2
             displayName: Update user settings to English (United Kingdom)
             inputs:
               filePath: '.\scripts\Set-AllUserLocalesToUk.ps1'
