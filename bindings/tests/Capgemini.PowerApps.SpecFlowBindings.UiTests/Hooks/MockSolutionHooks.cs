@@ -1,6 +1,9 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.UiTests.Hooks
 {
     using Microsoft.Xrm.Tooling.Connector;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Reflection;
     using TechTalk.SpecFlow;
@@ -24,12 +27,12 @@
         {
             using (var serviceClient = GetServiceClient())
             {
-                serviceClient.ImportSolutionToCrm(SolutionPath, out var importId);
-
-                if (serviceClient.LastCrmException != null)
+                if (serviceClient == null && !serviceClient.IsReady)
                 {
                     throw serviceClient.LastCrmException;
                 }
+
+                InstallSolution(serviceClient, SolutionPath, TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(30));
             }
         }
 
@@ -37,7 +40,7 @@
         {
             var admin = TestConfig.GetUser("an admin");
 
-            var connectionString = 
+            var connectionString =
                 $"AuthType=OAuth;" +
                 $"Username={admin.Username};" +
                 $"Password={admin.Password};" +
@@ -47,6 +50,32 @@
                 $"LoginPrompt=Auto";
 
             return new CrmServiceClient(connectionString);
+        }
+
+        private static void InstallSolution(CrmServiceClient serviceClient, string solutionPath, TimeSpan timeout, TimeSpan pollingPeriod)
+        {
+            var stopwatch = Stopwatch.StartNew();
+            var asyncOperationId = serviceClient.ImportSolutionToCrmAsync(solutionPath, out var _);
+
+            var solutionInstalled = false;
+            do
+            {
+                System.Threading.Thread.Sleep((int)pollingPeriod.TotalMilliseconds);
+
+                var result = serviceClient.GetEntityDataById("asyncoperation", asyncOperationId, new List<string> { "statecode" });
+                if (result.TryGetValue("statecode", out var statecode) && statecode?.ToString() == "Completed")
+                {
+                    solutionInstalled = true;
+                    break;
+                }
+                if (stopwatch.ElapsedMilliseconds > timeout.TotalMilliseconds)
+                {
+                    throw new TimeoutException($"Solution install timed out after {stopwatch.ElapsedMilliseconds}ms.");
+                }
+
+            } while (!solutionInstalled);
+
+            Console.WriteLine($"Solution install completed in {stopwatch.ElapsedMilliseconds}ms.");
         }
     }
 }

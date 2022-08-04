@@ -17,5 +17,5 @@ Scenario: Apply a search filter
 
 Scenario: Open a record from global search results
 	When I search globally using the filter 'A record configured for global search'
-	When I open a record from global search on the entity 'sb_mockrecord' in the position of '0'
+	And I open a record from global search on the entity 'Mock Records' in the position of '0'
 	Then I am presented with a 'Information' form for the 'sb_mockrecord' entity

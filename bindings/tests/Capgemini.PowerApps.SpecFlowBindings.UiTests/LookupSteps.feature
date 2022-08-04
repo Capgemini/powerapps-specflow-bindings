@@ -24,8 +24,11 @@ Scenario: Switch view in a lookup
 	When I search for 'Some text' in the 'sb_lookup' lookup
 	And I switch to the 'Inactive Secondary Mock Records' view in the lookup
 
-# Selecting lookup entities in EasyRepro currently flaky.
-@ignore
+Scenario: Open advanced lookup
+	When I search for 'Some text' in the 'sb_lookup' lookup
+	And I click to perform an advanced lookup
+
+@ignore # EasyRepro issue: https://github.com/microsoft/EasyRepro/issues/1311
 Scenario: Select a related entity in a lookup
 	When I search for '*' in the 'sb_customer' lookup
 	And I select the related 'Contacts' entity in the lookup

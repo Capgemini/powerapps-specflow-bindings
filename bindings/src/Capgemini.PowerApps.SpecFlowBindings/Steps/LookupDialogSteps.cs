@@ -33,7 +33,7 @@
         [When("I click Add in the lookup dialog")]
         public static void WhenIClickAddInTheLookupDialog()
         {
-            var container = Driver.WaitUntilAvailable(By.CssSelector("div[id=\"lookupDialogContainer\"]"));
+            var container = Driver.WaitUntilAvailable(By.CssSelector("div[id=\"lookupDialogFooterContainer\"]"));
 
             container.FindElement(By.CssSelector("button[data-id*=\"lookupDialogSaveBtn\"]"))
                 .Click();

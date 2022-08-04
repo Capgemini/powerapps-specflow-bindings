@@ -40,16 +40,6 @@
         }
 
         /// <summary>
-        /// Performs an advanced search using the filter attribute and a filter value.
-        /// </summary>
-        /// <param name="filterValue">Attribute filter value.</param>
-        [When("I change the search type using the filter '(.*)'")]
-        public static void WhenIChangeTheSearchType(string filterValue)
-        {
-            XrmApp.GlobalSearch.ChangeSearchType(filterValue);
-        }
-
-        /// <summary>
         /// Open a record from a global search at a certain row.
         /// </summary>
         /// <param name="entityName">Attribute to filter by.</param>

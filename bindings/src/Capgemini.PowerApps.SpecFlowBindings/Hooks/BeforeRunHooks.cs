@@ -7,6 +7,7 @@
     using Capgemini.PowerApps.SpecFlowBindings.Configuration;
     using Capgemini.PowerApps.SpecFlowBindings.Steps;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
+    using Microsoft.Dynamics365.UIAutomation.Browser;
     using TechTalk.SpecFlow;
 
     /// <summary>
@@ -54,10 +55,10 @@
                         userBrowserOptions.Headless = true;
 
                         var webClient = new WebClient(userBrowserOptions);
-                        using (new XrmApp(webClient))
+                        using (var app = new XrmApp(webClient))
                         {
                             var user = TestConfig.Users.First(u => u.Username == username);
-                            LoginSteps.Login(webClient.Browser.Driver, TestConfig.GetTestUrl(), user.Username, user.Password);
+                            app.OnlineLogin.Login(TestConfig.GetTestUrl(), user.Username.ToSecureString(), user.Password.ToSecureString());
                         }
                     }
                     finally
