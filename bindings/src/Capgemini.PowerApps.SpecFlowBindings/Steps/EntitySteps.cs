@@ -17,8 +17,6 @@
     [Binding]
     public class EntitySteps : PowerAppsStepDefiner
     {
-        public static DateTime Value { get; private set; }
-
         /// <summary>
         /// Selects a tab on the form.
         /// </summary>
@@ -525,10 +523,10 @@
                     });
                     break;
                 case "datetime":
-                    XrmApp.Entity.SetValue(new DateTimeControl(fieldName));
+                    XrmApp.Entity.SetValue(new DateTimeControl(fieldName)
                     {
-                        Value = DateTime.Parse(fieldValue, CultureInfo.CurrentCulture);
-                    };
+                        Value = DateTime.Parse(fieldValue, CultureInfo.CurrentCulture),
+                    });
                     break;
                 case "lookup":
                     XrmApp.Entity.SetValue(new LookupItem()
