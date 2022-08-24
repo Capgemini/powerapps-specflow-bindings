@@ -23,7 +23,7 @@
         [When("I add an appointment to the timeline with the subject '(.*)', the description '(.*)', the duration '(.*)', and the location '(.*)'")]
         public static void WhenIAddAnAppointmentToTheTimeline(string subject, string description, string duration, string location)
         {
-            XrmApp.Timeline.AddAppointment(subject, location, duration, description);
+            XrmApp.Timeline.AddAppointment(subject, description, duration, location);
             XrmApp.Timeline.SaveAndCloseAppointment();
         }
 
