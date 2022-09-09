@@ -101,13 +101,17 @@ stages:
       - job: ManualValidationCommentJob
         displayName: Manual validation (comment)
         steps:
-        - task: GitHubComment@0
+        - task: GitHubAppCreateIssueComment@1
+          name: CreateComment
           inputs:
-            gitHubConnection: 'github.com_tdashworth'
-            repositoryName: '$(RepositoryName)'
-            comment: |
+            privateKey: capgemini-microsoft-bot.private-key.pem
+            appId: 236185
+            repoOwner: Capgemini
+            repoName: $(Build.Repository.Name)
+            issueId: $(System.PullRequest.PullRequestId)
+            body: |
               **Manual validation requested**
-              Please perform any checks required on $(BuildTools.EnvironmentUrl) then approve $(BuildUrl).      
+              Please perform any checks required on $(BuildTools.EnvironmentUrl) then approve $(BuildUrl).
       - job: ManualValidationJob
         displayName: Manual validation
         pool: server
@@ -142,3 +146,10 @@ stages:
             inputs:
               authenticationType: PowerPlatformSPN
               PowerPlatformSPN: Dataverse (placeholder)
+          - task: GitHubAppDeleteIssueComment@1
+            inputs:
+              privateKey: capgemini-microsoft-bot.private-key.pem
+              appId: 236185
+              repoOwner: Capgemini
+              repoName: $(Build.Repository.Name)
+              commentId:  $[ stageDependencies.ManualValidation.ManualValidationCommentJob.outputs['CreateComment.CommentId'] ]
