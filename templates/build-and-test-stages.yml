@@ -106,9 +106,7 @@ stages:
           inputs:
             privateKey: capgemini-microsoft-bot.private-key.pem
             appId: 236185
-            repoOwner: Capgemini
-            repoName: $(Build.Repository.Name)
-            issueId: $(System.PullRequest.PullRequestId)
+            repo: $(Build.Repository.Name)
             body: |
               **Manual validation requested**
               Please perform any checks required on $(BuildTools.EnvironmentUrl) then approve $(BuildUrl).
@@ -151,6 +149,5 @@ stages:
             inputs:
               privateKey: capgemini-microsoft-bot.private-key.pem
               appId: 236185
-              repoOwner: Capgemini
-              repoName: $(Build.Repository.Name)
+              repo: $(Build.Repository.Name)
               commentId:  $[ stageDependencies.ManualValidation.ManualValidationCommentJob.outputs['CreateComment.CommentId'] ]
