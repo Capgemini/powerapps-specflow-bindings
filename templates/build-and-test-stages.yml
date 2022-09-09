@@ -147,6 +147,7 @@ stages:
               authenticationType: PowerPlatformSPN
               PowerPlatformSPN: Dataverse (placeholder)
           - task: GitHubAppDeleteIssueComment@1
+            condition: ne(dependencies.ManualValidation.ManualValidationCommentJob.outputs['CreateComment.CommentId'], '')
             inputs:
               privateKey: capgemini-microsoft-bot.private-key.pem
               appId: 236185
