@@ -129,6 +129,7 @@ stages:
     condition: ne(dependencies.ProvisionEnvironment.outputs['ProvisionEnvironmentJob.SetEnvironmentOutputVariables.EnvironmentUrl'], '')
     variables:
       BuildTools.EnvironmentUrl: $[ stageDependencies.ProvisionEnvironment.ProvisionEnvironmentJob.outputs['SetEnvironmentOutputVariables.EnvironmentUrl'] ]
+      CreateComment.CommentId: $[ stageDependencies.ManualValidation.ManualValidationCommentJob.outputs['CreateComment.CommentId'] ]
     jobs:
       - job: DeleteEnvironmentJob
         displayName: Delete environment
@@ -145,9 +146,9 @@ stages:
               authenticationType: PowerPlatformSPN
               PowerPlatformSPN: Dataverse (placeholder)
           - task: GitHubAppDeleteIssueComment@1
-            condition: ne(stageDependencies.ManualValidation.ManualValidationCommentJob.outputs['CreateComment.CommentId'], '')
+            condition: ne(variables['CreateComment.CommentId'], '')
             inputs:
               privateKey: capgemini-microsoft-bot.private-key.pem
               appId: 236185
               repo: $(Build.Repository.Name)
-              commentId:  $[ stageDependencies.ManualValidation.ManualValidationCommentJob.outputs['CreateComment.CommentId'] ]
+              commentId: $(CreateComment.CommentId)
