@@ -124,5 +124,20 @@
             Driver.WaitUntilAvailable(By.XPath(AppElements.Xpath[AppReference.Entity.LookupFieldExistingValue].Replace("[NAME]", lookupName))).Click();
             Driver.WaitForTransaction();
         }
+
+        /// <summary>
+        /// Selects advanced lookup
+        /// </summary>
+        [When(@"I click to perform an advanced lookup")]
+
+        public static void WhenIClickToPerformAnAdvancedLookup()
+
+        {
+            var fieldContainer = Driver.WaitUntilAvailable(By.Name("id-2015"));
+
+            fieldContainer.Click();
+
+            Driver.WaitForTransaction();
+        }
     }
 }
