@@ -125,6 +125,10 @@
             Driver.WaitForTransaction();
         }
 
+        /// <summary>
+        /// Open the advanced lookup dialog for the given lookup field.
+        /// </summary>
+        /// <param name="lookupField">The name of the lookup.</param>
         [When(@"I click to perform an advanced lookup on '(.*)' lookup")]
         public void WhenIClickToPerformAnAdvancedLookup(string lookupField)
         {
