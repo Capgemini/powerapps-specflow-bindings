@@ -124,5 +124,11 @@
             Driver.WaitUntilAvailable(By.XPath(AppElements.Xpath[AppReference.Entity.LookupFieldExistingValue].Replace("[NAME]", lookupName))).Click();
             Driver.WaitForTransaction();
         }
+
+        [When(@"I click to perform an advanced lookup on '(.*)' lookup")]
+        public void WhenIClickToPerformAnAdvancedLookup(string lookupField)
+        {
+            Driver.ClickWhenAvailable(By.CssSelector("button[data-id=\"[NAME].fieldControl-LookupResultsDropdown_[NAME]_advancedLookupBtnContainer\"]".Replace("[NAME]", lookupField)));
+        }
     }
 }
