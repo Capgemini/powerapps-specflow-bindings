@@ -5,7 +5,7 @@ Please first discuss the change you wish to make via an issue before making a ch
 ## Testing 
 
 1. Set up powerapps binding
-2. Application user musy be added with the system admin rights
+2. Application user may be added with the system admin rights
 3. Tests by default is on US datetime format, therefore change it based on your personal location. For example, if you are based in India, set the datetime format to the local time. 
 - This can be done by going to the Power Apps settings > 
 - Select Pernalization Settings > 
@@ -14,7 +14,7 @@ Please first discuss the change you wish to make via an issue before making a ch
 - Click on the Customize button > 
 - Click OK button
 
-NB: Running all tests are not required as the CI build will do these. Test verify any tests you have impacted.
+NB: Running all tests are not required as the CI build will do these. Test and verify only the steps or features you have impacted or made changes to.
 
 ## Pull request process
 
