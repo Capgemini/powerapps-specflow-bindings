@@ -101,13 +101,15 @@ stages:
       - job: ManualValidationCommentJob
         displayName: Manual validation (comment)
         steps:
-        - task: GitHubComment@0
+        - task: GitHubAppCreateIssueComment@1
+          name: CreateComment
           inputs:
-            gitHubConnection: 'github.com_tdashworth'
-            repositoryName: '$(RepositoryName)'
-            comment: |
+            privateKey: capgemini-microsoft-bot.private-key.pem
+            appId: 236185
+            repo: $(Build.Repository.Name)
+            body: |
               **Manual validation requested**
-              Please perform any checks required on $(BuildTools.EnvironmentUrl) then approve $(BuildUrl).      
+              Please perform any checks required on $(BuildTools.EnvironmentUrl) then approve $(BuildUrl).
       - job: ManualValidationJob
         displayName: Manual validation
         pool: server
@@ -127,6 +129,7 @@ stages:
     condition: ne(dependencies.ProvisionEnvironment.outputs['ProvisionEnvironmentJob.SetEnvironmentOutputVariables.EnvironmentUrl'], '')
     variables:
       BuildTools.EnvironmentUrl: $[ stageDependencies.ProvisionEnvironment.ProvisionEnvironmentJob.outputs['SetEnvironmentOutputVariables.EnvironmentUrl'] ]
+      CreateComment.CommentId: $[ stageDependencies.ManualValidation.ManualValidationCommentJob.outputs['CreateComment.CommentId'] ]
     jobs:
       - job: DeleteEnvironmentJob
         displayName: Delete environment
@@ -142,3 +145,10 @@ stages:
             inputs:
               authenticationType: PowerPlatformSPN
               PowerPlatformSPN: Dataverse (placeholder)
+          - task: GitHubAppDeleteIssueComment@1
+            condition: ne(variables['CreateComment.CommentId'], '')
+            inputs:
+              privateKey: capgemini-microsoft-bot.private-key.pem
+              appId: 236185
+              repo: $(Build.Repository.Name)
+              commentId: $(CreateComment.CommentId)
