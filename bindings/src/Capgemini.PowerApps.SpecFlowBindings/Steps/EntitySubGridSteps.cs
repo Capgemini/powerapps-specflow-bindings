@@ -111,7 +111,12 @@
         [Then(@"I can see (exactly|more than|less than) (\d+) records in the '(.*)' subgrid")]
         public static void ThenICanSeeRecordsInTheSubgrid(string compare, int count, string subGridName)
         {
-            var actualCount = XrmApp.Entity.SubGrid.GetSubGridItemsCount(subGridName);
+            //var actualCount = XrmApp.Entity.SubGrid.GetSubGridItemsCount(subGridName);
+            // Temporary until XrmApp.Entity.SubGrid.GetSubGridItemsCount(subGridName) works for a count of 0
+            // https://github.com/microsoft/EasyRepro/issues/1318
+            var actualCount = (long)Driver.ExecuteScript(
+            $"return Xrm.Page.getControl(\"{subGridName}\").getGrid().getTotalRecordCount();");
+
 
             switch (compare)
             {
