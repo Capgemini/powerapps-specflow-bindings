@@ -51,7 +51,7 @@ Other things to note:
 
 - Running all tests are **not** required as the CI/PR build will do these. Test and verify only the steps or features you have impacted or made changes to.
 - The first time you run the test suite, a managed solution will be installed into the environment which takes a couple minutes. If the first test run times out, try again - it was likely due to this. 
-- At times when buiding a solution, it fails and you receive some Build.exe errors or warnings. This prevents you from cancelling the build process as it hangs. You can stop or kill the Build.exe proceess by starting the Task Master and ending the process - you can close the Visual Studio and restart it if this doesn't work. You can also run this code (taskkill /f /im chromedriver.exe) on your terminal. 
+- At times when building a solution, it fails and you receive some MSBuild.exe errors or warnings. This prevents you from cancelling the build process as it hangs. You can stop or kill the MSBuild.exe process by starting the Task Manager and ending the process - you can close the Visual Studio and restart it if this doesn't work. You can also run this code `taskkill /f /im chromedriver.exe` on your terminal. 
 
 ## Pull request process
 
