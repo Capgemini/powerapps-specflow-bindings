@@ -61,4 +61,4 @@ Other things to note:
 1. You may merge the pull request once it meets all of the required checks. If you do not have permision, a reviewer will do it for you
 
 ## Useful Resources
-- [A presentation on the SpecFlowBinding and EasyRepro setup with demo] (https://triciasinclair.com/2020/11/30/using-specflow-and-easyrepro-to-improve-automated-ui-testing/)
+- [A presentation on the SpecFlowBinding and EasyRepro setup with demo](https://triciasinclair.com/2020/11/30/using-specflow-and-easyrepro-to-improve-automated-ui-testing/)
