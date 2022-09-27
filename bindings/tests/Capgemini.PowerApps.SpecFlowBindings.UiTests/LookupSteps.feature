@@ -26,7 +26,7 @@ Scenario: Switch view in a lookup
 
 Scenario: Open advanced lookup
 	When I search for 'Some text' in the 'sb_lookup' lookup
-	And I click to perform an advanced lookup
+	And I click to perform an advanced lookup on 'sb_lookup' lookup
 
 @ignore # EasyRepro issue: https://github.com/microsoft/EasyRepro/issues/1311
 Scenario: Select a related entity in a lookup
