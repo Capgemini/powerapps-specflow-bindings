@@ -1,7 +1,31 @@
 # Contributing
 
 Please first discuss the change you wish to make via an issue before making a change. 
- 
+
+To build this project locally, you will need: 
+- [Visual Studio 2020](https://visualstudio.microsoft.com/vs/)
+- [SpecFlow for Visual Studio 2022](https://marketplace.visualstudio.com/items?itemName=TechTalkSpecFlowTeam.SpecFlowForVisualStudio2022)
+- [.NET Framework 4.6.2 Developer Pack](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net462)
+- [Node and NPM](https://nodejs.org/en/download/)
+
+## Architechture 
+
+This project fundermentally utilises [Selenium](https://www.selenium.dev/) to automate user actions in the browser with the support of [Easy Repro](https://github.com/Microsoft/EasyRepro), which extends Selenium for Model-Driven apps. 
+
+Typically the use of EasyRepro is preferred due to it's backing from Microsoft and the community although when an action isn't working, some temporary custom code will be used until the issue has been resolved. This is also the case in the rare instance that EasyRepro doesn't support a particular action. 
+
+```mermaid
+sequenceDiagram
+Specflow->>Bindings: 1. Maps Given/When/Then scenarios to code
+Bindings->>Easy Repro: 2a. Calls an existing Easy Repro action  
+Bindings-->>Selenium: 2b. Otherwise calls the Selenium API directly
+Easy Repro->>Selenium: 3. Performs common and standard actions
+Selenium->>Browser: 4. Queries the DOM/simulates user actions
+Browser->>Driver: 5. Manages test data
+```
+
+In addition to the Specflow bindings, there is a custom "driver" that wraps the [Model-Driven Client-Side API](https://learn.microsoft.com/en-us/power-apps/developer/model-driven-apps/clientapi/reference) to support test data setup via the Dataverse API. This is written in TypeScript and compiled to JavaScript before being bundled in the DLL. 
+
 ## Testing 
 
 For a PR to be successfully merged, we aim for all tests to pass. Sometimes this isn't possible as the Power Platform changes, our tests aren't always kept up to date. We do require that there are tests for new/changed features and these. 
