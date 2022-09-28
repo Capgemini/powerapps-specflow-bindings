@@ -10,7 +10,7 @@ import Record from '../data/record';
  * @extends {Repository}
  */
 export default class AuthenticatedRecordRepository implements RecordRepository {
-  private readonly headers: {[header:string]: string};
+  private readonly headers: { [header: string]: string };
 
   private readonly metadataRepo: MetadataRepository;
 

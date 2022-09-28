@@ -489,7 +489,7 @@
         [Then("the status of the record is (active|inactive)")]
         public static void ThenTheStatusOfTheRecordIs(string status)
         {
-            XrmApp.Entity.GetFooterStatusValue().Should().BeEquivalentTo(status);
+            XrmApp.Entity.GetFormState().Should().BeEquivalentTo(status);
         }
 
         private static void SetFieldValue(string fieldName, string fieldValue, string fieldType)

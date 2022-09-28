@@ -25,7 +25,7 @@ stages:
         value: ${{ parameters.environmentDisplayName }} $(Environment.Identifier)
       - name: TestEnvironment.DomainName
         value: ${{ parameters.environmentDomainName }}-$(Environment.Identifier)
-      - group: Dataverse users
+      - group: Cap Dev - CI
     jobs:
       - job: ProvisionEnvironmentJob
         displayName: Provision environment
@@ -49,7 +49,28 @@ stages:
               echo "##vso[task.setvariable variable=EnvironmentUrl;isOutput=true]$env:BUILDTOOLS_ENVIRONMENTURL"
               echo "##vso[task.setvariable variable=EnvironmentName;isOutput=true]$env:BUILDTOOLS_ENVIRONMENTID"
             displayName: Set output variables
-            name: SetEnvironmentOutputVariables  
+            name: SetEnvironmentOutputVariables
+          - task: PowerShell@2
+            displayName: Sync required users
+            inputs:
+              filePath: '.\scripts\Sync-DataverseUsers.ps1'
+              arguments: >
+                -EnvironmentName $env:BUILDTOOLS_ENVIRONMENTID
+                -ObjectIds @(
+                  "6bc9aff9-6f6e-49ac-96df-d862f20c3d63" <# ado.integration  #>
+                )
+                -TenantId "f6dd1854-a44d-45a5-9537-c809a5d76c74"
+                -ClientId $(Application User Client ID)
+                -ClientSecret $(Application User Client Secret)
+          - task: PowerShell@2
+            displayName: Update user settings to English (United Kingdom)
+            inputs:
+              filePath: '.\scripts\Set-AllUserLocalesToUk.ps1'
+            env:
+              environmentUrl: $(SetEnvironmentOutputVariables.EnvironmentUrl)
+              clientId: $(Application User Client ID)
+              clientSecret: $(Application User Client Secret)
+              
   - stage: BuildAndTest
     displayName: Build and Test
     dependsOn: ProvisionEnvironment
@@ -80,13 +101,15 @@ stages:
       - job: ManualValidationCommentJob
         displayName: Manual validation (comment)
         steps:
-        - task: GitHubComment@0
+        - task: GitHubAppCreateIssueComment@1
+          name: CreateComment
           inputs:
-            gitHubConnection: 'github.com_tdashworth'
-            repositoryName: '$(RepositoryName)'
-            comment: |
+            privateKey: capgemini-microsoft-bot.private-key.pem
+            appId: 236185
+            repo: $(Build.Repository.Name)
+            body: |
               **Manual validation requested**
-              Please perform any checks required on $(BuildTools.EnvironmentUrl) then approve $(BuildUrl).      
+              Please perform any checks required on $(BuildTools.EnvironmentUrl) then approve $(BuildUrl).
       - job: ManualValidationJob
         displayName: Manual validation
         pool: server
@@ -106,6 +129,7 @@ stages:
     condition: ne(dependencies.ProvisionEnvironment.outputs['ProvisionEnvironmentJob.SetEnvironmentOutputVariables.EnvironmentUrl'], '')
     variables:
       BuildTools.EnvironmentUrl: $[ stageDependencies.ProvisionEnvironment.ProvisionEnvironmentJob.outputs['SetEnvironmentOutputVariables.EnvironmentUrl'] ]
+      CreateComment.CommentId: $[ stageDependencies.ManualValidation.ManualValidationCommentJob.outputs['CreateComment.CommentId'] ]
     jobs:
       - job: DeleteEnvironmentJob
         displayName: Delete environment
@@ -121,3 +145,10 @@ stages:
             inputs:
               authenticationType: PowerPlatformSPN
               PowerPlatformSPN: Dataverse (placeholder)
+          - task: GitHubAppDeleteIssueComment@1
+            condition: ne(variables['CreateComment.CommentId'], '')
+            inputs:
+              privateKey: capgemini-microsoft-bot.private-key.pem
+              appId: 236185
+              repo: $(Build.Repository.Name)
+              commentId: $(CreateComment.CommentId)

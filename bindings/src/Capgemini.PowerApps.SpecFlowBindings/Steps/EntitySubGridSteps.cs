@@ -25,8 +25,8 @@
         [When(@"I click the '(.*)' command on the '(.*)' subgrid")]
         public static void WhenISelectTheCommandOnTheSubgrid(string commandName, string subGridName)
         {
-            Driver.WaitUntilVisible(
-                By.CssSelector($"div#dataSetRoot_{subGridName} button[aria-label=\"{commandName}\"]"));
+            Driver.WaitUntilAvailable(
+                By.XPath(AppElements.Xpath[AppReference.Entity.SubGridContents].Replace("[NAME]", subGridName)));
 
             XrmApp.Entity.SubGrid.ClickCommand(subGridName, commandName);
         }
@@ -111,7 +111,12 @@
         [Then(@"I can see (exactly|more than|less than) (\d+) records in the '(.*)' subgrid")]
         public static void ThenICanSeeRecordsInTheSubgrid(string compare, int count, string subGridName)
         {
-            var actualCount = XrmApp.Entity.SubGrid.GetSubGridItemsCount(subGridName);
+            //var actualCount = XrmApp.Entity.SubGrid.GetSubGridItemsCount(subGridName);
+            // Temporary until XrmApp.Entity.SubGrid.GetSubGridItemsCount(subGridName) works for a count of 0
+            // https://github.com/microsoft/EasyRepro/issues/1318
+            var actualCount = (long)Driver.ExecuteScript(
+            $"return Xrm.Page.getControl(\"{subGridName}\").getGrid().getTotalRecordCount();");
+
 
             switch (compare)
             {
@@ -220,10 +225,13 @@
         [Then(@"I can see the '(.*)' command on the '(.*)' subgrid")]
         public static void ThenICanSeeTheCommandOnTheSubgrid(string commandName, string subGridName)
         {
-            Driver.WaitUntilVisible(
-                By.CssSelector($"div#dataSetRoot_{subGridName} button[aria-label=\"{commandName}\"]"),
-                new TimeSpan(0, 0, 5),
-                $"Could not find the {commandName} command on the {subGridName} subgrid.");
+            Driver
+                .WaitUntilAvailable(By.XPath(AppElements.Xpath[AppReference.Entity.SubGridContents].Replace("[NAME]", subGridName)))
+                .WaitUntilAvailable(By.XPath(AppElements.Xpath[AppReference.Entity.SubGridCommandBar]))
+                .WaitUntilVisible(
+                    By.XPath(AppElements.Xpath[AppReference.Entity.SubGridCommandLabel].Replace("[NAME]", commandName)),
+                    new TimeSpan(0, 0, 5),
+                    $"Could not find the {commandName} command on the {subGridName} subgrid.");
         }
 
         /// <summary>
@@ -234,8 +242,6 @@
         [When(@"I click the '([^']+)' flyout on the '([^']+)' subgrid")]
         public static void WhenIClickTheFlyoutOnTheSubgrid(string flyoutName, string subGridName)
         {
-            Driver.WaitUntilVisible(By.CssSelector($"div#dataSetRoot_{subGridName} li[aria-label=\"{flyoutName}\"]"));
-
             XrmApp.Entity.SubGrid.ClickCommand(subGridName, flyoutName);
         }
 
@@ -247,8 +253,11 @@
         [Then(@"I can not see the '(.*)' command on the '(.*)' subgrid")]
         public static void ThenICanNotSeeTheCommandOnTheSubgrid(string commandName, string subGridName)
         {
-            Driver.WaitUntilVisible(
-                    By.CssSelector($"div#dataSetRoot_{subGridName} button[aria-label=\"{commandName}\"]"),
+            Driver
+                .WaitUntilAvailable(By.XPath(AppElements.Xpath[AppReference.Entity.SubGridContents].Replace("[NAME]", subGridName)))
+                .WaitUntilAvailable(By.XPath(AppElements.Xpath[AppReference.Entity.SubGridCommandBar]))
+                .WaitUntilVisible(
+                    By.XPath(AppElements.Xpath[AppReference.Entity.SubGridCommandLabel].Replace("[NAME]", commandName)),
                     new TimeSpan(0, 0, 5))
                 .Should().BeNull();
         }
@@ -260,10 +269,12 @@
         [Then(@"I can see the '(.*)' command on the flyout of the subgrid")]
         public static void ThenICanSeeTheCommandOnTheFlyoutOfTheSubgrid(string commandName)
         {
-            Driver.WaitUntilVisible(
-                By.CssSelector($"#__flyoutRootNode button[aria-label$='{commandName}']"),
-                new TimeSpan(0, 0, 10),
-                $"Could not find the {commandName} command on the flyout of the subgrid.");
+            Driver
+                .WaitUntilAvailable(By.XPath(AppElements.Xpath[AppReference.Entity.SubGridOverflowContainer]))
+                .WaitUntilVisible(
+                    By.XPath(AppElements.Xpath[AppReference.Entity.SubGridOverflowButton].Replace("[NAME]", commandName)),
+                    new TimeSpan(0, 0, 10),
+                    $"Could not find the {commandName} command on the flyout of the subgrid.");
         }
 
         /// <summary>
@@ -274,10 +285,12 @@
         public static void ThenICanNotSeeTheCommandOnTheFlyoutOfTheSubgrid(string commandName)
         {
             Driver
-                .Invoking(d => d.WaitUntilVisible(
-                    By.CssSelector($"#__flyoutRootNode button[aria-label$=\"{commandName}\"]"),
-                    new TimeSpan(0, 0, 1),
-                    $"Could not find the {commandName} command on the flyout of the subgrid."))
+                .Invoking(d => d
+                    .WaitUntilAvailable(By.XPath(AppElements.Xpath[AppReference.Entity.SubGridOverflowContainer]))
+                    .WaitUntilVisible(
+                        By.XPath(AppElements.Xpath[AppReference.Entity.SubGridOverflowButton].Replace("[NAME]", commandName)),
+                        new TimeSpan(0, 0, 1),
+                        $"Could not find the {commandName} command on the flyout of the subgrid."))
                 .Should()
                 .Throw<Exception>();
         }

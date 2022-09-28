@@ -7,6 +7,8 @@ browserOptions:
   height: 1080
   startMaximized: false
   driversPath: ChromeWebDriver
+  additionalCapabilities:
+    capabilityName: capabilityVaue
 applicationUser:
   tenantId: POWERAPPS_SPECFLOW_BINDINGS_TEST_TENANTID
   clientId: POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTID

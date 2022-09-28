@@ -15,40 +15,6 @@
     public class LoginSteps : PowerAppsStepDefiner
     {
         /// <summary>
-        /// Logs into the given instance with the given credentials.
-        /// </summary>
-        /// <param name="driver">WebDriver used to imitate user actions.</param>
-        /// <param name="orgUrl">The <see cref="Uri"/> of the instance.</param>
-        /// <param name="username">The username of the user.</param>
-        /// <param name="password">The password of the user.</param>
-        public static void Login(IWebDriver driver, Uri orgUrl, string username, string password)
-        {
-            driver.Navigate().GoToUrl(orgUrl);
-            driver.ClickIfVisible(By.Id("otherTile"));
-
-            bool waitForMainPage = WaitForMainPage(driver);
-
-            if (!waitForMainPage)
-            {
-                IWebElement usernameInput = driver.WaitUntilAvailable(By.XPath(Elements.Xpath[Reference.Login.UserId]), 30.Seconds());
-                usernameInput.SendKeys(username);
-                usernameInput.SendKeys(Keys.Enter);
-
-                IWebElement passwordInput = driver.WaitUntilClickable(By.XPath(Elements.Xpath[Reference.Login.LoginPassword]), 30.Seconds());
-                passwordInput.SendKeys(password);
-                passwordInput.Submit();
-
-                var staySignedIn = driver.WaitUntilClickable(By.XPath(Elements.Xpath[Reference.Login.StaySignedIn]), 10.Seconds());
-                if (staySignedIn != null)
-                {
-                    staySignedIn.Click();
-                }
-
-                WaitForMainPage(driver, 30.Seconds());
-            }
-        }
-
-        /// <summary>
         /// Logs in to a given app as a given user.
         /// </summary>
         /// <param name="appName">The name of the app.</param>
@@ -64,12 +30,15 @@
             }
 
             var url = TestConfig.GetTestUrl();
-            Login(Driver, url, user.Username, user.Password);
+
+            XrmApp.OnlineLogin.Login(url, user.Username.ToSecureString(), user.Password.ToSecureString());
 
             if (!url.Query.Contains("appid"))
             {
                 XrmApp.Navigation.OpenApp(appName);
             }
+
+            Driver.WaitForTransaction();
 
             CloseTeachingBubbles();
         }

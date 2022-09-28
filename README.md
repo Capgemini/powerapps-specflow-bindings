@@ -55,6 +55,7 @@ Installing the NuGet package creates a _power-apps-bindings.yml_ file in your pr
 ```yaml
 url: SPECFLOW_POWERAPPS_URL # mandatory
 useProfiles: false # optional - defaults to false if not set
+deleteTestData: true # optional - defaults to true if not set
 browserOptions: # optional - will use default EasyRepro options if not set
   browserType: Chrome
   headless: true
@@ -62,6 +63,8 @@ browserOptions: # optional - will use default EasyRepro options if not set
   height: 1080
   startMaximized: false
   driversPath: ChromeWebDriver # optional - [Recommended when running tests from Azure DevOps Microsoft-hosted agent](https://docs.microsoft.com/en-us/azure/devops/pipelines/test/continuous-test-selenium?view=azure-devops#decide-how-you-will-deploy-and-test-your-app)
+  additionalCapabilities: # optional - additional capabilities to pass to the WebDriver
+    capabilityName: capabilityValue 
 applicationUser: # optional - populate if creating test data for users other than the current user
   tenantId: SPECFLOW_POWERAPPS_TENANTID optional # mandatory
   clientId: SPECFLOW_POWERAPPS_CLIENTID # mandatory
@@ -137,6 +140,8 @@ These bindings look for a corresponding JSON file in a _data_ folder in the root
     └───a record
             with a difference.json
 ```
+
+The deleteTestData property in the power-apps-bindings.yml file can be set to specify whether you want records created via these bindings to be deleted after a scenario has ran. You may wish to override the default value and retain these e.g. to aid in diagnosing failures.
 
 If you are using the binding which creates data as someone other than the current user, you will need the following configuration to be present:
 

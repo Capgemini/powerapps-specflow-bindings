@@ -8,6 +8,7 @@ Background:
 	And I have created 'a record with a subgrid and related records'
 	And I have opened 'the record'
 
+@ignore # EasyRepo issue: https://github.com/microsoft/EasyRepro/issues/1310 
 Scenario: Open record at a given position in a related grid
 	When I open the related 'Secondary Mock Records' tab
 	And I open the record at position '0' in the related grid
