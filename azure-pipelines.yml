@@ -26,7 +26,7 @@ stages:
       - job: PublishJob
         displayName: Publish 
         variables: 
-          SemVer: $[ stageDependencies.BuildAndTest.BuildJob.outputs['OutputSemVerTask.SemVer'] ]
+          SemVer: $[ stageDependencies.BuildAndTest.BuildAndTestJob.outputs['OutputSemVerTask.SemVer'] ]
         steps:
           - checkout: none
           - download: current
