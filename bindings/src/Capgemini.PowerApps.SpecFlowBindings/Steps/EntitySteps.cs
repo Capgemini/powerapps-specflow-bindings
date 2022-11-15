@@ -3,6 +3,7 @@
     using System;
     using System.Globalization;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using FluentAssertions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
@@ -490,6 +491,78 @@
         public static void ThenTheStatusOfTheRecordIs(string status)
         {
             XrmApp.Entity.GetFormState().Should().BeEquivalentTo(status);
+        }
+
+        /// <summary>
+        /// Asserts that auto-number field has value in given format or not. The input format copies those defined by the https://learn.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/create-auto-number-attributes?view=op-9-1#autonumberformat-options.
+        /// </summary>
+        /// <param name="formatToMatch">The format to match with</param>
+        /// <param name="fieldName">The name of the field.</param>
+        /// <param name="fieldLocation">The location of the field.</param>
+        [Then(@"I can see a value with the format '(.*)' in the '(.*)' auto-number (field|header field)")]
+        public void ThenICanSeeAValueWithTheFormatInTheAuto_NumberFieldHeaderField(string formatToMatch, string fieldName, string fieldLocation)
+        {
+            string[] inputFormatElements = formatToMatch.Split('-');
+            var fieldValue = fieldLocation == "field" ? XrmApp.Entity.GetValue(fieldName) : XrmApp.Entity.GetHeaderValue(fieldName);
+            string[] inputValueElements = fieldValue.Split('-');
+            string patternNotMatched = string.Empty;
+            string notAllPatternsExists = string.Empty;
+            int minLength;
+            if (inputFormatElements.Length > 0 && inputValueElements.Length > 0 && inputFormatElements.Length == inputValueElements.Length)
+            {
+                for (int i = 0; i < inputFormatElements.Length; i++)
+                {
+                    switch (inputFormatElements[i])
+                    {
+                        case string _ when inputFormatElements[i].Contains("SEQNUM"):
+                            minLength = int.Parse(Regex.Match(inputFormatElements[i], @"\d+").Value);
+                            Regex regexToMatchSeqNum = new Regex(@"^\d{" + minLength + ",}");
+                            if (!regexToMatchSeqNum.IsMatch(inputValueElements[i]))
+                            {
+                                patternNotMatched += " SEQNUM,";
+                            }
+
+                            break;
+                        case string _ when inputFormatElements[i].Contains("RANDSTRING"):
+                            minLength = int.Parse(Regex.Match(inputFormatElements[i], @"\d+").Value);
+                            Regex regexToMatchRandString = new Regex(@"^[a-zA-Z0-9]{" + minLength + ",}");
+                            if (!regexToMatchRandString.IsMatch(inputValueElements[i]))
+                            {
+                                patternNotMatched += " RANDSTRING,";
+                            }
+
+                            break;
+                        case string _ when inputFormatElements[i].Contains("DATETIMEUTC"):
+                            string dateTimeFormat = inputFormatElements[i].Split(':').GetValue(1).ToString().Trim('}');
+                            try
+                            {
+                                var parsedDate = DateTime.ParseExact(inputValueElements[i], dateTimeFormat, CultureInfo.InvariantCulture);
+                            }
+                            catch (FormatException)
+                            {
+                                patternNotMatched += " DATETIMEUTC,";
+                            }
+
+                            break;
+                        default:
+                            patternNotMatched += (inputValueElements[i] == inputFormatElements[i]) ? null : " Static Characters,";
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                notAllPatternsExists += "The no. of input pattern and that are in auto-number field value does not match.";
+            }
+
+            if (!patternNotMatched.IsEmptyValue())
+            {
+                throw new Exception("The auto-number field value does not match the following pattern/s - " + patternNotMatched.Trim(','));
+            }
+            else if (!notAllPatternsExists.IsEmptyValue())
+            {
+                throw new Exception(notAllPatternsExists);
+            }
         }
 
         private static void SetFieldValue(string fieldName, string fieldValue, string fieldType)

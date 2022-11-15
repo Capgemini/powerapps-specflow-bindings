@@ -190,3 +190,9 @@ Scenario: Assert fields not editable
 	Then I can not edit the following fields
 		| Field             |
 		| createdonbehalfby |
+
+Scenario: Assert if the auto-number field contains value as per the input pattern/format
+	When I enter 'Some text' into the 'sb_name' text field on the form
+	And I save the record
+	Then I can see a value with the format 'SB-{SEQNUM:4}-{RANDSTRING:6}-{DATETIMEUTC:yyyyMMddhhmm}' in the 'sb_autonumberone' auto-number header field
+	And I can see a value with the format '{DATETIMEUTC:yyyyddMM}-{SEQNUM:4}' in the 'sb_autonumbertwo' auto-number field

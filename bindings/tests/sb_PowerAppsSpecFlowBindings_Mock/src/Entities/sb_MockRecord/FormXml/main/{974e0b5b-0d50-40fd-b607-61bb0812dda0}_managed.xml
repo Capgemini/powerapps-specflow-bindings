@@ -28,6 +28,14 @@
                       </cell>
                     </row>
                     <row>
+                      <cell id="{611d8d20-211c-8077-0330-3d381e17ee85}" showlabel="true" locklevel="0">
+                        <labels>
+                          <label description="Auto-number 2" languagecode="1033" />
+                        </labels>
+                        <control id="sb_autonumbertwo" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="sb_autonumbertwo" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
                       <cell id="{ee7e9058-7950-4797-b682-01eeee93f0ab}" locklevel="0">
                         <labels>
                           <label description="Text" languagecode="1033" />
@@ -246,10 +254,11 @@
                 <label description="" languagecode="1033" />
               </labels>
             </cell>
-            <cell id="{6ba2785a-8c2c-4f55-9bce-977862b81864}" showlabel="false">
+            <cell id="{8d465b85-3ba5-758c-d3b0-6575e13ec6e7}" showlabel="true" locklevel="0">
               <labels>
-                <label description="" languagecode="1033" />
+                <label description="Auto-number 1" languagecode="1033" />
               </labels>
+              <control id="header_sb_autonumberone" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="sb_autonumberone" disabled="false" />
             </cell>
             <cell id="{10fc1664-f736-4dbd-a625-953d789d9146}" locklevel="0">
               <labels>
@@ -359,9 +368,6 @@
           </row>
         </rows>
       </footer>
-      <DisplayConditions Order="0" FallbackForm="true">
-        <Everyone />
-      </DisplayConditions>
       <formLibraries>
         <Library name="sb_/js/sb_mockrecord.form.js" libraryUniqueId="{14cfe9ba-3f37-439c-b6e6-28bebb4cc0ad}" />
       </formLibraries>
@@ -372,6 +378,39 @@
           </Handlers>
         </event>
       </events>
+      <Navigation>
+        <NavBar></NavBar>
+        <NavBarAreas>
+          <NavBarArea Id="Info">
+            <Titles>
+              <Title LCID="1033" Text="Common" />
+            </Titles>
+          </NavBarArea>
+          <NavBarArea Id="Sales">
+            <Titles>
+              <Title LCID="1033" Text="Sales" />
+            </Titles>
+          </NavBarArea>
+          <NavBarArea Id="Service">
+            <Titles>
+              <Title LCID="1033" Text="Service" />
+            </Titles>
+          </NavBarArea>
+          <NavBarArea Id="Marketing">
+            <Titles>
+              <Title LCID="1033" Text="Marketing" />
+            </Titles>
+          </NavBarArea>
+          <NavBarArea Id="ProcessCenter">
+            <Titles>
+              <Title LCID="1033" Text="Process Sessions" />
+            </Titles>
+          </NavBarArea>
+        </NavBarAreas>
+      </Navigation>
+      <DisplayConditions Order="0" FallbackForm="true">
+        <Everyone />
+      </DisplayConditions>
     </form>
     <IsCustomizable>1</IsCustomizable>
     <CanBeDeleted>1</CanBeDeleted>
