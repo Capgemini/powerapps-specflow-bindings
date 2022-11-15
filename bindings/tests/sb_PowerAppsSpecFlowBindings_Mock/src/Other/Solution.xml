@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ImportExportXml version="9.1.0.26437" SolutionPackageVersion="9.1" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ImportExportXml version="9.2.22104.192" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SolutionManifest>
     <UniqueName>sb_PowerAppsSpecFlowBindings_Mock</UniqueName>
     <LocalizedNames>
@@ -7,7 +7,7 @@
     </LocalizedNames>
     <Descriptions />
     <Version>1.0.0.2</Version>
-    <Managed>2</Managed>
+    <Managed>1</Managed>
     <Publisher>
       <UniqueName>powerappsspecflowbindings</UniqueName>
       <LocalizedNames>
@@ -87,11 +87,7 @@
       <RootComponent type="29" id="{a35908fe-0fcd-4eb7-826c-405286de4d9d}" behavior="0" />
       <RootComponent type="29" id="{d21a6986-eb11-429c-b4b1-bb747eeb0991}" behavior="0" />
       <RootComponent type="60" id="{50687e45-f839-eb11-a813-000d3a0b97ca}" behavior="0" />
-      <RootComponent type="60" id="{5cdd3da8-0b3a-eb11-a813-000d3a0b97ca}" behavior="0" />
-      <RootComponent type="60" id="{64f94a07-433f-4a64-a290-16238d710ab3}" behavior="0" />
       <RootComponent type="60" id="{6e43bd18-f839-eb11-a813-000d3a0b97ca}" behavior="0" />
-      <RootComponent type="60" id="{974e0b5b-0d50-40fd-b607-61bb0812dda0}" behavior="0" />
-      <RootComponent type="60" id="{e75d54f4-033a-eb11-a813-000d3a0b97ca}" behavior="0" />
       <RootComponent type="61" schemaName="sb_/js/sb_mockrecord.form.js" behavior="0" />
       <RootComponent type="61" schemaName="sb_/js/sb_mockrecord.ribbon.js" behavior="0" />
       <RootComponent type="62" schemaName="sb_MockApp" behavior="0" />
@@ -99,8 +95,8 @@
     </RootComponents>
     <MissingDependencies>
       <MissingDependency>
-        <Required key="0" type="61" schemaName="msdyn_/Images/AppModule_Default_Icon.png" displayName="msdyn_/Images/AppModule_Default_Icon.png" solution="AppModuleWebResources (2.5)" />
-        <Dependent key="1" type="80" schemaName="sb_MockApp" displayName="Mock App" />
+        <Required type="61" schemaName="msdyn_/Images/AppModule_Default_Icon.png" displayName="msdyn_/Images/AppModule_Default_Icon.png" solution="AppModuleWebResources (2.5)" />
+        <Dependent type="80" schemaName="sb_MockApp" displayName="Mock App" />
       </MissingDependency>
     </MissingDependencies>
   </SolutionManifest>
