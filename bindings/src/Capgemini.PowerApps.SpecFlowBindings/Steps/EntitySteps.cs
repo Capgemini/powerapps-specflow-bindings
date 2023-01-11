@@ -463,13 +463,35 @@
         }
 
         /// <summary>
-        /// Asserts that a field is not visible.
+        /// Asserts that a field is visible.
         /// </summary>
         /// <param name="fieldName">The name of the field.</param>
         [Then(@"I can see the '(.*)' field")]
         public static void ThenICanSeeTheField(string fieldName)
         {
             XrmApp.Entity.IsFieldVisible(Driver, fieldName).Should().BeTrue(because: "the field should be visible");
+        }
+
+        /// <summary>
+        /// Assert that fields are visible or not visible.
+        /// </summary>
+        /// <param name="canSee">Whether or not the field is visible.</param>
+        /// <param name="fields">The fields.</param>
+        [Then(@"I (can|can not) see the following fields")]
+        public static void ThenICanSeeTheFields(string canSee, Table fields)
+        {
+            var fieldList = fields.Rows.Select(x => x[0]);
+            for (int i = 0; i < fieldList.Count(); i++)
+            {
+                if (canSee == "can")
+                {
+                    ThenICanSeeTheField(fieldList.ElementAt(i));
+                }
+                else
+                {
+                    ThenICanNotSeeTheField(fieldList.ElementAt(i));
+                }
+            }
         }
 
         /// <summary>
