@@ -31,7 +31,14 @@
 
             var url = TestConfig.GetTestUrl();
 
-            XrmApp.OnlineLogin.Login(url, user.Username.ToSecureString(), user.Password.ToSecureString());
+            if (!string.IsNullOrEmpty(user.OtpToken))
+            {
+                XrmApp.OnlineLogin.Login(url, user.Username.ToSecureString(), user.Password.ToSecureString(), user.OtpToken.ToSecureString());
+            }
+            else
+            {
+                XrmApp.OnlineLogin.Login(url, user.Username.ToSecureString(), user.Password.ToSecureString());
+            }
 
             if (!url.Query.Contains("appid"))
             {
