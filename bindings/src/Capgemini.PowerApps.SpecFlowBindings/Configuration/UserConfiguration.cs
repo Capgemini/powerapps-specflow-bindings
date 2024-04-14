@@ -27,5 +27,11 @@
         /// </summary>
         [YamlMember(Alias = "alias")]
         public string Alias { get; set; }
+
+        /// <summary>
+        /// Gets or sets the OTP token of the user.
+        /// </summary>
+        [YamlMember(Alias = "otptoken")]
+        public string OtpToken { get; set; }
     }
 }

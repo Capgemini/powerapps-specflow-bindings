@@ -22,6 +22,7 @@
         public BrowserOptionsWithProfileSupport()
             : base()
         {
+            this.CookieСontrolsMode = 0;
             this.AdditionalCapabilities = new Dictionary<string, object>();
         }
 
