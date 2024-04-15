@@ -32,6 +32,6 @@
         /// Gets or sets the OTP token of the user.
         /// </summary>
         [YamlMember(Alias = "otptoken")]
-        public string OtpToken { get; set; }
+        public string OtpToken { get => ConfigHelper.GetEnvironmentVariableIfExists(this.OtpToken); set => this.OtpToken = value; }
     }
 }
