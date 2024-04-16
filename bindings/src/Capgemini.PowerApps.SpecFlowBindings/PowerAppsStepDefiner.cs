@@ -223,10 +223,7 @@
                 .ExecuteAndCapture(() =>
                 {
                     xrmApp?.Dispose();
-
-                    // Ensuring that the driver gets disposed. Previously we were left with orphan processes and were unable to clean up profile folders. We cannot rely on xrmApp.Dispose to properly dispose of the web driver.
-                    var driver = client?.Browser?.Driver;
-                    driver?.Dispose();
+                    client?.Dispose();
                 });
 
             xrmApp = null;
