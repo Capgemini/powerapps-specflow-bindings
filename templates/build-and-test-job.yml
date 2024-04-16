@@ -35,19 +35,6 @@ jobs:
         inputs:
           verbose: false
           workingDir: driver
-      - task: SonarCloudPrepare@1
-        displayName: Prepare SonarCloud
-        inputs:
-          SonarCloud: 'SonarCloud'
-          organization: 'capgemini-1'
-          scannerMode: 'MSBuild'
-          projectKey: 'Capgemini_powerapps-specflow-bindings'
-          projectName: 'powerapps-specflow-bindings'
-          projectVersion: '$(GitVersion.SemVer)'
-          extraProperties: |
-            sonar.javascript.lcov.reportPaths=driver/test_results/coverage/lcov/lcov.info
-            sonar.coverage.exclusions=**\*spec.ts, bindings/tests/**/*, bindings/src/Capgemini.PowerApps.SpecFlowBindings.MSBuild/**/*, bindings\src\Capgemini.PowerApps.SpecFlowBindings\Extensions\WebClientExtensions.cs
-            sonar.eslint.reportPaths=$(Build.SourcesDirectory)/driver/test_results/analysis/eslint.json
       - task: VSBuild@1
         displayName: Build solution
         inputs:
@@ -71,12 +58,6 @@ jobs:
         inputs:
           codeCoverageTool: Cobertura
           summaryFileLocation: driver/test_results/coverage/cobertura/cobertura.xml
-      - task: SonarCloudAnalyze@1
-        displayName: Analyse with SonarCloud
-      - task: SonarCloudPublish@1
-        displayName: Publish SonarCloud results
-        inputs:
-          pollingTimeoutSec: '300'
       - task: WhiteSource Bolt@20
         displayName: Detect security and licence issues
         inputs:
