@@ -14,7 +14,6 @@ stages:
   - template: templates/build-and-test-stages.yml      
   - stage: Publish
     displayName: Publish
-    dependsOn: ManualValidation
     jobs:
       - job: PublishJob
         displayName: Publish 
