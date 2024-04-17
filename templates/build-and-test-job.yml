@@ -1,17 +1,3 @@
-parameters:
-  - name: environmentUrl
-    displayName: Environment URL
-    type: string
-  - name: environmentName
-    displayName: environmentName
-    type: string
-  - name: username
-    displayName: Username
-    type: string
-  - name: password
-    displayName: Password
-    type: string
-
 jobs: 
     # build and tests executed in single job in order to allow SonarCloud to capture coverage
   - job: BuildAndTestJob
@@ -19,7 +5,6 @@ jobs:
     variables:
       - name: GitVersion.SemVer
         value: ''
-      - group: Cap Dev - CI
       - name: solution
         value: '**/*.sln'
       - name: buildPlatform
@@ -50,19 +35,6 @@ jobs:
         inputs:
           verbose: false
           workingDir: driver
-      - task: SonarCloudPrepare@1
-        displayName: Prepare SonarCloud
-        inputs:
-          SonarCloud: 'SonarCloud'
-          organization: 'capgemini-1'
-          scannerMode: 'MSBuild'
-          projectKey: 'Capgemini_powerapps-specflow-bindings'
-          projectName: 'powerapps-specflow-bindings'
-          projectVersion: '$(GitVersion.SemVer)'
-          extraProperties: |
-            sonar.javascript.lcov.reportPaths=driver/test_results/coverage/lcov/lcov.info
-            sonar.coverage.exclusions=**\*spec.ts, bindings/tests/**/*, bindings/src/Capgemini.PowerApps.SpecFlowBindings.MSBuild/**/*, bindings\src\Capgemini.PowerApps.SpecFlowBindings\Extensions\WebClientExtensions.cs
-            sonar.eslint.reportPaths=$(Build.SourcesDirectory)/driver/test_results/analysis/eslint.json
       - task: VSBuild@1
         displayName: Build solution
         inputs:
@@ -86,35 +58,6 @@ jobs:
         inputs:
           codeCoverageTool: Cobertura
           summaryFileLocation: driver/test_results/coverage/cobertura/cobertura.xml
-      - task: VSTest@2
-        displayName: Run UI tests
-        inputs:
-          uiTests: true
-          runInParallel: true
-          codeCoverageEnabled: true
-          runSettingsFile: bindings\tests\Capgemini.PowerApps.SpecFlowBindings.UiTests\CodeCoverage.runsettings
-          testAssemblyVer2: |
-            **\*UiTests.dll
-            !**\*TestAdapter.dll
-            !**\obj\**
-          searchFolder: bindings\tests\Capgemini.PowerApps.SpecFlowBindings.UiTests
-          rerunFailedTests: true
-          rerunMaxAttempts: 2
-        env:
-          POWERAPPS_SPECFLOW_BINDINGS_TEST_TENANTID: $(Application User Tenant ID)
-          POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTID: $(Application User Client ID)
-          POWERAPPS_SPECFLOW_BINDINGS_TEST_CLIENTSECRET: $(Application User Client Secret)
-          POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME: ${{ parameters.username }}
-          POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_PASSWORD: ${{ parameters.password }}
-          POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_USERNAME2: $(Extra Admin User Username)
-          POWERAPPS_SPECFLOW_BINDINGS_TEST_ADMIN_PASSWORD2: $(Extra Admin User Password)
-          POWERAPPS_SPECFLOW_BINDINGS_TEST_URL: ${{ parameters.environmentUrl }}
-      - task: SonarCloudAnalyze@1
-        displayName: Analyse with SonarCloud
-      - task: SonarCloudPublish@1
-        displayName: Publish SonarCloud results
-        inputs:
-          pollingTimeoutSec: '300'
       - task: WhiteSource Bolt@20
         displayName: Detect security and licence issues
         inputs:

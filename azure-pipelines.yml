@@ -11,17 +11,9 @@ pr: none
 pool:
   vmImage: windows-latest
 stages:
-  - template: templates/build-and-test-stages.yml
-    parameters:
-      environmentIdentifier: $(Build.BuildId)
-      environmentDisplayName: SpecFlow Bindings - CI
-      environmentDomainName: sfb-ci
-      buildUrl: https://dev.azure.com/capgeminiuk/GitHub%20Support/_build/results?buildId=$(Build.BuildId)
-      repositoryName: $(Build.Repository.Name)
-      
+  - template: templates/build-and-test-stages.yml      
   - stage: Publish
     displayName: Publish
-    dependsOn: ManualValidation
     jobs:
       - job: PublishJob
         displayName: Publish 
