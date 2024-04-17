@@ -9,6 +9,7 @@
     {
         private string username;
         private string password;
+        private string otptoken;
 
         /// <summary>
         /// Gets or sets the username of the user.
@@ -27,5 +28,11 @@
         /// </summary>
         [YamlMember(Alias = "alias")]
         public string Alias { get; set; }
+
+        /// <summary>
+        /// Gets or sets the OTP token of the user.
+        /// </summary>
+        [YamlMember(Alias = "otptoken")]
+        public string OtpToken { get => ConfigHelper.GetEnvironmentVariableIfExists(this.otptoken); set => this.otptoken = value; }
     }
 }

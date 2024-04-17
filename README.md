@@ -73,6 +73,7 @@ users: # mandatory
   - username: SPECFLOW_POWERAPPS_USERNAME_SALESPERSON # mandatory
     password: SPECFLOW_POWERAPPS_PASSWORD_SALESPERSON # optional - populate if this user will be logging in for tests
     alias: a salesperson # mandatory
+    otptoken: SPECFLOW_POWERAPPS_OTPTOKEN_SALESPERSON # optional - populate if this user has MFA enabled
 ```
 
 The URL, driversPath, usernames, passwords, and application user details will be set from environment variable (if found). Otherwise, the value from the config file will be used. The browserOptions node supports anything in the EasyRepro `BrowserOptions` class.
