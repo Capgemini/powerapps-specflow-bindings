@@ -52,21 +52,31 @@
         [AfterScenario(Order = 0)]
         public void ScreenshotFailedScenario()
         {
-            if (this.scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.TestError)
+            if (this.scenarioContext.ScenarioExecutionStatus != ScenarioExecutionStatus.TestError)
             {
-                var rootFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                var screenshotsFolder = Path.Combine(rootFolder, "screenshots");
-                Console.WriteLine(screenshotsFolder);
+                return;
+            }
 
-                if (!Directory.Exists(screenshotsFolder))
-                {
-                    Directory.CreateDirectory(screenshotsFolder);
-                }
+            var rootFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var screenshotsFolder = Path.Combine(rootFolder, "screenshots");
 
-                var fileName = string.Concat(this.scenarioContext.ScenarioInfo.Title.Split(Path.GetInvalidFileNameChars()));
+            if (!Directory.Exists(screenshotsFolder))
+            {
+                Directory.CreateDirectory(screenshotsFolder);
+            }
+
+            var fileName = string.Concat(this.scenarioContext.ScenarioInfo.Title.Split(Path.GetInvalidFileNameChars()));
+
+            try
+            {
                 Client.Browser.TakeWindowScreenShot(
                     Path.Combine(screenshotsFolder, $"{fileName}.jpg"),
                     ScreenshotImageFormat.Jpeg);
+            }
+            catch (WebDriverException ex)
+            {
+                // Don't throw an unhandled exception if the screenshot can't be captured as this will prevent the WebDriver instance from being cleaned up.
+                Console.WriteLine($"Failed to capture screenshot: {ex.Message}.");
             }
         }
     }
