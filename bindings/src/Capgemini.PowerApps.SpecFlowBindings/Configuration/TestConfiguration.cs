@@ -19,6 +19,7 @@
 
         private const string GetUserException = "Unable to retrieve user configuration. Please ensure a user with the given alias exists in the config.";
 
+        [ThreadStatic]
         private static readonly Dictionary<string, UserConfiguration> CurrentUsers = new Dictionary<string, UserConfiguration>();
 
         private readonly object userEnumeratorsLock = new object();
