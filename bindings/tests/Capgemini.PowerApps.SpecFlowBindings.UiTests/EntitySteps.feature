@@ -123,6 +123,18 @@ Scenario: Assert a field is optional
 Scenario: Assert a field is required
 	Then the 'sb_name' field is mandatory
 
+Scenario: Assert a set of fields are optional
+	Then the following fields are optional
+	| fields    |
+	| sb_text   |
+	| sb_number |
+	| sb_yesno  |
+
+Scenario: Assert a set of fields are mandatory
+	Then the following fields are mandatory
+	| fields  |
+	| sb_name |
+
 Scenario Outline: Assert fom notification message
 	Then I can see <type> form notification stating '<text>'
 
