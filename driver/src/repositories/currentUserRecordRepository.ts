@@ -1,5 +1,5 @@
 import RecordRepository from './recordRepository';
-import { Record } from '../data';
+import Record, { recordInternalProperties } from '../data/record';
 import { AssociateRequest } from '../requests';
 
 /**
@@ -51,7 +51,8 @@ export default class CurrentUserRecordRepository implements RecordRepository {
      * @memberof RecordRepository
      */
   public async createRecord(logicalName: string, record: Record): Promise<Xrm.LookupValue> {
-    return this.webApi.createRecord(logicalName, record);
+    return this.webApi.createRecord(logicalName,
+      CurrentUserRecordRepository.exludeInternalPropertiesFromPayload(record));
   }
 
   /**
@@ -63,7 +64,8 @@ export default class CurrentUserRecordRepository implements RecordRepository {
      */
   public async upsertRecord(logicalName: string, record: Record): Promise<Xrm.LookupValue> {
     if (!record['@key']) {
-      return this.webApi.createRecord(logicalName, record);
+      return this.webApi.createRecord(logicalName,
+        CurrentUserRecordRepository.exludeInternalPropertiesFromPayload(record));
     }
 
     const retrieveResponse = await this.webApi.retrieveMultipleRecords(
@@ -78,7 +80,8 @@ export default class CurrentUserRecordRepository implements RecordRepository {
       return { entityType: logicalName, id };
     }
 
-    return this.webApi.createRecord(logicalName, record);
+    return this.webApi.createRecord(logicalName,
+      CurrentUserRecordRepository.exludeInternalPropertiesFromPayload(record));
   }
 
   /**
@@ -107,5 +110,15 @@ export default class CurrentUserRecordRepository implements RecordRepository {
     relationship: string,
   ): Promise<void> {
     this.webApi.execute(new AssociateRequest(primaryRecord, relatedRecords, relationship));
+  }
+
+  private static exludeInternalPropertiesFromPayload(record: Record) {
+    const updatedRecord = { ...record } as Record;
+    Object.keys(record).forEach((key) => {
+      if (recordInternalProperties.includes(key)) {
+        delete updatedRecord[key];
+      }
+    });
+    return updatedRecord;
   }
 }

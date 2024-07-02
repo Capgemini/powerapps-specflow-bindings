@@ -1,6 +1,6 @@
 import MetadataRepository from './metadataRepository';
 import RecordRepository from './recordRepository';
-import Record from '../data/record';
+import Record, { recordInternalProperties } from '../data/record';
 
 /**
  * Repository to handle CRUD operations for entities.
@@ -82,7 +82,9 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
     const entitySet = await this.metadataRepo.getEntitySetForEntity(logicalName);
     const res = await fetch(`api/data/v9.1/${entitySet}`, {
       headers: this.headers,
-      body: JSON.stringify(record),
+      body: JSON.stringify(
+        AuthenticatedRecordRepository.exludeInternalPropertiesFromPayload(record),
+      ),
       method: 'POST',
     });
 
@@ -101,7 +103,8 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
      */
   public async upsertRecord(logicalName: string, record: Record): Promise<Xrm.LookupValue> {
     if (!record['@key']) {
-      return this.createRecord(logicalName, record);
+      return this.createRecord(logicalName,
+        AuthenticatedRecordRepository.exludeInternalPropertiesFromPayload(record));
     }
 
     const retrieveResponse = await this.retrieveMultipleRecords(
@@ -116,7 +119,8 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
       return { entityType: logicalName, id };
     }
 
-    return this.createRecord(logicalName, record);
+    return this.createRecord(logicalName,
+      AuthenticatedRecordRepository.exludeInternalPropertiesFromPayload(record));
   }
 
   /**
@@ -188,5 +192,15 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
       const json = await res.json();
       throw new Error(`${json.error.code}: ${json.error.message}`);
     }
+  }
+
+  private static exludeInternalPropertiesFromPayload(record: Record) {
+    const updatedRecord = { ...record } as Record;
+    Object.keys(record).forEach((key) => {
+      if (recordInternalProperties.includes(key)) {
+        delete updatedRecord[key];
+      }
+    });
+    return updatedRecord;
   }
 }
