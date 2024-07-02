@@ -103,8 +103,7 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
      */
   public async upsertRecord(logicalName: string, record: Record): Promise<Xrm.LookupValue> {
     if (!record['@key']) {
-      return this.createRecord(logicalName,
-        AuthenticatedRecordRepository.exludeInternalPropertiesFromPayload(record));
+      return this.createRecord(logicalName, record);
     }
 
     const retrieveResponse = await this.retrieveMultipleRecords(
@@ -119,8 +118,7 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
       return { entityType: logicalName, id };
     }
 
-    return this.createRecord(logicalName,
-      AuthenticatedRecordRepository.exludeInternalPropertiesFromPayload(record));
+    return this.createRecord(logicalName, record);
   }
 
   /**
@@ -177,7 +175,9 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
     const res = await fetch(`api/data/v9.1/${entitySet}(${id})`,
       {
         headers: this.headers,
-        body: JSON.stringify(record),
+        body: JSON.stringify(
+          AuthenticatedRecordRepository.exludeInternalPropertiesFromPayload(record),
+        ),
         method: 'PATCH',
       });
 

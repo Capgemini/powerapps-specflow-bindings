@@ -75,7 +75,8 @@ export default class CurrentUserRecordRepository implements RecordRepository {
 
     if (retrieveResponse.entities.length > 0) {
       const id = retrieveResponse.entities[0][`${logicalName}id`];
-      await this.webApi.updateRecord(logicalName, id, record);
+      await this.webApi.updateRecord(logicalName, id,
+        CurrentUserRecordRepository.exludeInternalPropertiesFromPayload(record));
 
       return { entityType: logicalName, id };
     }
