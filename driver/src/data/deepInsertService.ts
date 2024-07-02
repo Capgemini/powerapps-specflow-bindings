@@ -40,6 +40,9 @@ export default class DeepInsertService {
     dataByAlias: { [alias: string]: Xrm.LookupValue },
     repository?: RecordRepository,
   ): Promise<DeepInsertResponse> {
+    console.log(`Repository:${JSON.stringify(repository)}`);
+    // eslint-disable-next-line no-debugger
+    debugger;
     const repo = repository ?? this.recordRepository;
     const recordToCreate = record;
     const associatedRecords: { alias?: string, reference: Xrm.LookupValue }[] = [];
@@ -56,6 +59,8 @@ export default class DeepInsertService {
       delete recordToCreate[aliasedRecordNavProp];
       recordToCreate[aliasedRecordNavProp.replace('@alias.bind', '@odata.bind')] = `/${set}(${dataByAlias[alias].id})`;
     }));
+
+    // const odataLookups = DeepInsertService.getOdataLookups(record);
 
     const lookupRecordsByNavProp = DeepInsertService.getManyToOneRecords(recordToCreate);
     const singleNavProps = Object.keys(lookupRecordsByNavProp);
@@ -261,5 +266,14 @@ export default class DeepInsertService {
     metadata: Xrm.Metadata.RelationshipMetadata,
   ): metadata is Xrm.Metadata.OneToNRelationshipMetadata {
     return metadata.RelationshipType === 'OneToManyRelationship';
+  }
+
+  private static getOdataLookups(record: Record) {
+    const oDataLookups: { [navigationProperty: string]: Record[] } = {};
+    const lookupKeys = Object.keys(record).filter((key) => key.indexOf('@odata.bind') > -1);
+    lookupKeys.forEach((key) => {
+      oDataLookups[key] = record[key] as Record[];
+    });
+    return oDataLookups;
   }
 }

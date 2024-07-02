@@ -41,18 +41,19 @@
             scriptBuilder.AppendLine(File.ReadAllText(this.FilePath));
             scriptBuilder.AppendLine($@"top.recordRepository = new {LibraryNamespace}.CurrentUserRecordRepository(Xrm.WebApi.online);
                    top.metadataRepository = new {LibraryNamespace}.MetadataRepository(Xrm.WebApi.online);
-                   top.deepInsertService = new {LibraryNamespace}.DeepInsertService(top.metadataRepository, top.recordRepository);");
+                   top.deepInsertService = new {LibraryNamespace}.DeepInsertService(top.metadataRepository, top.recordRepository);
+                   top.recordService = new {LibraryNamespace}.RecordService(top.metadataRepository, top.recordRepository);");
 
             if (!string.IsNullOrEmpty(authToken))
             {
                 scriptBuilder.AppendLine(
                     $@"top.appUserRecordRepository = new {LibraryNamespace}.AuthenticatedRecordRepository(top.metadataRepository, '{authToken}');
-                       top.dataManager = new {LibraryNamespace}.DataManager(top.recordRepository, top.deepInsertService, [new {LibraryNamespace}.FakerPreprocessor()], top.appUserRecordRepository);");
+                       top.dataManager = new {LibraryNamespace}.DataManager(top.recordRepository, top.deepInsertService, top.recordService, [new {LibraryNamespace}.FakerPreprocessor()], top.appUserRecordRepository);");
             }
             else
             {
                 scriptBuilder.AppendLine(
-                    $"top.dataManager = new {LibraryNamespace}.DataManager(top.recordRepository, top.deepInsertService, [new {LibraryNamespace}.FakerPreprocessor()]);");
+                    $"top.dataManager = new {LibraryNamespace}.DataManager(top.recordRepository, top.deepInsertService, top.recordService, [new {LibraryNamespace}.FakerPreprocessor()]);");
             }
 
             scriptBuilder.AppendLine($"{TestDriverReference} = new {LibraryNamespace}.Driver(top.dataManager);");

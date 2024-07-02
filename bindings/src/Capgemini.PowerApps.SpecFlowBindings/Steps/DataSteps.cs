@@ -1,5 +1,6 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Steps
 {
+    using System;
     using System.Configuration;
     using Capgemini.PowerApps.SpecFlowBindings;
     using Microsoft.Dynamics365.UIAutomation.Browser;

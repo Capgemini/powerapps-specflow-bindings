@@ -160,6 +160,8 @@
             {
                 if (testDriver == null)
                 {
+                    Driver.Manage().Timeouts().PageLoad = new TimeSpan(0, 20, 0);
+                    Driver.Manage().Timeouts().AsynchronousJavaScript = new TimeSpan(0, 20, 0);
                     testDriver = new TestDriver((IJavaScriptExecutor)Driver);
                     testDriver.InjectOnPage(TestConfig.ApplicationUser != null ? AccessToken : null);
                 }
