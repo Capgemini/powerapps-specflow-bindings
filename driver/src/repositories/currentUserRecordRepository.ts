@@ -67,7 +67,7 @@ export default class CurrentUserRecordRepository implements RecordRepository {
   public async updateRecord(logicalName: string, recordId: string,
     record: Record): Promise<Xrm.LookupValue> {
     return this.webApi.updateRecord(logicalName, recordId,
-      CurrentUserRecordRepository.exludeInternalPropertiesFromPayload(record));
+      exludeInternalPropertiesFromPayload(record));
   }
 
   /**
