@@ -56,6 +56,21 @@ export default class CurrentUserRecordRepository implements RecordRepository {
   }
 
   /**
+   * Updates an entity record.
+   *
+   * @param {string} logicalName A logical name for the entity to update.
+   * @param {string} recordId A recordId to update.
+   * @param {Record} record A record to update.
+   * @returns {Xrm.LookupValue} An entity reference to the created entity.
+   * @memberof RecordRepository
+   */
+  public async updateRecord(logicalName: string, recordId: string,
+    record: Record): Promise<Xrm.LookupValue> {
+    return this.webApi.updateRecord(logicalName, recordId,
+      CurrentUserRecordRepository.exludeInternalPropertiesFromPayload(record));
+  }
+
+  /**
      * Upserts an entity record.
      * @param {string} logicalName A logical name for the entity to upsert.
      * @param {Record} record A record to upsert.

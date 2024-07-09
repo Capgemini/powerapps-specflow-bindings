@@ -170,7 +170,7 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
     }));
   }
 
-  private async updateRecord(logicalName: string, id: string, record: any) {
+  public async updateRecord(logicalName: string, id: string, record: any) {
     const entitySet = await this.metadataRepo.getEntitySetForEntity(logicalName);
     const res = await fetch(`api/data/v9.1/${entitySet}(${id})`,
       {

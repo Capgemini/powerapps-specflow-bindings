@@ -74,8 +74,6 @@ export default class DataManager {
         await this.getObjectIdForUser(opts.userToImpersonate),
       );
     }
-    // eslint-disable-next-line no-debugger
-    debugger;
     const res = await this.deepInsertSvc.deepInsert(
       logicalName,
       this.preprocess(record),
@@ -100,8 +98,6 @@ export default class DataManager {
     id: string,
     record: Record,
   ): Promise<Xrm.LookupValue> {
-    // eslint-disable-next-line no-debugger
-    debugger;
     const result = await this.recordService.getExistingRecord(logicalName, id);
     if (record?.['@alias']) {
       this.refsByAlias[record?.['@alias'] as string] = result;

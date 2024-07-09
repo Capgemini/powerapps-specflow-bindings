@@ -16,7 +16,7 @@ export default class DeepInsertService {
   /**
      * Creates an instance of DeepInsertService.
      * @param {MetadataRepository} metadataRepository A metadata repository.
-     * @param {RecordRepository} recordRepository A record repostiroy.
+     * @param {RecordRepository} recordRepository A record repository.
      * @memberof DeepInsertService
      */
   constructor(metadataRepository: MetadataRepository, recordRepository: RecordRepository) {
@@ -40,9 +40,6 @@ export default class DeepInsertService {
     dataByAlias: { [alias: string]: Xrm.LookupValue },
     repository?: RecordRepository,
   ): Promise<DeepInsertResponse> {
-    console.log(`Repository:${JSON.stringify(repository)}`);
-    // eslint-disable-next-line no-debugger
-    debugger;
     const repo = repository ?? this.recordRepository;
     const recordToCreate = record;
     const associatedRecords: { alias?: string, reference: Xrm.LookupValue }[] = [];
@@ -60,8 +57,6 @@ export default class DeepInsertService {
       recordToCreate[aliasedRecordNavProp.replace('@alias.bind', '@odata.bind')] = `/${set}(${dataByAlias[alias].id})`;
     }));
 
-    // const odataLookups = DeepInsertService.getOdataLookups(record);
-
     const lookupRecordsByNavProp = DeepInsertService.getManyToOneRecords(recordToCreate);
     const singleNavProps = Object.keys(lookupRecordsByNavProp);
     await Promise.all(singleNavProps.map(async (singleNavProp) => {
@@ -75,6 +70,10 @@ export default class DeepInsertService {
     Object.keys(collRecordsByNavProp).forEach((collNavProp) => delete recordToCreate[collNavProp]);
 
     const recordToCreateRef = await repo.upsertRecord(logicalName, recordToCreate);
+
+    if (Object.keys(record).includes('@bpf')) {
+      DeepInsertService.setBusinessProcessFlowStage(record, recordToCreateRef.id, repo);
+    }
 
     await Promise.all(Object.keys(collRecordsByNavProp).map(async (collNavProp) => {
       const result = await this.createCollectionRecords(
@@ -118,9 +117,10 @@ export default class DeepInsertService {
     return Object.keys(record)
       .filter(
         (key) => typeof record[key] === 'object'
-        && !Array.isArray(record[key])
-        && record[key] !== null
-        && !(record[key] instanceof Date),
+          && !Array.isArray(record[key])
+          && record[key] !== null
+          && !(record[key] instanceof Date)
+          && (key !== '@bpf'),
       )
       .reduce((prev, curr) => {
         // eslint-disable-next-line no-param-reassign
@@ -268,12 +268,24 @@ export default class DeepInsertService {
     return metadata.RelationshipType === 'OneToManyRelationship';
   }
 
-  private static getOdataLookups(record: Record) {
-    const oDataLookups: { [navigationProperty: string]: Record[] } = {};
-    const lookupKeys = Object.keys(record).filter((key) => key.indexOf('@odata.bind') > -1);
-    lookupKeys.forEach((key) => {
-      oDataLookups[key] = record[key] as Record[];
-    });
-    return oDataLookups;
+  private static async setBusinessProcessFlowStage(
+    record: Record,
+    recordId: string,
+    repo: RecordRepository,
+  ) {
+    const bpfValue = record?.['@bpf'] as any;
+    const bpfKeys = Object.keys(bpfValue);
+    // eslint-disable-next-line no-debugger
+    debugger;
+    if (bpfKeys.includes('@logicalName') && bpfKeys.includes('@activestageid')) {
+      const bpfRecords = await repo.retrieveMultipleRecords(bpfValue?.['@logicalName'], `?$filter=_bpf_${record?.['@logicalName']}id_value eq ${recordId}&$select=businessprocessflowinstanceid`);
+      if (bpfRecords.entities.length === 1) {
+        const bpfEntityId = bpfRecords.entities[0]?.businessprocessflowinstanceid;
+        const bpfRecord: Record = {
+          'activestageid@odata.bind': `/processstages(${bpfValue['@activestageid']})`,
+        };
+        repo.updateRecord(bpfValue?.['@logicalName'], bpfEntityId, bpfRecord);
+      }
+    }
   }
 }

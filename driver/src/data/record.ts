@@ -6,4 +6,7 @@ export const recordInternalProperties = [
   '@alias',
   '@logicalName',
   '@key',
+  '@bpf',
+  '@extends',
+  '@activestageid',
 ];
