@@ -1,6 +1,6 @@
 import MetadataRepository from './metadataRepository';
 import RecordRepository from './recordRepository';
-import Record from '../data/record';
+import Record, { exludeInternalPropertiesFromPayload } from '../data/record';
 
 /**
  * Repository to handle CRUD operations for entities.
@@ -82,7 +82,9 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
     const entitySet = await this.metadataRepo.getEntitySetForEntity(logicalName);
     const res = await fetch(`api/data/v9.1/${entitySet}`, {
       headers: this.headers,
-      body: JSON.stringify(record),
+      body: JSON.stringify(
+        exludeInternalPropertiesFromPayload(record),
+      ),
       method: 'POST',
     });
 
@@ -173,7 +175,9 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
     const res = await fetch(`api/data/v9.1/${entitySet}(${id})`,
       {
         headers: this.headers,
-        body: JSON.stringify(record),
+        body: JSON.stringify(
+          exludeInternalPropertiesFromPayload(record),
+        ),
         method: 'PATCH',
       });
 
