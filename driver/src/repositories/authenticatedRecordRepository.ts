@@ -1,6 +1,6 @@
 import MetadataRepository from './metadataRepository';
 import RecordRepository from './recordRepository';
-import Record, { recordInternalProperties } from '../data/record';
+import Record, { exludeInternalPropertiesFromPayload } from '../data/record';
 
 /**
  * Repository to handle CRUD operations for entities.
@@ -83,7 +83,7 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
     const res = await fetch(`api/data/v9.1/${entitySet}`, {
       headers: this.headers,
       body: JSON.stringify(
-        AuthenticatedRecordRepository.exludeInternalPropertiesFromPayload(record),
+        exludeInternalPropertiesFromPayload(record),
       ),
       method: 'POST',
     });
@@ -176,7 +176,7 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
       {
         headers: this.headers,
         body: JSON.stringify(
-          AuthenticatedRecordRepository.exludeInternalPropertiesFromPayload(record),
+          exludeInternalPropertiesFromPayload(record),
         ),
         method: 'PATCH',
       });
@@ -192,15 +192,5 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
       const json = await res.json();
       throw new Error(`${json.error.code}: ${json.error.message}`);
     }
-  }
-
-  private static exludeInternalPropertiesFromPayload(record: Record) {
-    const updatedRecord = { ...record } as Record;
-    Object.keys(record).forEach((key) => {
-      if (recordInternalProperties.includes(key)) {
-        delete updatedRecord[key];
-      }
-    });
-    return updatedRecord;
   }
 }
