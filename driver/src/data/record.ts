@@ -10,3 +10,13 @@ export const recordInternalProperties = [
   '@extends',
   '@activestageid',
 ];
+
+export function exludeInternalPropertiesFromPayload(record: Record) {
+  const updatedRecord = { ...record } as Record;
+  Object.keys(record).forEach((key) => {
+    if (recordInternalProperties.includes(key)) {
+      delete updatedRecord[key];
+    }
+  });
+  return updatedRecord;
+}

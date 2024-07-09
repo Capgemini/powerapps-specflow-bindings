@@ -1,5 +1,6 @@
 import { CurrentUserRecordRepository, RecordRepository } from '../../src/repositories/index';
 import { AssociateRequest } from '../../src/requests';
+import { exludeInternalPropertiesFromPayload } from '../../src/data/record';
 
 describe('CurrentUserRecordRepository', () => {
   let xrmWebApi: jasmine.SpyObj<Xrm.WebApiOnline>;
@@ -76,7 +77,8 @@ describe('CurrentUserRecordRepository', () => {
       await recordRepository.upsertRecord(logicalName, recordWithkey);
 
       expect(xrmWebApi.updateRecord)
-        .toHaveBeenCalledWith(logicalName, matchedRecordId, recordWithkey);
+        .toHaveBeenCalledWith(logicalName, matchedRecordId,
+          exludeInternalPropertiesFromPayload(recordWithkey));
     });
 
     it('performs a create when no match is found on @key', async () => {
@@ -85,7 +87,8 @@ describe('CurrentUserRecordRepository', () => {
 
       await recordRepository.upsertRecord(logicalName, recordWithkey);
 
-      expect(xrmWebApi.createRecord).toHaveBeenCalledWith(logicalName, recordWithkey);
+      expect(xrmWebApi.createRecord).toHaveBeenCalledWith(logicalName,
+        exludeInternalPropertiesFromPayload(recordWithkey));
     });
 
     it('performs a create when no @key is specified', async () => {
@@ -93,7 +96,8 @@ describe('CurrentUserRecordRepository', () => {
       const recordWithoutKey = {};
       await recordRepository.upsertRecord(logicalName, recordWithoutKey);
 
-      expect(xrmWebApi.createRecord).toHaveBeenCalledWith(logicalName, recordWithoutKey);
+      expect(xrmWebApi.createRecord).toHaveBeenCalledWith(logicalName,
+        exludeInternalPropertiesFromPayload(recordWithoutKey));
     });
   });
 
