@@ -19,7 +19,8 @@
 
         private const string GetUserException = "Unable to retrieve user configuration. Please ensure a user with the given alias exists in the config.";
 
-        private static readonly Dictionary<string, UserConfiguration> CurrentUsers = new Dictionary<string, UserConfiguration>();
+        [ThreadStatic]
+        private static Dictionary<string, UserConfiguration> currentUsers;
 
         private readonly object userEnumeratorsLock = new object();
         private Dictionary<string, IEnumerator<UserConfiguration>> userEnumerators;
@@ -75,6 +76,19 @@
         [YamlMember(Alias = "applicationUser")]
         public ClientCredentials ApplicationUser { get; set; }
 
+        private Dictionary<string, UserConfiguration> CurrentUsers
+        {
+            get
+            {
+                if (currentUsers == null)
+                {
+                    currentUsers = new Dictionary<string, UserConfiguration>();
+                }
+
+                return currentUsers;
+            }
+        }
+
         [YamlIgnore]
         private Dictionary<string, IEnumerator<UserConfiguration>> UserEnumerators
         {
@@ -114,9 +128,9 @@
         /// <returns>The user configuration.</returns>
         public UserConfiguration GetUser(string userAlias, bool useCurrentUser = true)
         {
-            if (useCurrentUser && CurrentUsers.ContainsKey(userAlias))
+            if (useCurrentUser && this.CurrentUsers.ContainsKey(userAlias))
             {
-                return CurrentUsers[userAlias];
+                return this.CurrentUsers[userAlias];
             }
 
             try
@@ -131,13 +145,13 @@
                         aliasEnumerator.MoveNext();
                     }
 
-                    if (CurrentUsers.ContainsKey(userAlias))
+                    if (this.CurrentUsers.ContainsKey(userAlias))
                     {
-                        CurrentUsers[userAlias] = aliasEnumerator.Current;
+                        this.CurrentUsers[userAlias] = aliasEnumerator.Current;
                     }
                     else
                     {
-                        CurrentUsers.Add(userAlias, aliasEnumerator.Current);
+                        this.CurrentUsers.Add(userAlias, aliasEnumerator.Current);
                     }
                 }
             }
@@ -146,7 +160,7 @@
                 throw new ConfigurationErrorsException($"{GetUserException} User: {userAlias}", ex);
             }
 
-            return CurrentUsers[userAlias];
+            return this.CurrentUsers[userAlias];
         }
 
         /// <summary>
@@ -154,7 +168,7 @@
         /// </summary>
         internal void Flush()
         {
-            CurrentUsers.Clear();
+            this.CurrentUsers.Clear();
         }
 
         private IEnumerator<UserConfiguration> GetUserEnumerator(string alias)
