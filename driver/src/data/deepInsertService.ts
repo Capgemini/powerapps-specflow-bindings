@@ -275,8 +275,6 @@ export default class DeepInsertService {
   ) {
     const bpfValue = record?.['@bpf'] as any;
     const bpfKeys = Object.keys(bpfValue);
-    // eslint-disable-next-line no-debugger
-    debugger;
     if (bpfKeys.includes('@logicalName') && bpfKeys.includes('@activestageid')) {
       const bpfRecords = await repo.retrieveMultipleRecords(bpfValue?.['@logicalName'], `?$filter=_bpf_${record?.['@logicalName']}id_value eq ${recordId}&$select=businessprocessflowinstanceid`);
       if (bpfRecords.entities.length === 1) {

@@ -15,6 +15,8 @@ import RecordService from './recordService';
 export default class DataManager {
   public readonly refs: Xrm.LookupValue[];
 
+  public readonly preservedRefs: Xrm.LookupValue[];
+
   public readonly refsByAlias: { [alias: string]: Xrm.LookupValue };
 
   private readonly currentUserRecordRepo: CurrentUserRecordRepository;
@@ -49,6 +51,7 @@ export default class DataManager {
     this.recordService = recordService;
 
     this.refs = [];
+    this.preservedRefs = [];
     this.refsByAlias = {};
   }
 
@@ -104,6 +107,7 @@ export default class DataManager {
     }
 
     this.refs.push(result);
+    this.preservedRefs.push(result);
     return result;
   }
 
@@ -126,7 +130,8 @@ export default class DataManager {
   public async cleanup(): Promise<(Xrm.LookupValue | void)[]> {
     const repo = this.appUserRecordRepo || this.currentUserRecordRepo;
 
-    const deletePromises = this.refs.map(async (record) => {
+    const cleanupRefs = this.refs.filter((x) => !this.preservedRefs.includes(x));
+    const deletePromises = cleanupRefs.map(async (record) => {
       let reference;
       let retry = 0;
       while (retry < 3) {

@@ -29,14 +29,11 @@ export default class Driver {
   public async loadTestData(json: string): Promise<Xrm.LookupValue> {
     const testRecord = JSON.parse(json) as TestRecord;
     const logicalName = testRecord['@logicalName'];
-    const recordId = testRecord?.['@id'];
+    const recordId = testRecord?.['@key'];
 
     if (recordId) {
-      console.log('Getting data.');
       return this.dataManager.getData(logicalName, recordId, testRecord);
     }
-
-    console.log('Creating data');
     return this.dataManager.createData(logicalName, testRecord);
   }
 
