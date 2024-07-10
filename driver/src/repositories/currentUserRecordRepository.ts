@@ -1,5 +1,5 @@
 import RecordRepository from './recordRepository';
-import { Record } from '../data';
+import Record, { exludeInternalPropertiesFromPayload } from '../data/record';
 import { AssociateRequest } from '../requests';
 
 /**
@@ -51,7 +51,23 @@ export default class CurrentUserRecordRepository implements RecordRepository {
      * @memberof RecordRepository
      */
   public async createRecord(logicalName: string, record: Record): Promise<Xrm.LookupValue> {
-    return this.webApi.createRecord(logicalName, record);
+    return this.webApi.createRecord(logicalName,
+      exludeInternalPropertiesFromPayload(record));
+  }
+
+  /**
+   * Updates an entity record.
+   *
+   * @param {string} logicalName A logical name for the entity to update.
+   * @param {string} recordId A recordId to update.
+   * @param {Record} record A record to update.
+   * @returns {Xrm.LookupValue} An entity reference to the created entity.
+   * @memberof RecordRepository
+   */
+  public async updateRecord(logicalName: string, recordId: string,
+    record: Record): Promise<Xrm.LookupValue> {
+    return this.webApi.updateRecord(logicalName, recordId,
+      exludeInternalPropertiesFromPayload(record));
   }
 
   /**
@@ -63,7 +79,8 @@ export default class CurrentUserRecordRepository implements RecordRepository {
      */
   public async upsertRecord(logicalName: string, record: Record): Promise<Xrm.LookupValue> {
     if (!record['@key']) {
-      return this.webApi.createRecord(logicalName, record);
+      return this.webApi.createRecord(logicalName,
+        exludeInternalPropertiesFromPayload(record));
     }
 
     const retrieveResponse = await this.webApi.retrieveMultipleRecords(
@@ -73,12 +90,14 @@ export default class CurrentUserRecordRepository implements RecordRepository {
 
     if (retrieveResponse.entities.length > 0) {
       const id = retrieveResponse.entities[0][`${logicalName}id`];
-      await this.webApi.updateRecord(logicalName, id, record);
+      await this.webApi.updateRecord(logicalName, id,
+        exludeInternalPropertiesFromPayload(record));
 
       return { entityType: logicalName, id };
     }
 
-    return this.webApi.createRecord(logicalName, record);
+    return this.webApi.createRecord(logicalName,
+      exludeInternalPropertiesFromPayload(record));
   }
 
   /**

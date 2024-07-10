@@ -1,5 +1,6 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Steps
 {
+    using System;
     using System.Configuration;
     using Capgemini.PowerApps.SpecFlowBindings;
     using Microsoft.Dynamics365.UIAutomation.Browser;
@@ -29,6 +30,7 @@
         /// </summary>
         /// <param name="fileName">The name of the file containing the test record.</param>
         [Given(@"I have created '(.*)'")]
+        [Given(@"'(.*)' exists")]
         public static void GivenIHaveCreated(string fileName)
         {
             TestDriver.LoadTestData(TestDataRepository.GetTestData(fileName));

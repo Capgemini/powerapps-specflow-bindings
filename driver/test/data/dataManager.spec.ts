@@ -1,10 +1,11 @@
-import { DataManager, DeepInsertService } from '../../src/data';
+import { DataManager, DeepInsertService, RecordService } from '../../src/data';
 import { AuthenticatedRecordRepository, CurrentUserRecordRepository } from '../../src/repositories';
 
 describe('TestDriver', () => {
   let currentUserRecordRepo: jasmine.SpyObj<CurrentUserRecordRepository>;
   let appUserRecordRepo: jasmine.SpyObj<AuthenticatedRecordRepository>;
   let deepInsertService: jasmine.SpyObj<DeepInsertService>;
+  let recordService: jasmine.SpyObj<RecordService>;
   let dataManager: DataManager;
 
   beforeEach(() => {
@@ -15,7 +16,12 @@ describe('TestDriver', () => {
       'AuthenticatedRecordRepository', ['createRecord', 'deleteRecord', 'setImpersonatedUserId'],
     );
     deepInsertService = jasmine.createSpyObj<DeepInsertService>('DeepInsertService', ['deepInsert']);
-    dataManager = new DataManager(currentUserRecordRepo, deepInsertService, [], appUserRecordRepo);
+    recordService = jasmine.createSpyObj<RecordService>('RecordService', ['getExistingRecord']);
+    dataManager = new DataManager(currentUserRecordRepo,
+      deepInsertService,
+      recordService,
+      [],
+      appUserRecordRepo);
   });
 
   describe('.createData(record)', () => {
@@ -119,7 +125,7 @@ describe('TestDriver', () => {
     });
 
     it('uses the current user repository if no app user repository is set', async () => {
-      const dm = new DataManager(currentUserRecordRepo, deepInsertService);
+      const dm = new DataManager(currentUserRecordRepo, deepInsertService, recordService);
       const mockDeepInsertResponse = Promise.resolve(
         {
           associatedRecords: [{ reference: associatedRecord, alias: associatedRecordAlias }],
