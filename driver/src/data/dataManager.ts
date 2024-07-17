@@ -22,8 +22,6 @@ export default class DataManager {
 
   private readonly deepInsertSvc: DeepInsertService;
 
-  private readonly recordService: RecordService;
-
   private readonly preprocessors?: Preprocessor[];
 
   /**
@@ -71,6 +69,7 @@ export default class DataManager {
         await this.getObjectIdForUser(opts.userToImpersonate),
       );
     }
+
     const res = await this.deepInsertSvc.deepInsert(
       logicalName,
       this.preprocess(record),
