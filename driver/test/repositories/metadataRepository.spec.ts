@@ -25,17 +25,6 @@ describe('MetadataRepository', () => {
     });
   });
 
-  describe('getPrimaryColumnName(logicalName)', () => {
-    it('returns entity primary column name', () => {
-      const entityLogicalName = 'account';
-      const mockResponse = { value: [{ PrimaryNameAttribute: 'name' }] };
-      fetchMock.mock('*', { body: mockResponse, sendAsJson: true });
-
-      expectAsync(metadataRepo.getPrimaryColumnName(entityLogicalName))
-        .toBeResolvedTo('name');
-    });
-  });
-
   describe('getTargetsForLookupProperty(logicalName, navigationProperty)', () => {
     const entityLogicalName = 'contact';
     const targetEntityName = 'account';

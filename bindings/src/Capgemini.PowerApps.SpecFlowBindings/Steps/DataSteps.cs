@@ -30,7 +30,6 @@
         /// </summary>
         /// <param name="fileName">The name of the file containing the test record.</param>
         [Given(@"I have created '(.*)'")]
-        [Given(@"'(.*)' exists")]
         public static void GivenIHaveCreated(string fileName)
         {
             TestDriver.LoadTestData(TestDataRepository.GetTestData(fileName));

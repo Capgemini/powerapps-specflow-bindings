@@ -4,7 +4,6 @@ import DeepInsertService from './deepInsertService';
 import Preprocessor from './preprocessor';
 import Record from './record';
 import { CurrentUserRecordRepository } from '../repositories';
-import RecordService from './recordService';
 
 /**
  * Manages the creation and cleanup of data.
@@ -14,8 +13,6 @@ import RecordService from './recordService';
  */
 export default class DataManager {
   public readonly refs: Xrm.LookupValue[];
-
-  public readonly preservedRefs: Xrm.LookupValue[];
 
   public readonly refsByAlias: { [alias: string]: Xrm.LookupValue };
 
@@ -40,7 +37,6 @@ export default class DataManager {
   constructor(
     currentUserRecordRepo: CurrentUserRecordRepository,
     deepInsertService: DeepInsertService,
-    recordService: RecordService,
     preprocessors?: Preprocessor[],
     appUserRecordRepo?: AuthenticatedRecordRepository,
   ) {
@@ -48,10 +44,8 @@ export default class DataManager {
     this.deepInsertSvc = deepInsertService;
     this.appUserRecordRepo = appUserRecordRepo;
     this.preprocessors = preprocessors;
-    this.recordService = recordService;
 
     this.refs = [];
-    this.preservedRefs = [];
     this.refsByAlias = {};
   }
 
@@ -96,21 +90,6 @@ export default class DataManager {
     return res.record.reference;
   }
 
-  public async getData(
-    logicalName: string,
-    id: string,
-    record: Record,
-  ): Promise<Xrm.LookupValue> {
-    const result = await this.recordService.getExistingRecord(logicalName, id);
-    if (record?.['@alias']) {
-      this.refsByAlias[record?.['@alias'] as string] = result;
-    }
-
-    this.refs.push(result);
-    this.preservedRefs.push(result);
-    return result;
-  }
-
   private async getObjectIdForUser(username: string): Promise<string> {
     const res = await this.currentUserRecordRepo.retrieveMultipleRecords('systemuser', `?$filter=internalemailaddress eq '${username}'&$select=azureactivedirectoryobjectid`);
 
@@ -130,8 +109,7 @@ export default class DataManager {
   public async cleanup(): Promise<(Xrm.LookupValue | void)[]> {
     const repo = this.appUserRecordRepo || this.currentUserRecordRepo;
 
-    const cleanupRefs = this.refs.filter((x) => !this.preservedRefs.includes(x));
-    const deletePromises = cleanupRefs.map(async (record) => {
+    const deletePromises = this.refs.map(async (record) => {
       let reference;
       let retry = 0;
       while (retry < 3) {

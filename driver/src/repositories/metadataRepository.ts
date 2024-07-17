@@ -33,24 +33,6 @@ export default class MetadataRepository {
   }
 
   /**
-   * Gets the Primary Column Name for an entity.
-   *
-   * @param {string} logicalName An entity to retrieve the entity set for.
-   * @returns {Promise<string>} primary column name.
-   * @memberof MetadataRepository
-   */
-  public async getPrimaryColumnName(logicalName: string): Promise<string> {
-    const response = await fetch(
-      'api/data/v9.1/'
-            + `${MetadataRepository.EntityMetadataSet}?$filter=LogicalName eq '${logicalName}'&$select=PrimaryNameAttribute`,
-      { cache: 'force-cache' },
-    );
-    const result = await response.json();
-
-    return result.value[0].PrimaryNameAttribute as string;
-  }
-
-  /**
      * Gets the related entity for a navigation property.
      *
      * @param {string} logicalName The name of the entity containing the navigation property.
