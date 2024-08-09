@@ -209,6 +209,25 @@ When using faker syntax, you must also annotate number or date fields using `@fa
 
 You can also dynamically set lookups by alias using `<lookup>@alias.bind` (this is limited to aliased records in other files - not the current file).
 
+#### Record in specific Business Process Flow stage
+In case you need a record in specific BPF (Business Process Flow) stage, you can specify '@bpf' parameter in your data file which needs a logical name of target BPF and an id of stage. Example:
+
+```json
+{
+  "@extends":  "../an opportunity",
+  "@logicalName": "talxis_opportunityheader",
+  "@alias": "the opportunity in won stage",
+  "@bpf": {
+    "@logicalName": "talxis_opportunitybusinessprocessflow",
+    "@activestageid": "b573544e-8c04-4b6d-ac3d-84d810d92ac1"
+  }
+}
+```
+You can use WebApi to get the stageid you need where _processid_value is equal to id of your BPF, like this:
+
+`await Xrm.WebApi.retrieveMultipleRecords("processstage", "?$filter=_processid_value eq BA1AF566-5105-4E24-8B75-0A7F01A24079");`
+
+
 ## Contributing
 
 Please refer to the [Contributing](./CONTRIBUTING.md) guide.
