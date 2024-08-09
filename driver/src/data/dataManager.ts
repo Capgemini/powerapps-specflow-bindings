@@ -25,13 +25,13 @@ export default class DataManager {
   private readonly preprocessors?: Preprocessor[];
 
   /**
-     * Creates an instance of DataManager.
-     * @param {RecordRepository} currentUserRecordRepo A record repository.
-     * @param {DeepInsertService} deepInsertService A deep insert parser.
-     * @param {Preprocessor} preprocessors Preprocessors that modify test data before creation.
-     * @param {AuthenticatedRecordRepository} appUserRecordRepo An app user record repository
-     * @memberof DataManager
-     */
+       * Creates an instance of DataManager.
+       * @param {RecordRepository} currentUserRecordRepo A record repository.
+       * @param {DeepInsertService} deepInsertService A deep insert parser.
+       * @param {Preprocessor} preprocessors Preprocessors that modify test data before creation.
+       * @param {AuthenticatedRecordRepository} appUserRecordRepo An app user record repository
+       * @memberof DataManager
+       */
   constructor(
     currentUserRecordRepo: CurrentUserRecordRepository,
     deepInsertService: DeepInsertService,
@@ -48,14 +48,14 @@ export default class DataManager {
   }
 
   /**
-     * Deep inserts a record for use in a test.
-     *
-     * @param {string} logicalName the logical name of the root entity.
-     * @param {Record} record The record to deep insert.
-     * @param {CreateOptions} opts options for creating the data.
-     * @returns {Promise<Xrm.LookupValue>} An entity reference to the root record.
-     * @memberof DataManager
-     */
+       * Deep inserts a record for use in a test.
+       *
+       * @param {string} logicalName the logical name of the root entity.
+       * @param {Record} record The record to deep insert.
+       * @param {CreateOptions} opts options for creating the data.
+       * @returns {Promise<Xrm.LookupValue>} An entity reference to the root record.
+       * @memberof DataManager
+       */
   public async createData(
     logicalName: string,
     record: Record,
@@ -100,11 +100,11 @@ export default class DataManager {
   }
 
   /**
-     * Performs cleanup by deleting all records created via the TestDataManager.
-     * @param authToken An optional auth token to use when deleting test data.
-     * @returns {Promise<void>}
-     * @memberof DataManager
-     */
+       * Performs cleanup by deleting all records created via the TestDataManager.
+       * @param authToken An optional auth token to use when deleting test data.
+       * @returns {Promise<void>}
+       * @memberof DataManager
+       */
   public async cleanup(): Promise<(Xrm.LookupValue | void)[]> {
     const repo = this.appUserRecordRepo || this.currentUserRecordRepo;
 

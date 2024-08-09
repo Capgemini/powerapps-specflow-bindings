@@ -16,7 +16,7 @@ export default class DeepInsertService {
   /**
      * Creates an instance of DeepInsertService.
      * @param {MetadataRepository} metadataRepository A metadata repository.
-     * @param {RecordRepository} recordRepository A record repostiroy.
+     * @param {RecordRepository} recordRepository A record repository.
      * @memberof DeepInsertService
      */
   constructor(metadataRepository: MetadataRepository, recordRepository: RecordRepository) {
@@ -71,6 +71,10 @@ export default class DeepInsertService {
 
     const recordToCreateRef = await repo.upsertRecord(logicalName, recordToCreate);
 
+    if (Object.keys(record).includes('@bpf')) {
+      DeepInsertService.setBusinessProcessFlowStage(record, recordToCreateRef.id, repo);
+    }
+
     await Promise.all(Object.keys(collRecordsByNavProp).map(async (collNavProp) => {
       const result = await this.createCollectionRecords(
         logicalName, recordToCreateRef, collRecordsByNavProp, collNavProp, dataByAlias, repo,
@@ -113,9 +117,10 @@ export default class DeepInsertService {
     return Object.keys(record)
       .filter(
         (key) => typeof record[key] === 'object'
-        && !Array.isArray(record[key])
-        && record[key] !== null
-        && !(record[key] instanceof Date),
+          && !Array.isArray(record[key])
+          && record[key] !== null
+          && !(record[key] instanceof Date)
+          && (key !== '@bpf'),
       )
       .reduce((prev, curr) => {
         // eslint-disable-next-line no-param-reassign
@@ -261,5 +266,24 @@ export default class DeepInsertService {
     metadata: Xrm.Metadata.RelationshipMetadata,
   ): metadata is Xrm.Metadata.OneToNRelationshipMetadata {
     return metadata.RelationshipType === 'OneToManyRelationship';
+  }
+
+  private static async setBusinessProcessFlowStage(
+    record: Record,
+    recordId: string,
+    repo: RecordRepository,
+  ) {
+    const bpfValue = record?.['@bpf'] as any;
+    const bpfKeys = Object.keys(bpfValue);
+    if (bpfKeys.includes('@logicalName') && bpfKeys.includes('@activestageid')) {
+      const bpfRecords = await repo.retrieveMultipleRecords(bpfValue?.['@logicalName'], `?$filter=_bpf_${record?.['@logicalName']}id_value eq ${recordId}&$select=businessprocessflowinstanceid`);
+      if (bpfRecords.entities.length === 1) {
+        const bpfEntityId = bpfRecords.entities[0]?.businessprocessflowinstanceid;
+        const bpfRecord: Record = {
+          'activestageid@odata.bind': `/processstages(${bpfValue['@activestageid']})`,
+        };
+        repo.updateRecord(bpfValue?.['@logicalName'], bpfEntityId, bpfRecord);
+      }
+    }
   }
 }
