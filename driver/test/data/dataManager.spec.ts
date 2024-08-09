@@ -15,6 +15,10 @@ describe('TestDriver', () => {
       'AuthenticatedRecordRepository', ['createRecord', 'deleteRecord', 'setImpersonatedUserId'],
     );
     deepInsertService = jasmine.createSpyObj<DeepInsertService>('DeepInsertService', ['deepInsert']);
+    dataManager = new DataManager(currentUserRecordRepo,
+      deepInsertService,
+      [],
+      appUserRecordRepo);
   });
 
   describe('.createData(record)', () => {
