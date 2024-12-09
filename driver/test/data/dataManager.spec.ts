@@ -32,10 +32,10 @@ describe('TestDriver', () => {
           id: '<account-id>',
         },
       };
-      deepInsertService.deepInsert.and.returnValue(Promise.resolve({
+      deepInsertService.deepInsert.and.resolveTo({
         associatedRecords: assocRecs,
         record: rec,
-      }));
+      });
 
       await dataManager.createData('account',
         {

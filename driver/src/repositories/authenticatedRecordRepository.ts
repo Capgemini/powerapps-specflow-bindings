@@ -67,7 +67,7 @@ export default class AuthenticatedRecordRepository extends GenericRecordReposito
     const entitySet = await this.metadataRepo.getEntitySetForEntity(logicalName);
     const res = await fetch(`api/data/v9.1/${entitySet}`, {
       headers: this.headers,
-      body: JSON.stringify(this.sanitiseRecord(record)),
+      body: JSON.stringify(GenericRecordRepository.sanitiseRecord(record)),
       method: 'POST',
     });
 
@@ -138,7 +138,7 @@ export default class AuthenticatedRecordRepository extends GenericRecordReposito
     const res = await fetch(`api/data/v9.1/${entitySet}(${id})`,
       {
         headers: this.headers,
-        body: JSON.stringify(this.sanitiseRecord(record)),
+        body: JSON.stringify(GenericRecordRepository.sanitiseRecord(record)),
         method: 'PATCH',
       });
 

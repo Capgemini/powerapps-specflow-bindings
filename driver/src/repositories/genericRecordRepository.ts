@@ -22,7 +22,9 @@ export default abstract class GenericRecordRepository implements RecordRepositor
   * @param logicalName The logical name of the records to retrieve.
   * @param query The query string.
   */
-  abstract retrieveMultipleRecords(logicalName: string, query?: string): Promise<Xrm.RetrieveMultipleResult>;
+  abstract retrieveMultipleRecords(
+    logicalName: string,
+    query?: string): Promise<Xrm.RetrieveMultipleResult>;
 
   /**
   * Creates an entity record.
@@ -74,7 +76,7 @@ export default abstract class GenericRecordRepository implements RecordRepositor
    * @returns {Record} The sanitised record.
    * @memberof RecordRepository
    */
-  sanitiseRecord(record: Record): Record {
+  static sanitiseRecord(record: Record): Record {
     return Object.fromEntries(
       Object.entries(record).filter(([key]) => !key.startsWith('@')),
     );

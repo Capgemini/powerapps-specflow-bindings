@@ -1,5 +1,5 @@
-import { Record } from '../data';
-import { AssociateRequest } from '../requests';
+import Record from '../data/record';
+import AssociateRequest from '../requests/associateRequest';
 import GenericRecordRepository from './genericRecordRepository';
 
 /**
@@ -37,13 +37,15 @@ export default class CurrentUserRecordRepository extends GenericRecordRepository
 
   /** @inheritdoc */
   public async createRecord(logicalName: string, record: Record): Promise<Xrm.LookupValue> {
-    return this.webApi.createRecord(logicalName, this.sanitiseRecord(record));
+    return this.webApi.createRecord(logicalName, GenericRecordRepository.sanitiseRecord(record));
   }
 
   /** @inheritdoc */
   public async upsertRecord(logicalName: string, record: Record): Promise<Xrm.LookupValue> {
     if (!record['@key']) {
-      return this.webApi.createRecord(logicalName, this.sanitiseRecord(record));
+      return this.webApi.createRecord(
+        logicalName, CurrentUserRecordRepository.sanitiseRecord(record),
+      );
     }
 
     const retrieveResponse = await this.webApi.retrieveMultipleRecords(
@@ -53,12 +55,16 @@ export default class CurrentUserRecordRepository extends GenericRecordRepository
 
     if (retrieveResponse.entities.length > 0) {
       const id = retrieveResponse.entities[0][`${logicalName}id`];
-      await this.webApi.updateRecord(logicalName, id, this.sanitiseRecord(record));
+      await this.webApi.updateRecord(
+        logicalName, id, GenericRecordRepository.sanitiseRecord(record),
+      );
 
       return { entityType: logicalName, id };
     }
 
-    return this.webApi.createRecord(logicalName, this.sanitiseRecord(record));
+    return this.webApi.createRecord(
+      logicalName, GenericRecordRepository.sanitiseRecord(record),
+    );
   }
 
   /** @inheritdoc */
