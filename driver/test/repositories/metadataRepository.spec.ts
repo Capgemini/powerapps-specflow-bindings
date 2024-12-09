@@ -18,9 +18,9 @@ describe('MetadataRepository', () => {
       const entityLogicalName = 'contact';
       const entitySetName = 'contacts';
       const mockResponse = { value: [{ EntitySetName: 'contacts' }] };
-      fetchMock.mock('*', { body: mockResponse, sendAsJson: true });
+      fetchMock.mock('*', { body: mockResponse }, { sendAsJson: true });
 
-      expectAsync(metadataRepo.getEntitySetForEntity(entityLogicalName))
+      return expectAsync(metadataRepo.getEntitySetForEntity(entityLogicalName))
         .toBeResolvedTo(entitySetName);
     });
   });
@@ -32,19 +32,21 @@ describe('MetadataRepository', () => {
     it('returns the target entity for a lookup attribute', () => {
       const navigationProperty = 'accountid';
       const mockResponse = { value: [{ Targets: [targetEntityName] }] };
-      fetchMock.mock('*', { body: mockResponse, sendAsJson: true });
+      fetchMock.mock('*', { body: mockResponse }, { sendAsJson: true });
 
-      expectAsync(metadataRepo.getTargetsForLookupProperty(entityLogicalName, navigationProperty))
-        .toBeResolvedTo(mockResponse.value[0].Targets);
+      return expectAsync(
+        metadataRepo.getTargetsForLookupProperty(entityLogicalName, navigationProperty),
+      ).toBeResolvedTo(mockResponse.value[0].Targets);
     });
 
-    it('returns null if the attribute is not found', () => {
+    it('returns null if the attribute is not found', async () => {
       const navigationProperty = 'accountid';
       const mockResponse = { value: [] };
-      fetchMock.mock('*', { body: mockResponse, sendAsJson: true });
+      fetchMock.mock('*', { body: mockResponse }, { sendAsJson: true });
 
-      expectAsync(metadataRepo.getTargetsForLookupProperty(entityLogicalName, navigationProperty))
-        .toBeResolvedTo(null);
+      return expectAsync(
+        metadataRepo.getTargetsForLookupProperty(entityLogicalName, navigationProperty),
+      ).toBeResolvedTo(null);
     });
   });
 
@@ -53,9 +55,9 @@ describe('MetadataRepository', () => {
       const navProp = 'contact_accounts';
       const lookupNavProp = 'contactid';
       const mockResponse = { value: [{ ReferencingEntityNavigationPropertyName: lookupNavProp }] };
-      fetchMock.mock('*', { body: mockResponse, sendAsJson: true });
+      fetchMock.mock('*', { body: mockResponse }, { sendAsJson: true });
 
-      expectAsync(metadataRepo.getLookupPropertyForCollectionProperty(navProp))
+      return expectAsync(metadataRepo.getLookupPropertyForCollectionProperty(navProp))
         .toBeResolvedTo(lookupNavProp);
     });
   });
@@ -64,9 +66,9 @@ describe('MetadataRepository', () => {
     it('returns relationship metadata for the provided relationship schema name', async () => {
       const result = {};
       const relationshipSchemaName = 'contact_accounts';
-      fetchMock.mock('*', { body: result, sendAsJson: true });
+      fetchMock.mock('*', { body: result }, { sendAsJson: true });
 
-      expectAsync(metadataRepo.getRelationshipMetadata(relationshipSchemaName))
+      return expectAsync(metadataRepo.getRelationshipMetadata(relationshipSchemaName))
         .toBeResolvedTo(result as never);
     });
   });
