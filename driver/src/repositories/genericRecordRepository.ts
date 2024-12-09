@@ -76,7 +76,7 @@ export default abstract class GenericRecordRepository implements RecordRepositor
    */
   sanitiseRecord(record: Record): Record {
     return Object.fromEntries(
-      Object.entries(record).filter(([key]) => !key.startsWith("@"))
+      Object.entries(record).filter(([key]) => !key.startsWith('@')),
     );
   }
 }

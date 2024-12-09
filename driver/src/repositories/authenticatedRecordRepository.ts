@@ -42,7 +42,6 @@ export default class AuthenticatedRecordRepository extends GenericRecordReposito
     this.headers.CallerObjectId = userToImpersonateId;
   }
 
-  
   /** @inheritdoc */
   public async retrieveRecord(logicalName: string, id: string, query?: string): Promise<any> {
     const entitySet = await this.metadataRepo.getEntitySetForEntity(logicalName);
