@@ -76,7 +76,7 @@ describe('CurrentUserRecordRepository', () => {
       await recordRepository.upsertRecord(logicalName, recordWithkey);
 
       expect(xrmWebApi.updateRecord)
-        .toHaveBeenCalledWith(logicalName, matchedRecordId, recordWithkey);
+        .toHaveBeenCalledWith(logicalName, matchedRecordId, { keyfield: recordWithkey.keyfield });
     });
 
     it('performs a create when no match is found on @key', async () => {
@@ -85,7 +85,13 @@ describe('CurrentUserRecordRepository', () => {
 
       await recordRepository.upsertRecord(logicalName, recordWithkey);
 
-      expect(xrmWebApi.createRecord).toHaveBeenCalledWith(logicalName, recordWithkey);
+      expect(xrmWebApi.createRecord)
+        .toHaveBeenCalledWith(
+          logicalName,
+          {
+            keyfield: recordWithkey.keyfield,
+          },
+        );
     });
 
     it('performs a create when no @key is specified', async () => {

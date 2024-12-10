@@ -1,15 +1,15 @@
 import MetadataRepository from './metadataRepository';
-import RecordRepository from './recordRepository';
 import Record from '../data/record';
+import GenericRecordRepository from './genericRecordRepository';
 
 /**
- * Repository to handle CRUD operations for entities.
+ * Repository to handle CRUD operations for entities with authentication and impersonation.
  *
  * @export
  * @class RecordRepository
  * @extends {Repository}
  */
-export default class AuthenticatedRecordRepository implements RecordRepository {
+export default class AuthenticatedRecordRepository extends GenericRecordRepository {
   private readonly headers: { [header: string]: string };
 
   private readonly metadataRepo: MetadataRepository;
@@ -21,8 +21,9 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
    * @param userToImpersonateId An optional ID for an impersonated user.
    */
   constructor(metadataRepo: MetadataRepository, authToken: string, userToImpersonateId?: string) {
-    this.metadataRepo = metadataRepo;
+    super();
 
+    this.metadataRepo = metadataRepo;
     this.headers = {
       Authorization: `Bearer ${authToken}`,
       'Content-Type': 'application/json',
@@ -41,12 +42,7 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
     this.headers.CallerObjectId = userToImpersonateId;
   }
 
-  /**
-   * Retrieves a record.
-   * @param logicalName The logical name of the record to retrieve.
-   * @param id The ID of the record to retrieve.
-   * @param query The query string.
-   */
+  /** @inheritdoc */
   public async retrieveRecord(logicalName: string, id: string, query?: string): Promise<any> {
     const entitySet = await this.metadataRepo.getEntitySetForEntity(logicalName);
     const res = await fetch(`api/data/v9.1/${entitySet}(${id})${query}`, { headers: this.headers });
@@ -56,11 +52,7 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
     return res.json();
   }
 
-  /**
-   * Retrieves multiple records.
-   * @param logicalName The logical name of the records to retrieve.
-   * @param query The query string.
-   */
+  /** @inheritdoc */
   public async retrieveMultipleRecords(logicalName: string, query?: string): Promise<any> {
     const entitySet = await this.metadataRepo.getEntitySetForEntity(logicalName);
     const res = await fetch(`api/data/v9.1/${entitySet}${query}`, { headers: this.headers });
@@ -70,19 +62,12 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
     return res.json();
   }
 
-  /**
-     * Creates an entity record.
-     *
-     * @param {string} logicalName A logical name for the entity to create.
-     * @param {Record} record A record to create.
-     * @returns {Xrm.LookupValue} An entity reference to the created entity.
-     * @memberof RecordRepository
-     */
+  /** @inheritdoc */
   public async createRecord(logicalName: string, record: Record): Promise<Xrm.LookupValue> {
     const entitySet = await this.metadataRepo.getEntitySetForEntity(logicalName);
     const res = await fetch(`api/data/v9.1/${entitySet}`, {
       headers: this.headers,
-      body: JSON.stringify(record),
+      body: JSON.stringify(GenericRecordRepository.sanitiseRecord(record)),
       method: 'POST',
     });
 
@@ -92,13 +77,7 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
     return { entityType: logicalName, id };
   }
 
-  /**
-     * Upserts an entity record.
-     * @param {string} logicalName A logical name for the entity to upsert.
-     * @param {Record} record A record to upsert.
-     * @returns {Xrm.LookupValue} An entity reference to the upserted entity.
-     * @memberof RecordRepository
-     */
+  /** @inheritdoc */
   public async upsertRecord(logicalName: string, record: Record): Promise<Xrm.LookupValue> {
     if (!record['@key']) {
       return this.createRecord(logicalName, record);
@@ -119,13 +98,7 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
     return this.createRecord(logicalName, record);
   }
 
-  /**
-     * Deletes an entity record.
-     *
-     * @param {Xrm.LookupValue} ref A reference to the entity to delete.
-     * @returns {Xrm.LookupValue} A reference to the deleted entity.
-     * @memberof RecordRepository
-     */
+  /** @inheritdoc */
   public async deleteRecord(ref: Xrm.LookupValue): Promise<Xrm.LookupValue> {
     const entitySet = await this.metadataRepo.getEntitySetForEntity(ref.entityType);
     const res = await fetch(`api/data/v9.1/${entitySet}(${ref.id})`,
@@ -139,15 +112,7 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
     return ref;
   }
 
-  /**
-     * Associates two records in a N:N Relationship.
-     *
-     * @param {Xrm.LookupValue} primaryRecord The Primary Record to associate.
-     * @param {Xrm.LookupValue[]} relatedRecords The Related Records to associate.
-     * @param {string} relationship The N:N Relationship Name.
-     * @returns {Xrm.ExecuteResponse} The Response from the execute request.
-     * @memberof RecordRepository
-     */
+  /** @inheritdoc */
   public async associateManyToManyRecords(
     primaryRecord: Xrm.LookupValue,
     relatedRecords: Xrm.LookupValue[],
@@ -173,7 +138,7 @@ export default class AuthenticatedRecordRepository implements RecordRepository {
     const res = await fetch(`api/data/v9.1/${entitySet}(${id})`,
       {
         headers: this.headers,
-        body: JSON.stringify(record),
+        body: JSON.stringify(GenericRecordRepository.sanitiseRecord(record)),
         method: 'PATCH',
       });
 
