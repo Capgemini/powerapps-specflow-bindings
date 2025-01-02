@@ -1,7 +1,7 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Steps
 {
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     /// <summary>
     /// Step bindings related to dialogs.

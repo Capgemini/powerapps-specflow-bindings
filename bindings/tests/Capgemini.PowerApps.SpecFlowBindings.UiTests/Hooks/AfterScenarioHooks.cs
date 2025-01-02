@@ -4,7 +4,7 @@
     using System.Reflection;
     using Capgemini.PowerApps.SpecFlowBindings;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     /// <summary>
     /// After scenario hooks.

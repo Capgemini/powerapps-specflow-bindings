@@ -4,7 +4,7 @@
     using FluentAssertions;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using OpenQA.Selenium;
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     /// <summary>
     /// Steps relating to related grids.

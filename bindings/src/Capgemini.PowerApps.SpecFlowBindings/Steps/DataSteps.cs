@@ -4,7 +4,7 @@
     using Capgemini.PowerApps.SpecFlowBindings;
     using Microsoft.Dynamics365.UIAutomation.Browser;
     using Microsoft.Identity.Client;
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     /// <summary>
     /// Test setup step bindings for data.

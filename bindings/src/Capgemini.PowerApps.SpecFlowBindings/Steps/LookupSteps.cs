@@ -7,7 +7,7 @@
     using Microsoft.Dynamics365.UIAutomation.Browser;
     using OpenQA.Selenium;
     using OpenQA.Selenium.Support.UI;
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     /// <summary>
     /// Steps relating to lookups.

@@ -2,7 +2,7 @@
 {
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using FluentAssertions;
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     /// <summary>
     /// Step bindings relating to the command bar.

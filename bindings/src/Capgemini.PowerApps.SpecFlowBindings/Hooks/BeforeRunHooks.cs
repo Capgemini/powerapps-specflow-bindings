@@ -8,7 +8,7 @@
     using Capgemini.PowerApps.SpecFlowBindings.Steps;
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using Microsoft.Dynamics365.UIAutomation.Browser;
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     /// <summary>
     /// Hooks that run before the start of each run.

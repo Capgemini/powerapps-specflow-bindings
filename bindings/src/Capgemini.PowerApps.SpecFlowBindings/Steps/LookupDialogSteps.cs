@@ -2,7 +2,7 @@
 {
     using Microsoft.Dynamics365.UIAutomation.Browser;
     using OpenQA.Selenium;
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     /// <summary>
     /// Step bindings related to lookup dialogs.

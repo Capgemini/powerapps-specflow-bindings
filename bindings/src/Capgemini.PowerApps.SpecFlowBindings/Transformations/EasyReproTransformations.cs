@@ -1,7 +1,7 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Transformations
 {
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     /// <summary>
     /// Transformations for EasyRepro types.
