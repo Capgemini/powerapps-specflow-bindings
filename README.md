@@ -28,7 +28,7 @@ Follow the guidance in the **Installation and Setup** section in SpecFlow's [doc
 PM> Install-Package Capgemini.PowerApps.SpecFlowBindings
 ```
 
-Once the NuGet package is installed, follow the SpecFlow [documentation](https://specflow.org/documentation/Configuration/) on referencing an external binding library. At the time of writing - for SpecFlow 3.x - you should update a _specflow.json_ file in your project root as follows -
+Once the NuGet package is installed, follow the SpecFlow [documentation](https://specflow.org/documentation/Configuration/) on referencing an external binding library. At the time of writing - for SpecFlow 3.x - you should update a _reqnroll.json_ file in your project root as follows -
 
 ```json
 {
