@@ -3,14 +3,14 @@
     <TargetFramework>net462</TargetFramework>
     <AssemblyTitle>Capgemini.PowerApps.SpecFlowBindings</AssemblyTitle>
     <Product>Capgemini.PowerApps.SpecFlowBindings</Product>
-    <Description>A SpecFlow bindings library for Power Apps.</Description>
+    <Description>A Reqnroll bindings library for Power Apps.</Description>
     <Copyright>Capgemini Copyright © 2020</Copyright>
     <Version>0.1.0</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Authors>Capgemini_UK, ewingjm</Authors>
     <PackageId>Capgemini.PowerApps.SpecFlowBindings</PackageId>
     <PackageProjectUrl>https://github.com/Capgemini/powerapps-specflow-bindings</PackageProjectUrl>
-    <PackageTags>powerapps specflow bindings automated-testing testing</PackageTags>
+    <PackageTags>powerapps reqnroll bindings automated-testing testing</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <DebugType>portable</DebugType>
