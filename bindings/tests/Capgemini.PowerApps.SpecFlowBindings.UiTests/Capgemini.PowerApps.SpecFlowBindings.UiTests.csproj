@@ -36,7 +36,7 @@
   </Target>
   <ItemGroup>
     <PackageReference Include="Microsoft.CrmSdk.XrmTooling.CoreAssembly" Version="9.1.1.65" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.7.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.7.3" />
     <PackageReference Include="MSTest.TestFramework" Version="3.7.0" />
     <PackageReference Include="Reqnroll" Version="2.2.1" />
     <PackageReference Include="Reqnroll.MsTest" Version="2.2.1" />
