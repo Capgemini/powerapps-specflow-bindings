@@ -70,19 +70,4 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Capgemini.PowerApps.SpecFlowBindings\Capgemini.PowerApps.SpecFlowBindings.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="BusinessProcessFlowSteps.feature.cs" />
-    <Compile Remove="CommandBarSteps.feature.cs" />
-    <Compile Remove="DashboardSteps.feature.cs" />
-    <Compile Remove="DataSteps.feature.cs" />
-    <Compile Remove="EntitySteps.feature.cs" />
-    <Compile Remove="EntitySubGridSteps.feature.cs" />
-    <Compile Remove="GlobalSearchSteps.feature.cs" />
-    <Compile Remove="GridSteps.feature.cs" />
-    <Compile Remove="LoginSteps.feature.cs" />
-    <Compile Remove="LookupSteps.feature.cs" />
-    <Compile Remove="NavigationSteps.feature.cs" />
-    <Compile Remove="QuickCreateSteps.feature.cs" />
-    <Compile Remove="TimelineSteps.feature.cs" />
-  </ItemGroup>
 </Project>
