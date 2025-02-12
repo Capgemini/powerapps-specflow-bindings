@@ -46,7 +46,7 @@
 
   <ItemGroup>
     <PackageReference Include="Dynamics365.UIAutomation.Api" Version="9.2.21101.119-RW2-Preview" />
-    <PackageReference Include="FluentAssertions" Version="7.0.0" />
+    <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
