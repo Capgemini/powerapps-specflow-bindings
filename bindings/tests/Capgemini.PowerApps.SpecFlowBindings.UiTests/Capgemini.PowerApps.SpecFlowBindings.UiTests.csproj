@@ -6,6 +6,7 @@
     <Product>Capgemini.PowerApps.SpecFlowBindings.UiTests</Product>
     <Copyright>Copyright © 2020</Copyright>
     <DebugType>portable</DebugType>
+    <RunSettingsFilePath>$(MSBuildProjectDirectory)\.runsettings</RunSettingsFilePath>
   </PropertyGroup>
   <Target Name="CopyDriver" AfterTargets="Build">
     <Copy SourceFiles="..\..\src\Capgemini.PowerApps.SpecFlowBindings\bin\lib\driver.js" DestinationFolder="$(OutputPath)" />
