@@ -13,7 +13,7 @@
         /// Clicks the confirmation button on a confirm dialog.
         /// </summary>
         /// <param name="option">The option to click.</param>
-        [When(@"I (confirm|cancel) when presented with the confirmation dialog")]
+        [When(@"^I (confirm|cancel) when presented with the confirmation dialog$")]
         public static void WhenIConfirmWhenPresentedWithTheConfirmationDialog(string option)
         {
             XrmApp.Dialogs.ConfirmationDialog(option == "confirm");
@@ -73,7 +73,7 @@
         /// Clicks an option on the set state dialog.
         /// </summary>
         /// <param name="option">The option to click.</param>
-        [When("I click (ok|cancel) on the set state dialog")]
+        [When("^I click (ok|cancel) on the set state dialog$")]
         public static void WhenIClickOnTheSetStateDialog(string option)
         {
             XrmApp.Dialogs.SetStateDialog(option == "ok");
