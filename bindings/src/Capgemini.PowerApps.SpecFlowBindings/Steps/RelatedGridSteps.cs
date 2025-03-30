@@ -20,7 +20,7 @@
         [When(@"I open the (\d+(?:(?:st)|(?:nd)|(?:rd)|(?:th))) record in the related grid")]
         public static void WhenIOpenTheRecordAtPositionInTheRelatedGrid(int index)
         {
-            XrmApp.Entity.RelatedGrid.OpenGridRow(index);
+            XrmApp.Grid.OpenRecord(index);
         }
 
         /// <summary>
