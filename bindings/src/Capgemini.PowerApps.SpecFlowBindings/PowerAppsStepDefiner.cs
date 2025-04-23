@@ -44,6 +44,11 @@
         private static object userProfilesDirectoriesLock = new object();
 
         /// <summary>
+        /// Gets a value indicating whether or not a <see cref="WebClient"/> instance has been initialised for the current test thread.
+        /// </summary>
+        internal static bool WebClientInitialised => client != null;
+
+        /// <summary>
         /// Gets access token used to authenticate as the application user configured for testing.
         /// </summary>
         protected static string AccessToken
