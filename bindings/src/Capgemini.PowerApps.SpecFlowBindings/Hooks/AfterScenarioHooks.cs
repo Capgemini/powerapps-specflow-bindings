@@ -24,35 +24,12 @@
         }
 
         /// <summary>
-        /// Deletes the test data created during the test and disposes of the browser.
-        /// </summary>
-        [AfterScenario(Order = 1)]
-        public static void TestCleanup()
-        {
-            try
-            {
-                if (TestConfig.DeleteTestData)
-                {
-                    TestDriver.DeleteTestData();
-                }
-            }
-            catch (WebDriverException)
-            {
-                // Ignore - tests might have failed before driver was initialised.
-            }
-            finally
-            {
-                Quit();
-            }
-        }
-
-        /// <summary>
         /// Takes a screenshot of the browser when a test fails.
         /// </summary>
         [AfterScenario(Order = 0)]
         public void ScreenshotFailedScenario()
         {
-            if (this.scenarioContext.ScenarioExecutionStatus != ScenarioExecutionStatus.TestError)
+            if (this.scenarioContext.ScenarioExecutionStatus != ScenarioExecutionStatus.TestError || !WebClientInitialised)
             {
                 return;
             }
@@ -77,6 +54,29 @@
             {
                 // Don't throw an unhandled exception if the screenshot can't be captured as this will prevent the WebDriver instance from being cleaned up.
                 Console.WriteLine($"Failed to capture screenshot: {ex.Message}.");
+            }
+        }
+
+        /// <summary>
+        /// Deletes the test data created during the test and disposes of the browser.
+        /// </summary>
+        [AfterScenario(Order = 1)]
+        public void TestCleanup()
+        {
+            try
+            {
+                if (TestConfig.DeleteTestData)
+                {
+                    TestDriver.DeleteTestData();
+                }
+            }
+            catch (WebDriverException)
+            {
+                // Ignore - tests might have failed before driver was initialised.
+            }
+            finally
+            {
+                Quit();
             }
         }
     }
