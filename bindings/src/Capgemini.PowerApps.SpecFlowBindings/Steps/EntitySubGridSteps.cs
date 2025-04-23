@@ -9,7 +9,7 @@
     using Microsoft.Dynamics365.UIAutomation.Api.UCI;
     using Microsoft.Dynamics365.UIAutomation.Browser;
     using OpenQA.Selenium;
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     /// <summary>
     /// Step bindings related to subgrids on forms.

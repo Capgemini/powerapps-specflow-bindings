@@ -6,6 +6,7 @@
     <Product>Capgemini.PowerApps.SpecFlowBindings.UiTests</Product>
     <Copyright>Copyright © 2020</Copyright>
     <DebugType>portable</DebugType>
+    <RunSettingsFilePath>$(MSBuildProjectDirectory)\.runsettings</RunSettingsFilePath>
   </PropertyGroup>
   <Target Name="CopyDriver" AfterTargets="Build">
     <Copy SourceFiles="..\..\src\Capgemini.PowerApps.SpecFlowBindings\bin\lib\driver.js" DestinationFolder="$(OutputPath)" />
@@ -35,13 +36,13 @@
     <ExtendDataFiles Include="@(DataFiles)" DestinationFolder="$(OutputPath)Data" />
   </Target>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CrmSdk.XrmTooling.CoreAssembly" Version="9.1.0.64" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
-    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="105.0.5195.5200" />
-    <PackageReference Include="SpecFlow" Version="3.5.14" />
-    <PackageReference Include="SpecFlow.MsTest" Version="3.5.14" />
-    <PackageReference Include="SpecFlow.Tools.MsBuild.Generation" Version="3.5.14" />
+    <PackageReference Include="Microsoft.CrmSdk.XrmTooling.CoreAssembly" Version="9.1.1.65" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.7.3" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.7.0" />
+    <PackageReference Include="Reqnroll" Version="2.2.1" />
+    <PackageReference Include="Reqnroll.MsTest" Version="2.2.1" />
+    <PackageReference Include="Reqnroll.Tools.MsBuild.Generation" Version="2.2.1" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="131.0.6778.20400" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CodeCoverage.runsettings">
@@ -63,26 +64,11 @@
     <None Include="power-apps-bindings.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="specflow.json">
+    <None Include="reqnroll.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Capgemini.PowerApps.SpecFlowBindings\Capgemini.PowerApps.SpecFlowBindings.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="BusinessProcessFlowSteps.feature.cs" />
-    <Compile Remove="CommandBarSteps.feature.cs" />
-    <Compile Remove="DashboardSteps.feature.cs" />
-    <Compile Remove="DataSteps.feature.cs" />
-    <Compile Remove="EntitySteps.feature.cs" />
-    <Compile Remove="EntitySubGridSteps.feature.cs" />
-    <Compile Remove="GlobalSearchSteps.feature.cs" />
-    <Compile Remove="GridSteps.feature.cs" />
-    <Compile Remove="LoginSteps.feature.cs" />
-    <Compile Remove="LookupSteps.feature.cs" />
-    <Compile Remove="NavigationSteps.feature.cs" />
-    <Compile Remove="QuickCreateSteps.feature.cs" />
-    <Compile Remove="TimelineSteps.feature.cs" />
   </ItemGroup>
 </Project>

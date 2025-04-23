@@ -2,9 +2,9 @@
 
 [![Build Status](https://capgeminiuk.visualstudio.com/GitHub%20Support/_apis/build/status/CI-Builds/NuGet%20Packages/Capgemini.PowerApps.SpecFlowBindings?branchName=master)](https://capgeminiuk.visualstudio.com/GitHub%20Support/_build/latest?definitionId=195&branchName=master) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Capgemini_powerapps-specflow-bindings&metric=alert_status)](https://sonarcloud.io/dashboard?id=Capgemini_powerapps-specflow-bindings) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Capgemini_powerapps-specflow-bindings&metric=coverage)](https://sonarcloud.io/dashboard?id=Capgemini_powerapps-specflow-bindings)
 
-A SpecFlow bindings library for Power Apps.
+A Reqnroll bindings library for Power Apps.
 
-The aim of this project is to make Power Apps test automation easier, faster and more accessible. It does this by providing a library of generic SpecFlow step bindings that adhere to test automation best practices. This allows effective automated tests to be written without the dependency on developers who are both proficient with Power Apps and test automation.
+The aim of this project is to make Power Apps test automation easier, faster and more accessible. It does this by providing a library of generic Reqnroll step bindings that adhere to test automation best practices. This allows effective automated tests to be written without the dependency on developers who are both proficient with Power Apps and test automation.
 
 ## Table of Contents
 
@@ -28,11 +28,11 @@ Follow the guidance in the **Installation and Setup** section in SpecFlow's [doc
 PM> Install-Package Capgemini.PowerApps.SpecFlowBindings
 ```
 
-Once the NuGet package is installed, follow the SpecFlow [documentation](https://specflow.org/documentation/Configuration/) on referencing an external binding library. At the time of writing - for SpecFlow 3.x - you should update a _specflow.json_ file in your project root as follows -
+Once the NuGet package is installed, follow the Reqnroll [documentation](https://docs.reqnroll.net/stable/installation/configuration.html) on referencing an external binding library. At the time of writing, you should update a _reqnroll.json_ file in your project root as follows -
 
 ```json
 {
-    "stepAssemblies": [
+    "bindingAssemblies": [
         { "assembly": "Capgemini.PowerApps.SpecFlowBindings" }
     ]
 }
@@ -99,7 +99,7 @@ Alternatively, write your own step bindings (see below).
 
 ### Writing step bindings
 
-You can write your own step bindings that have thread-safe access to EasyRepro and the Selenium WebDriver. This ensures that your tests can be ran safely in parallel. You can do this by creating a class decorated with the SpecFlow `BindingAttribute` and inheriting from the `PowerAppsStepDefiner` base class. You can then create your SpecFlow step bindings by interacting with the `XrmApp` and `Driver` properties.
+You can write your own step bindings that have thread-safe access to EasyRepro and the Selenium WebDriver. This ensures that your tests can be ran safely in parallel. You can do this by creating a class decorated with the Reqnroll `BindingAttribute` and inheriting from the `PowerAppsStepDefiner` base class. You can then create your bindings by interacting with the `XrmApp` and `Driver` properties.
 
 ```csharp
 [Binding]

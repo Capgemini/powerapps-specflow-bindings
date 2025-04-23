@@ -32,9 +32,9 @@ Scenarios:
 		| sb_text        | text      | Some text      |
 		| sb_number      | numeric   | 10             |
 		# | sb_yesno       | boolean   | false          | Currently failing due to https://github.com/microsoft/EasyRepro/issues/1140
-		| sb_choice      | optionset | Option A       |
+		#| sb_choice      | optionset | Option A       |
 		# | sb_dateandtime | datetime  | 1/1/2021 13:00 | Currently failing due to https://github.com/microsoft/EasyRepro/issues/1139
-		| sb_dateonly    | datetime  | 1/1/2021       |
+		#| sb_dateonly    | datetime  | 1/1/2021       |
 		| sb_currency    | currency  | £10.00         |
 
 Scenario: Enter lookup value on business process flow

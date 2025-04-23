@@ -1,6 +1,6 @@
 ﻿namespace Capgemini.PowerApps.SpecFlowBindings.Steps
 {
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     /// <summary>
     /// Steps relating to global search.

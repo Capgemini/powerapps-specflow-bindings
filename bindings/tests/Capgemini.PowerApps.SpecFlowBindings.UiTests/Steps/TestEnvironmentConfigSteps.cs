@@ -3,7 +3,7 @@
     using Microsoft.Xrm.Sdk;
     using Microsoft.Xrm.Tooling.Connector;
     using System.ServiceModel;
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     /// <summary>
     /// Steps relating to configuring the test environment.

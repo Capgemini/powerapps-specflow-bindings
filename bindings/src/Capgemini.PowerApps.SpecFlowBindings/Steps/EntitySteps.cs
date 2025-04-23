@@ -9,7 +9,7 @@
     using Microsoft.Dynamics365.UIAutomation.Api.UCI.DTO;
     using Microsoft.Dynamics365.UIAutomation.Browser;
     using OpenQA.Selenium;
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     /// <summary>
     /// Step bindings related to forms.
@@ -83,7 +83,7 @@
         {
             fields = fields ?? throw new ArgumentNullException(nameof(fields));
 
-            foreach (TableRow row in fields.Rows)
+            foreach (DataTableRow row in fields.Rows)
             {
                 WhenIEnterInTheField(row["Value"], row["Field"], row["Type"], row["Location"]);
             }
@@ -486,7 +486,7 @@
         /// Asserts that a record is active or inactive.
         /// </summary>
         /// <param name="status">The status.</param>
-        [Then("the status of the record is (active|inactive)")]
+        [Then("^the status of the record is (active|inactive)$")]
         public static void ThenTheStatusOfTheRecordIs(string status)
         {
             XrmApp.Entity.GetFormState().Should().BeEquivalentTo(status);

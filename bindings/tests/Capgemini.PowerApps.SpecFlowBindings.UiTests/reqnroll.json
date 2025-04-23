@@ -5,7 +5,7 @@
   "language": {
     "feature": "en-gb"
   },
-  "stepAssemblies": [
+  "bindingAssemblies": [
     { "assembly": "Capgemini.PowerApps.SpecFlowBindings" }
   ]
 }

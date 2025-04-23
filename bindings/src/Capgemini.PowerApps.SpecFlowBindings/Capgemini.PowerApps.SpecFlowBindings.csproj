@@ -3,14 +3,14 @@
     <TargetFramework>net462</TargetFramework>
     <AssemblyTitle>Capgemini.PowerApps.SpecFlowBindings</AssemblyTitle>
     <Product>Capgemini.PowerApps.SpecFlowBindings</Product>
-    <Description>A SpecFlow bindings library for Power Apps.</Description>
+    <Description>A Reqnroll bindings library for Power Apps.</Description>
     <Copyright>Capgemini Copyright © 2020</Copyright>
     <Version>0.1.0</Version>
     <PackageIcon>icon.png</PackageIcon>
     <Authors>Capgemini_UK, ewingjm</Authors>
     <PackageId>Capgemini.PowerApps.SpecFlowBindings</PackageId>
     <PackageProjectUrl>https://github.com/Capgemini/powerapps-specflow-bindings</PackageProjectUrl>
-    <PackageTags>powerapps specflow bindings automated-testing testing</PackageTags>
+    <PackageTags>powerapps reqnroll bindings automated-testing testing</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <DebugType>portable</DebugType>
@@ -47,26 +47,23 @@
   <ItemGroup>
     <PackageReference Include="Dynamics365.UIAutomation.Api" Version="9.2.21101.119-RW2-Preview" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
-    <PackageReference Include="Microsoft.Build.Tasks.Git" Version="1.0.0">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.1">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.2.29" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.24.0" />
-    <PackageReference Include="Microsoft.SourceLink.Common" Version="1.0.0">
+    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.2.56" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.66.2" />
+    <PackageReference Include="Microsoft.SourceLink.Common" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Polly" Version="7.2.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Polly" Version="8.5.0" />
+    <PackageReference Include="Reqnroll" Version="2.2.1" />
     <PackageReference Include="Selenium.Support" Version="3.141.0" />
     <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
-    <PackageReference Include="SpecFlow" Version="3.5.14" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -89,5 +86,9 @@
     <None Include="icon.png" Pack="true" PackagePath="\" />
     <!-- Including driver files so that they are picked up by SonarCloud analysis (see https://sonarcloud.io/documentation/analysis/scan/sonarscanner-for-msbuild)  -->
     <None Include="..\..\..\driver\**\*.ts" Exclude="..\..\..\driver\node_modules\**\*" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Configuration" />
   </ItemGroup>
 </Project>

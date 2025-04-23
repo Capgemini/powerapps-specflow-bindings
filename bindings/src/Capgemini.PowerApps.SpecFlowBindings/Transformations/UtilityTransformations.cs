@@ -3,7 +3,7 @@
     using System;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     /// <summary>
     /// General utility transformations.

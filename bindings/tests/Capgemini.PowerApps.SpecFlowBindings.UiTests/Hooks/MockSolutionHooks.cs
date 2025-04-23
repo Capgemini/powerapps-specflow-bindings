@@ -6,7 +6,7 @@
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
-    using TechTalk.SpecFlow;
+    using Reqnroll;
 
     /// <summary>
     /// Hooks related to the mock solution used for testing.
