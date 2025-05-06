@@ -171,8 +171,21 @@ Scenario: Assert option set options
 Scenario: Assert field visible
 	Then I can see the 'sb_name' field
 
+Scenario: Assert fields visible
+	Then I can see the following fields
+	| fieldList      |
+	| sb_name        |
+	| sb_yesno       |
+	| sb_choice      |
+	| sb_dateandtime |
+
 Scenario: Assert field not visible
 	Then I can not see the 'ownerid' field
+
+	Scenario: Assert fields not visible
+	Then I can not see the following fields
+	| fieldList |
+	| ownerid   |
 
 Scenario: Assert record status
 	Then the status of the record is active
