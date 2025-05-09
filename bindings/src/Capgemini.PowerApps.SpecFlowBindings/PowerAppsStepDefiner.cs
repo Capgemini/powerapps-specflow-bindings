@@ -6,6 +6,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
     using Capgemini.PowerApps.SpecFlowBindings.Configuration;
     using Capgemini.PowerApps.SpecFlowBindings.Extensions;
     using FluentAssertions.Extensions;
@@ -34,11 +35,9 @@
         [ThreadStatic]
         private static ITestDataRepository testDataRepository;
 
-        [ThreadStatic]
-        private static WebClient client;
+        private static AsyncLocal<WebClient> client = new AsyncLocal<WebClient>();
 
-        [ThreadStatic]
-        private static XrmApp xrmApp;
+        private static AsyncLocal<XrmApp> xrmApp = new AsyncLocal<XrmApp>();
 
         private static IDictionary<string, string> userProfilesDirectories;
         private static object userProfilesDirectoriesLock = new object();
@@ -46,7 +45,7 @@
         /// <summary>
         /// Gets a value indicating whether or not a <see cref="WebClient"/> instance has been initialised for the current test thread.
         /// </summary>
-        internal static bool WebClientInitialised => client != null;
+        internal static bool WebClientInitialised => client.Value != null;
 
         /// <summary>
         /// Gets access token used to authenticate as the application user configured for testing.
@@ -104,30 +103,12 @@
         /// <summary>
         /// Gets the EasyRepro WebClient.
         /// </summary>
-        protected static WebClient Client
-        {
-            get
-            {
-                if (client == null)
-                {
-                    var browserOptions = (BrowserOptionsWithProfileSupport)TestConfig.BrowserOptions.Clone();
-
-                    if (TestConfig.UseProfiles)
-                    {
-                        browserOptions.ProfileDirectory = CurrentProfileDirectory;
-                    }
-
-                    client = new WebClient(browserOptions);
-                }
-
-                return client;
-            }
-        }
+        protected static WebClient Client => client.Value;
 
         /// <summary>
         /// Gets the EasyRepro XrmApp.
         /// </summary>
-        protected static XrmApp XrmApp => xrmApp ?? (xrmApp = new XrmApp(Client));
+        protected static XrmApp XrmApp => xrmApp.Value;
 
         /// <summary>
         /// Gets the Selenium WebDriver.
@@ -227,12 +208,10 @@
                 })
                 .ExecuteAndCapture(() =>
                 {
-                    xrmApp?.Dispose();
-                    client?.Dispose();
+                    xrmApp?.Value?.Dispose();
+                    client?.Value?.Dispose();
                 });
 
-            xrmApp = null;
-            client = null;
             testDriver = null;
             testConfig?.Flush();
 
@@ -249,6 +228,22 @@
                     {
                         Directory.Delete(directoryToDelete, true);
                     });
+            }
+        }
+
+        /// <summary>
+        /// Initialise binding dependencies.
+        /// </summary>
+        protected static void Initialise()
+        {
+            if (client.Value == null)
+            {
+                client.Value = new WebClient((BrowserOptionsWithProfileSupport)TestConfig.BrowserOptions.Clone());
+            }
+
+            if (xrmApp.Value == null)
+            {
+                xrmApp.Value = new XrmApp(Client);
             }
         }
 
