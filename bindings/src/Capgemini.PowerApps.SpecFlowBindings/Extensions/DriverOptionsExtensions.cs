@@ -21,16 +21,16 @@
             switch (options)
             {
                 case ChromeOptions chromeOptions:
-                    chromeOptions.AddAdditionalCapability(name, value, true);
+                    chromeOptions.AddAdditionalChromeOption(name, value);
                     break;
                 case FirefoxOptions firefoxOptions:
-                    firefoxOptions.AddAdditionalCapability(name, value, true);
+                    firefoxOptions.AddAdditionalFirefoxOption(name, value);
                     break;
                 case InternetExplorerOptions internetExplorerOptions:
-                    internetExplorerOptions.AddAdditionalCapability(name, value, true);
+                    internetExplorerOptions.AddAdditionalInternetExplorerOption(name, value);
                     break;
                 default:
-                    options.AddAdditionalCapability(name, value);
+                    options.AddAdditionalOption(name, value);
                     break;
             }
         }
